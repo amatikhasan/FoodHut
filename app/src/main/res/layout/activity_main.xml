@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".ui.MainActivity">
+<Button
+    android:id="@+id/btnCustomer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:onClick="toCustomer"
+    android:text="Login As Customer"/>
+    <Button
+        android:id="@+id/btnProvider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="toProvider"
+        android:text="Login As Provider"/>
+</LinearLayout>

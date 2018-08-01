@@ -1,0 +1,178 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layoutMain"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/backgrad"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvSuccess"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="Login Successful!"
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/tvLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:gravity="center"
+            android:text="Login With Mobile Number"
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp" />
+
+     <!--   <EditText
+            android:id="@+id/field_name"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/corner_orange_border"
+            android:hint=" Name"
+            android:inputType="textPersonName"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="#545454"
+            android:textColorHint="#545454"
+            android:textSize="14sp" />
+            -->
+
+        <EditText
+            android:id="@+id/field_phone_number"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/corner_orange_border"
+            android:hint=" Phone Number"
+            android:inputType="phone"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="#545454"
+            android:textColorHint="#545454"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/button_start_verification"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/round_button_orange"
+            android:padding="10dp"
+            android:text="Login"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tvVC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:text="Verification Code"
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvPTVC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="Please type the verification code sent to your mobile"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/field_verification_code"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/corner_orange_border"
+            android:hint=" Enter Code"
+            android:inputType="number"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="#545454"
+            android:textColorHint="#545454"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/button_verify_phone"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/round_button_orange"
+            android:padding="10dp"
+            android:text="Verify"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvDRC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Didn't receive the code?"
+            android:textColor="@color/colorPrimary"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/timerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please wait "
+                android:textColor="@color/colorPrimary"
+                android:layout_marginRight="10dp"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="12sp"
+                tools:text="0:30 " />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_resend"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/round_button_orange"
+            android:padding="10dp"
+            android:text="Resend Code"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.provider.AddMenu">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Item Name"
+                android:textColor="@color/colorAccent" />
+
+            <EditText
+                android:id="@+id/etItemName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_style"
+                android:hint="Item Name"
+                android:inputType="textPersonName"
+                android:padding="8dp"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Type"
+                android:textColor="@color/colorAccent" />
+
+            <EditText
+                android:id="@+id/etItemType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_style"
+                android:hint="Type"
+                android:inputType="textPersonName"
+                android:padding="8dp"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Price"
+                android:textColor="@color/colorAccent" />
+
+            <EditText
+                android:id="@+id/etItemPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_style"
+                android:hint="Price"
+                android:inputType="textMultiLine"
+                android:padding="8dp"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Description"
+                android:textColor="@color/colorAccent" />
+
+            <EditText
+                android:id="@+id/etItemDesc"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/edit_text_style"
+                android:hint="Description"
+                android:inputType="textPersonName"
+                android:padding="8dp"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:weightSum="1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:layout_marginEnd="4dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Extra Item"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText
+                        android:id="@+id/etExtraItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_text_style"
+                        android:hint="Extra Item"
+                        android:inputType="textMultiLine"
+                        android:padding="8dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight=".5"
+                    android:layout_marginStart="4dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Price"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText
+                        android:id="@+id/etExtraPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_text_style"
+                        android:hint="Price"
+                        android:inputType="textMultiLine"
+                        android:padding="8dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ivItemImage"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:contentDescription="image"
+                android:src="@drawable/image" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnBrowsImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_button"
+                android:text="Select Image"
+                android:onClick="browsImages"
+                android:layout_weight=".5"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white" />
+            <Button
+                android:id="@+id/btnCapture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_button"
+                android:text="Capture Image"
+                android:onClick="captureImage"
+                android:layout_weight=".5"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white" />
+            </LinearLayout>
+
+            <!-- an empty view for full scroll view -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

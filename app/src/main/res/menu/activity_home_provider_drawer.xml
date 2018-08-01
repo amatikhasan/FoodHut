@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/pmProfile"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Profile" />
+        <item
+            android:id="@+id/pmOrders"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Orders" />
+        <item
+            android:id="@+id/pmSale"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Sales" />
+        <item
+            android:id="@+id/pmReviews"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Reviews" />
+
+        <item
+            android:id="@+id/pmLogout"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Log Out" />
+    </group>
+
+
+</menu>

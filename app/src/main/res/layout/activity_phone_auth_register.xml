@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="320dp"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true"
+        android:paddingTop="5dp">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_add"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="40dp"
+            app:cardBackgroundColor="#2ea67f"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="3dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="50dp"
+                    android:layout_marginTop="50dp"
+                    android:text="@string/register"
+                    android:textColor="#fff"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+
+                <EditText
+                    android:id="@+id/et_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/edit_text_style"
+                    android:hint="Name"
+                    android:inputType="textPersonName"
+                    android:padding="8dp"
+                    android:textColor="#f0f7f4"
+                    android:textColorHint="#f0f7f4"
+                    android:textCursorDrawable="@drawable/bg_input_cursor_2"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/et_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginStart="40dp"
+                    android:background="@drawable/edit_text_style"
+                    android:hint="@string/phone"
+                    android:inputType="phone"
+                    android:padding="8dp"
+                    android:textColor="#f0f7f4"
+                    android:textColorHint="#f0f7f4"
+                    android:textCursorDrawable="@drawable/bg_input_cursor_2"
+                    android:textSize="18sp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/et_code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="20dp"
+                        android:background="@drawable/rect_text_edit"
+                        android:hint="Enter Code"
+                        android:inputType="number"
+                        android:padding="10dp"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/bt_signup"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="30dp"
+                        android:background="@drawable/bt_shape_2"
+                        android:stateListAnimator="@drawable/state_list_animator_z"
+                        android:text="@string/go"
+                        android:textColor="#2fa881" />
+
+                    <Button
+                        android:id="@+id/bt_verify"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="30dp"
+                        android:background="@drawable/bt_shape_2"
+                        android:onClick="verify"
+                        android:stateListAnimator="@drawable/state_list_animator_z"
+                        android:text="@string/tag_verify"
+                        android:textColor="#2fa881"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="timer"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/bt_resend"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="30dp"
+                        android:background="@drawable/bt_shape_2"
+                        android:onClick="resend"
+                        android:stateListAnimator="@drawable/state_list_animator_z"
+                        android:text="@string/resend"
+                        android:textColor="#2fa881"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </FrameLayout>
+
+
+</RelativeLayout>

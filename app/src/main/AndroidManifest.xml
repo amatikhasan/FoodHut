@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="xyz.foodhut.app">
+
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".ui.MainActivity" />
+        <activity android:name=".ui.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.PhoneAuthActivity" />
+        <activity android:name=".ui.customer.CustomerHome" />
+        <activity android:name=".ui.provider.ProviderHome" />
+        <activity android:name=".ui.PhoneAuthRegister" />
+        <activity android:name=".ui.provider.Menus" />
+        <activity android:name=".ui.provider.Schedule" />
+        <activity android:name=".ui.provider.Payments" />
+        <activity android:name=".ui.provider.OrdersDate" />
+        <activity android:name=".ui.provider.Reviews" />
+        <activity android:name=".ui.provider.AddMenu" />
+        <activity android:name=".ui.customer.AddOrder" />
+        <activity android:name=".ui.customer.MenuDetails" />
+        <activity android:name=".ui.provider.Orders" />
+        <activity android:name=".ui.ProfileUpdate" />
+        <activity
+            android:name=".ui.customer.HomeCustomer"
+            android:label="@string/title_activity_home_customer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.provider.HomeProvider"
+            android:label="@string/title_activity_home_provider"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.customer.OrdersCustomer" />
+        <activity android:name=".ui.customer.OrdersDateCustomer"></activity>
+    </application>
+
+</manifest>
