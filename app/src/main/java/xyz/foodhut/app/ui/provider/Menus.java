@@ -21,18 +21,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import xyz.foodhut.app.R;
-import xyz.foodhut.app.classes.MenuAdapterProvider;
+import xyz.foodhut.app.adapter.MenuProvider;
 import xyz.foodhut.app.data.StaticConfig;
-import xyz.foodhut.app.model.MenuProvider;
 
 public class Menus extends AppCompatActivity {
     RecyclerView recyclerView;
-    ArrayList<MenuProvider> arrayList = new ArrayList<>();
+    ArrayList<xyz.foodhut.app.model.MenuProvider> arrayList = new ArrayList<>();
     String userID=null;
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-    MenuAdapterProvider menuAdapter;
+    MenuProvider menuAdapter;
     private ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,7 @@ public class Menus extends AppCompatActivity {
         recyclerView=findViewById(R.id.rvMenu);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        menuAdapter=new MenuAdapterProvider(this,arrayList);
+        menuAdapter=new MenuProvider(this,arrayList);
         recyclerView.setAdapter(menuAdapter);
 
         dialog=new ProgressDialog(this);
@@ -68,13 +67,13 @@ public class Menus extends AppCompatActivity {
 
         if(StaticConfig.UID!=null) {
             FirebaseDatabase.getInstance().getReference("providers/"+ StaticConfig.UID).child("menu")
-                    .addValueEventListener(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     dialog.dismiss();
                     //fetch files from firebase database and push in arraylist
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        MenuProvider menuProvider = snapshot.getValue(MenuProvider.class);
+                        xyz.foodhut.app.model.MenuProvider menuProvider = snapshot.getValue(xyz.foodhut.app.model.MenuProvider.class);
                         arrayList.add(menuProvider);
                         //menuAdapter.notifyDataSetChanged();
                         Log.d("Check list", "onDataChange: " + arrayList.size());

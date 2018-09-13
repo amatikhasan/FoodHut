@@ -4,9 +4,10 @@
         android:state_pressed="false"
         >
         <shape>
-            <stroke android:color="@color/colorPrimary"
+            <stroke android:color="@color/white"
                 android:width="1.5dp"/>
             <corners android:radius="5dp"/>
+            <solid android:color="#F7F5F3"/>
         </shape>
 
     </item>

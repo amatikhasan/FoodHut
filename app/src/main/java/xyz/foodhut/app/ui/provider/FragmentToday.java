@@ -2,27 +2,15 @@ package xyz.foodhut.app.ui.provider;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,24 +19,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Calendar;
+import java.util.Date;
 
 import xyz.foodhut.app.R;
-import xyz.foodhut.app.classes.MenuAdapterProvider;
-import xyz.foodhut.app.classes.ScheduleAdapterProvider;
+import xyz.foodhut.app.adapter.ScheduleProvider;
 import xyz.foodhut.app.data.StaticConfig;
-import xyz.foodhut.app.model.MenuProvider;
-import xyz.foodhut.app.model.ScheduleProvider;
 
 
 public class FragmentToday extends Fragment {
 
 
     RecyclerView recyclerView;
-    ArrayList<ScheduleProvider> arrayList = new ArrayList<>();
+    ArrayList<xyz.foodhut.app.model.ScheduleProvider> arrayList = new ArrayList<>();
     String userID=null;
-    ScheduleAdapterProvider adapter;
+    ScheduleProvider adapter;
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
@@ -87,7 +74,7 @@ public class FragmentToday extends Fragment {
         recyclerView=view.findViewById(R.id.rvToday);
        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-       adapter= new ScheduleAdapterProvider(getContext(),arrayList);
+       adapter= new ScheduleProvider(getContext(),arrayList,1);
         recyclerView.setAdapter(adapter);
 
         getSchedule();
@@ -108,23 +95,23 @@ public class FragmentToday extends Fragment {
         if(StaticConfig.UID!=null) {
            dialog.show();
             FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule")
-                    .addValueEventListener(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             dialog.dismiss();
                             //fetch files from firebase database and push in arraylist
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                ScheduleProvider scheduleProvider = snapshot.getValue(ScheduleProvider.class);
+                                xyz.foodhut.app.model.ScheduleProvider scheduleProvider = snapshot.getValue(xyz.foodhut.app.model.ScheduleProvider.class);
                                 arrayList.add(scheduleProvider);
                                 //menuAdapter.notifyDataSetChanged();
                                 Log.d("Check list", "onDataChange: " + arrayList.size());
                             }
 
-                            //   for(int i=0;i<arrayList.size();i++){
-                            //       if(arrayList.get(i).imageUrl==null||arrayList.get(i).imageUrl==null){
-                            //          arrayList.remove(i);
-                            //      }
-                            //   }
+                               for(int i=0;i<arrayList.size();i++){
+                                   if(!arrayList.get(i).date.equals(checkDate())){
+                                      arrayList.remove(i);
+                                 }
+                               }
 
                             //  Collections.reverse(arrayList);
 
@@ -140,6 +127,31 @@ public class FragmentToday extends Fragment {
                     });
         }
         }
+
+    public String checkDate(){
+        // Get the calander
+        int day,month,year;
+        String date = null;
+        Calendar c = Calendar.getInstance();
+
+        // From calander get the year, month, day, hour, minute
+        year= c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
+
+            c.set(year, month, day);
+            date = day + "-" + (month + 1) + "-" + year;
+
+        String formattedDate;
+        SimpleDateFormat sdtf = new SimpleDateFormat("dd MMM yyyy");
+        Date now = c.getTime();
+        formattedDate = sdtf.format(now);
+
+        Log.d("check", "checkDate: "+date+" "+formattedDate);
+
+        return date;
+    }
+
 
     @Override
     public void onDestroyView (){

@@ -1,65 +1,76 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context=".ui.PhoneAuthActivity">
+
 
     <LinearLayout
-        android:id="@+id/layoutMain"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/backgrad"
+        android:id="@+id/ll1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/corner_white"
         android:gravity="center"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/tvSuccess"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            android:gravity="center"
-            android:text="Login Successful!"
-            android:textColor="@color/colorPrimary"
-            android:textSize="22sp" />
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/guideline6"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
+        app:layout_constraintTop_toTopOf="@+id/guideline7">
 
         <TextView
-            android:id="@+id/tvLogin"
+            android:id="@+id/txtGSWF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Get Started with FoodHut.xyz"
+            android:textColor="#545454"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtPEVC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Please Enter Verification Code"
+            android:textColor="#545454"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/llPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
-            android:gravity="center"
-            android:text="Login With Mobile Number"
-            android:textColor="@color/colorPrimary"
-            android:textSize="22sp" />
+            android:layout_margin="10dp"
+            android:gravity="center">
 
-     <!--   <EditText
-            android:id="@+id/field_name"
-            android:layout_width="220dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/corner_orange_border"
-            android:hint=" Name"
-            android:inputType="textPersonName"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:textColor="#545454"
-            android:textColorHint="#545454"
-            android:textSize="14sp" />
-            -->
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/ccpicker"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="@color/colorPrimary"
+                app:ccp_contentColor="@color/white"
+                app:ccp_defaultNameCode="bd"
+                app:ccp_showFlag="false"
+                app:ccp_showNameCode="false"
+                app:ccp_textSize="16dp" />
 
-        <EditText
-            android:id="@+id/field_phone_number"
-            android:layout_width="220dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/corner_orange_border"
-            android:hint=" Phone Number"
-            android:inputType="phone"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:textColor="#545454"
-            android:textColorHint="#545454"
-            android:textSize="14sp" />
+            <EditText
+                android:id="@+id/field_phone_number"
+                android:layout_width="220dp"
+                android:layout_height="45dp"
+                android:background="@drawable/edit_text_style"
+                android:hint=" Phone Number"
+                android:inputType="phone"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:textColor="#AFA59F"
+                android:textColorHint="#AFA59F"
+                android:textSize="14sp" />
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/button_start_verification"
@@ -71,30 +82,8 @@
             android:text="Login"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#ffffff"
-            android:textSize="15sp" />
+            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tvVC"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:gravity="center"
-            android:text="Verification Code"
-            android:textColor="@color/colorPrimary"
-            android:textSize="22sp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tvPTVC"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="Please type the verification code sent to your mobile"
-            android:textColor="@color/colorPrimary"
-            android:textSize="14sp"
-            android:visibility="gone" />
 
         <EditText
             android:id="@+id/field_verification_code"
@@ -121,7 +110,7 @@
             android:text="Verify"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#ffffff"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:visibility="gone" />
 
         <TextView
@@ -141,15 +130,14 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:text="Please wait "
                 android:textColor="@color/colorPrimary"
-                android:layout_marginRight="10dp"
                 android:textSize="12sp" />
 
             <TextView
@@ -171,8 +159,60 @@
             android:text="Resend Code"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#ffffff"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:visibility="gone" />
+
+
     </LinearLayout>
 
-</RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_round_customer"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/round_customer"
+        app:layout_constraintBottom_toTopOf="@+id/ll1"
+        app:layout_constraintEnd_toEndOf="@+id/ll1"
+        app:layout_constraintStart_toStartOf="@+id/ll1"
+        app:layout_constraintTop_toTopOf="@+id/ll1" />
+
+    <ImageView
+        android:id="@+id/iv_round_kitchen"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/round_kitchen"
+        app:layout_constraintBottom_toTopOf="@+id/ll1"
+        app:layout_constraintEnd_toEndOf="@+id/ll1"
+        app:layout_constraintStart_toStartOf="@+id/ll1"
+        app:layout_constraintTop_toTopOf="@+id/ll1"
+        android:visibility="gone"
+        />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".075" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.925" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".90" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".15" />
+</android.support.constraint.ConstraintLayout>

@@ -5,16 +5,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import xyz.foodhut.app.R;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import static android.content.ContentValues.TAG;
+import xyz.foodhut.app.R;
 
 public class MenuDetails extends AppCompatActivity {
 
@@ -33,13 +35,13 @@ public class MenuDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_details);
 
-        name = findViewById(R.id.mdName);
-        type = findViewById(R.id.mdType);
+        name = findViewById(R.id.osName);
+        type = findViewById(R.id.osType);
         price = findViewById(R.id.mdPrice);
         desc = findViewById(R.id.mdDetails);
-        date = findViewById(R.id.mdDate);
-        providerName = findViewById(R.id.mdProvider);
-        providerAddress = findViewById(R.id.mdProviderLocation);
+        date = findViewById(R.id.osDate);
+        providerName = findViewById(R.id.osProvider);
+        providerAddress = findViewById(R.id.osProviderLocation);
         //ratingCount = findViewById(R.id.mdName);
         //rating
         order=findViewById(R.id.mdOrder);
@@ -63,7 +65,7 @@ public class MenuDetails extends AppCompatActivity {
             mProviderId=extras.getString("providerId");
             mProviderName=extras.getString("providerName");
             mProviderAddress=extras.getString("providerAddress");
-         //   mProviderPhone=extras.getString("providerPhone");
+            mProviderPhone=extras.getString("providerPhone");
             Log.d("check", "extra MD: "+mExtraItem);
 
             // Log.d("check", "onCreate: "+byteArray);
@@ -71,18 +73,28 @@ public class MenuDetails extends AppCompatActivity {
 
             getSupportActionBar().setTitle("Menu Details");
 
-            String total=mPrice+" TK";
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");
+            Date date1= null;
+            try {
+                date1 = dateFormat.parse(mDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            SimpleDateFormat newFormate=new SimpleDateFormat("dd MMM, yyyy");
+            String date2=newFormate.format(date1);
+
+            String total="৳ "+mPrice;
             name.setText(mName);
             type.setText(mType);
             price.setText(total);
             desc.setText(mDesc);
-            date.setText(mDate);
+            date.setText(date2);
             providerName.setText(mProviderName);
             providerAddress.setText(mProviderAddress);
 
 
             Picasso.get().load(mImageUrl).placeholder(R.drawable.image).into(image);
-            //Glide.with(contex).load(obj.imageUrl).into(holder.image);
+            //Glide.with(contex).load(obj.mImageUrl).into(holder.image);
 
             /*
             if (byteArray != null) {
@@ -110,7 +122,7 @@ public class MenuDetails extends AppCompatActivity {
         intent.putExtra("date",mDate);
         intent.putExtra("providerName", mProviderName);
         intent.putExtra("providerAddress", mProviderAddress);
-       // intent.putExtra("providerPhone", mProviderPhone);
+        intent.putExtra("providerPhone", mProviderPhone);
         intent.putExtra("providerId", mProviderId);
 
         startActivity(intent);

@@ -146,8 +146,6 @@ public class AddMenu extends AppCompatActivity {
             chooserIntent = Intent.createChooser(intent, "Select File");
         }
         startActivityForResult(chooserIntent, IMAGE_REQUEST);
-
-
     }
 
     public void captureImage(View view) {
@@ -189,9 +187,7 @@ public class AddMenu extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             Log.d("check", "onActivityResult: " + image);
-
         }
 
         if (requestCode == IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
@@ -282,7 +278,7 @@ public class AddMenu extends AppCompatActivity {
                                 Log.d("state", "onSuccess::  imageURL: " + imageURL[0]);
                                 //save image info in database
                                 String key = databaseReference.push().getKey();
-                                MenuProvider menuProvider = new MenuProvider(key, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice, taskSnapshot.getDownloadUrl().toString(), 3.5f, 10);
+                                MenuProvider menuProvider = new MenuProvider(key, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice, taskSnapshot.getDownloadUrl().toString(), "0", "0");
                                 databaseReference.child("providers/" + userID).child("menu").child(key).setValue(menuProvider);
 
                                 isError[0] = false;
@@ -407,7 +403,7 @@ public class AddMenu extends AppCompatActivity {
                                 Log.d("state", "onSuccess::  imageURL: " + imageURL[0]);
                                 //save image info in database
                                 String id = databaseReference.push().getKey();
-                                MenuProvider menuProvider = new MenuProvider(mId, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice, taskSnapshot.getDownloadUrl().toString(), 3.5f, 10);
+                                MenuProvider menuProvider = new MenuProvider(mId, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice, taskSnapshot.getDownloadUrl().toString(), "0", "0");
                                 databaseReference.child("providers/" + userID).child("menu").child(mId).setValue(menuProvider);
 
                                 isError[0] = false;
@@ -439,7 +435,7 @@ public class AddMenu extends AppCompatActivity {
                         });
 
             } else if (mImageUrl != null) {
-                MenuProvider menuProvider = new MenuProvider(mId, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice, mImageUrl, 3.5f, 10);
+                MenuProvider menuProvider = new MenuProvider(mId, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice, mImageUrl, "0", "0");
                 databaseReference.child("providers/" + userID).child("menu").child(mId).setValue(menuProvider);
 
             } else {

@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import xyz.foodhut.app.R;
-import xyz.foodhut.app.classes.OrdersDateAdapterProvider;
+import xyz.foodhut.app.adapter.OrderDateProvider;
 import xyz.foodhut.app.data.StaticConfig;
 
 public class OrdersDate extends AppCompatActivity {
@@ -31,14 +31,14 @@ public class OrdersDate extends AppCompatActivity {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-    OrdersDateAdapterProvider orderAdapter;
+    OrderDateProvider orderAdapter;
     private ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_date);
 
-        getSupportActionBar().setTitle("Orders");
+        getSupportActionBar().setTitle("OrdersProvider");
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -47,7 +47,7 @@ public class OrdersDate extends AppCompatActivity {
         recyclerView=findViewById(R.id.rvOrderDateProvider);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        orderAdapter=new OrdersDateAdapterProvider(this,arrayList,"provider");
+        orderAdapter=new OrderDateProvider(this,arrayList,"provider");
         recyclerView.setAdapter(orderAdapter);
 
         dialog=new ProgressDialog(this);
@@ -69,7 +69,7 @@ public class OrdersDate extends AppCompatActivity {
 
 
         if(StaticConfig.UID!=null) {
-            FirebaseDatabase.getInstance().getReference("providers/" + userID+"/orders").addValueEventListener(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference("providers/" + userID+"/orders").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             dialog.dismiss();

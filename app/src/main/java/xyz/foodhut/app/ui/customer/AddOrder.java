@@ -21,37 +21,38 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Random;
 
 import xyz.foodhut.app.R;
 import xyz.foodhut.app.data.StaticConfig;
-import xyz.foodhut.app.model.MenuProvider;
+import xyz.foodhut.app.model.Notification;
 import xyz.foodhut.app.model.OrderDetails;
 import xyz.foodhut.app.model.OrderMenuDetails;
-import xyz.foodhut.app.ui.ProfileUpdate;
 
 import static xyz.foodhut.app.ui.PhoneAuthActivity.userID;
 
 public class AddOrder extends AppCompatActivity {
 
-    TextView quantity,subTotal,extraItem,extraItemPrice,extraItemQty,name,total,address, tk2;
+    TextView quantity, subTotal, extraItem, extraItemPrice, extraItemQty, name, total,time, address, itemPrice;
     EditText etNote;
-    Button time,confirm;
+    TextView confirm;
     RadioButton cod;
     LinearLayout llExtra;
 
-    String cName,cAddress,cPhone;
-    String mName,mExtraItem,mNote,mTime,mAddress,mProviderAddress,
-            mId,mType,mImageUrl,mDate,mProviderId,mProviderName;
-    int mQuantity=1,mExtraQuantity=0,mSubTotal=0,mTotal=0,mPrice=0,mExtraItemPrice=0,mExtraSubTotal=0;
+    String cName, cAddress, cPhone;
+    String mName, mExtraItem, mNote, mTime, mAddress, mProviderAddress, mProviderPhone,
+            mId, mType, mImageUrl, mDate, mProviderId, mProviderName;
+    int mQuantity = 1, mExtraQuantity = 0, mSubTotal = 0, mTotal = 0, mPrice = 0, mExtraItemPrice = 0, mExtraSubTotal = 0;
     Bundle extras;
 
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,23 +63,26 @@ public class AddOrder extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        quantity=findViewById(R.id.aoQuantity);
-        subTotal=findViewById(R.id.aoSubTotal);
-        extraItem=findViewById(R.id.aoExtraItem);
-        extraItemPrice=findViewById(R.id.aoExtraPrice);
-        extraItemQty=findViewById(R.id.aoExtraQuantity);
-        name=findViewById(R.id.aoName);
-        total=findViewById(R.id.aoTotalPrice);
-        address=findViewById(R.id.aoAddress);
+        quantity = findViewById(R.id.aoQuantity);
+        // subTotal=findViewById(R.id.aoSubTotal);
+        extraItem = findViewById(R.id.aoExtraItem);
+        itemPrice = findViewById(R.id.aoPrice);
+        extraItemPrice = findViewById(R.id.aoExtraPrice);
+        extraItemQty = findViewById(R.id.aoExtraQuantity);
+        name = findViewById(R.id.aoName);
+        total = findViewById(R.id.aoTotalPrice);
+        address = findViewById(R.id.aoAddress);
 
-        time=findViewById(R.id.aoBtnTime);
-        confirm=findViewById(R.id.aoConfirm);
-        etNote=findViewById(R.id.aoNote);
-        cod=findViewById(R.id.aoRdoCOD);
+        time = findViewById(R.id.aoBtnTime);
+        confirm = findViewById(R.id.aoConfirm);
+        etNote = findViewById(R.id.aoNote);
+        cod = findViewById(R.id.aoRdoCOD);
 
-        llExtra=findViewById(R.id.llExtra);
-        tk2=findViewById(R.id.tk2);
+        llExtra = findViewById(R.id.llExtra);
+        // tk2=findViewById(R.id.tk2);
 
+        address.setText(StaticConfig.ADDRESS);
+        customerInfo();
 
         //get Intent Data
         extras = getIntent().getExtras();
@@ -90,40 +94,39 @@ public class AddOrder extends AppCompatActivity {
             //mDesc = extras.getString("desc");
             mExtraItem = extras.getString("extraItem");
 
-            Log.d("check", "extraItem: "+mExtraItem);
+            Log.d("check", "extraItem: " + mExtraItem);
 
             mImageUrl = extras.getString("imageUrl");
-            mDate=extras.getString("date");
-            mProviderId=extras.getString("providerId");
-            mProviderName=extras.getString("providerName");
-            mProviderAddress=extras.getString("providerAddress");
-           // mProviderPhone=extras.getString("providerPhone");
+            mDate = extras.getString("date");
+            mProviderId = extras.getString("providerId");
+            mProviderName = extras.getString("providerName");
+            mProviderAddress = extras.getString("providerAddress");
+            mProviderPhone = extras.getString("providerPhone");
 
             // Log.d("check", "onCreate: "+byteArray);
 
 
             cod.setChecked(true);
 
-            mSubTotal=mPrice;
-            mTotal=mPrice;
-            String ei="Extra "+mExtraItem;
-            String price= String.valueOf(mPrice);
+            mSubTotal = mPrice;
+            mTotal = mPrice;
+            String ei = "Extra " + mExtraItem;
+            String price = String.valueOf(mPrice);
+
             name.setText(mName);
             total.setText(price);
-            subTotal.setText(price);
+            itemPrice.setText(price);
 
-            if(mExtraItem!=null) {
+
+            if (mExtraItem != null) {
                 mExtraItemPrice = Integer.parseInt(extras.getString("extraItemPrice"));
                 extraItem.setText(ei);
-            }
-            else{
+            } else {
                 extraItem.setVisibility(View.INVISIBLE);
                 extraItemPrice.setVisibility(View.INVISIBLE);
                 llExtra.setVisibility(View.INVISIBLE);
-                tk2.setVisibility(View.INVISIBLE);
+                // tk2.setVisibility(View.INVISIBLE);
             }
-
-            customerInfo();
 
             /*
             if (byteArray != null) {
@@ -134,6 +137,8 @@ public class AddOrder extends AppCompatActivity {
             }
             */
         }
+
+
 
         time.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,11 +152,15 @@ public class AddOrder extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
 
                         if (minute < 10) {
-                            mTime = String.valueOf(selectedHour) + ":" + "0" + String.valueOf(selectedMinute);
+                            mTime  = String.valueOf(selectedHour) + ":" + "0" + String.valueOf(selectedMinute);
+                            //mTime = formatTime(time);
+                            //mTime=time;
                         } else {
                             mTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
+                           // mTime = formatTime(time);
+                            //mTime=time;
                         }
-                        time.setText( formatTime(mTime));
+                        time.setText(formatTime(mTime));
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -188,7 +197,7 @@ public class AddOrder extends AppCompatActivity {
         return formattedTime;
     }
 
-    public void customerInfo(){
+    public void customerInfo() {
         FirebaseDatabase.getInstance().getReference().child("customers").child(StaticConfig.UID).child("about").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -197,9 +206,9 @@ public class AddOrder extends AppCompatActivity {
                     HashMap hashUser = (HashMap) snapshot.getValue();
                     cName = (String) hashUser.get("name");
                     cAddress = (String) hashUser.get("address");
-                    cPhone=(String) hashUser.get("phone");
+                    cPhone = (String) hashUser.get("phone");
 
-                    Log.d("check", "name in addorder: "+cName);
+                    Log.d("check", "name in addorder: " + cName);
 
                 }
             }
@@ -209,23 +218,23 @@ public class AddOrder extends AppCompatActivity {
         });
     }
 
-    public void quantityOp(View view){
+    public void quantityOp(View view) {
 
-        mQuantity= Integer.parseInt(quantity.getText().toString().trim());
-        mExtraQuantity= Integer.parseInt(extraItemQty.getText().toString());
+        mQuantity = Integer.parseInt(quantity.getText().toString().trim());
+        mExtraQuantity = Integer.parseInt(extraItemQty.getText().toString());
 
-        if(view.getId()==R.id.aoQtyMinus){
+        if (view.getId() == R.id.aoQtyMinus) {
 
-            if(mQuantity>1){
+            if (mQuantity > 1) {
 
-                mSubTotal=mSubTotal-mPrice;
-                mTotal=mTotal-mPrice;
+                mSubTotal = mSubTotal - mPrice;
+                mTotal = mTotal - mPrice;
 
                 mQuantity--;
-                String qty= String.valueOf(mQuantity);
-                String sub= String.valueOf(mSubTotal);
-                String totals= String.valueOf(mTotal);
-                subTotal.setText(sub);
+                String qty = String.valueOf(mQuantity);
+                String sub = String.valueOf(mSubTotal);
+                String totals = String.valueOf(mTotal);
+                itemPrice.setText(sub);
                 total.setText(totals);
                 quantity.setText(qty);
 
@@ -233,76 +242,103 @@ public class AddOrder extends AppCompatActivity {
             }
 
         }
-        if(view.getId()==R.id.aoQtyPlus){
+        if (view.getId() == R.id.aoQtyPlus) {
 
-            mSubTotal=mSubTotal+mPrice;
-            mTotal=mTotal+mPrice;
+            mSubTotal = mSubTotal + mPrice;
+            mTotal = mTotal + mPrice;
 
             mQuantity++;
-            String qty= String.valueOf(mQuantity);
+            String qty = String.valueOf(mQuantity);
             quantity.setText(qty);
-            String sub= String.valueOf(mSubTotal);
-            String totals= String.valueOf(mTotal);
-            subTotal.setText(sub);
+            String sub = String.valueOf(mSubTotal);
+            String totals = String.valueOf(mTotal);
+            itemPrice.setText(sub);
             total.setText(totals);
 
         }
-        if(view.getId()==R.id.aoExtraQtyMinus){
+        if (view.getId() == R.id.aoExtraQtyMinus) {
 
-            if(mExtraQuantity>0){
+            if (mExtraQuantity > 0) {
 
-                mExtraSubTotal=mExtraSubTotal-mExtraItemPrice;
-                mTotal=mTotal-mExtraItemPrice;
+                mExtraSubTotal = mExtraSubTotal - mExtraItemPrice;
+                mTotal = mTotal - mExtraItemPrice;
 
                 mExtraQuantity--;
-                String qty= String.valueOf(mExtraQuantity);
+                String qty = String.valueOf(mExtraQuantity);
                 extraItemQty.setText(qty);
 
-                String sub= String.valueOf(mExtraSubTotal);
-                String totals= String.valueOf(mTotal);
+                String sub = String.valueOf(mExtraSubTotal);
+                String totals = String.valueOf(mTotal);
                 extraItemPrice.setText(sub);
                 total.setText(totals);
 
 
             }
         }
-        if(view.getId()==R.id.aoExtraQtyPlus){
-            mExtraSubTotal=mExtraSubTotal+mExtraItemPrice;
-            mTotal=mTotal+mExtraItemPrice;
+        if (view.getId() == R.id.aoExtraQtyPlus) {
+            mExtraSubTotal = mExtraSubTotal + mExtraItemPrice;
+            mTotal = mTotal + mExtraItemPrice;
 
             mExtraQuantity++;
-            String qty= String.valueOf(mExtraQuantity);
+            String qty = String.valueOf(mExtraQuantity);
             extraItemQty.setText(qty);
 
-            String sub= String.valueOf(mExtraSubTotal);
-            String totals= String.valueOf(mTotal);
+            String sub = String.valueOf(mExtraSubTotal);
+            String totals = String.valueOf(mTotal);
             extraItemPrice.setText(sub);
             total.setText(totals);
         }
     }
 
-    public void confirm(View view){
+    public void confirm(View view) {
         //get the signed in user
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
             userID = user.getUid();
         }
+        int random = (new Random().nextInt(1000));
+
+        // Get the calander
+        Calendar c = Calendar.getInstance();
+
+        // From calander get the year, month, day, hour, minute
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int hour=c.get(Calendar.HOUR_OF_DAY);
+        int minute=c.get(Calendar.MINUTE);
+        int second=c.get(Calendar.SECOND);
+        String time=formatTime(hour+":"+minute);
+
+        final String orderNo = year + "" + (month + 1) + "" + day + "" + random;
+
+        DateFormat dateFormat= SimpleDateFormat.getDateTimeInstance();
+        final String date=dateFormat.format(c.getTime());
+        final Notification notification=new Notification();
+        notification.orderId=orderNo;
+        notification.status="Processing";
+        notification.time=date;
+
 
         final String key = databaseReference.push().getKey();
-        final OrderMenuDetails menuDetails = new OrderMenuDetails(mId,mName,mType,mPrice,mImageUrl,mProviderId,mProviderName,mProviderAddress);
-        final OrderDetails orderDetails=new OrderDetails(key,cName,cAddress,cPhone,mQuantity,mTotal,"COD",mTime,"status");
+
+        final OrderMenuDetails menuDetails = new OrderMenuDetails(mId, mName, mType, mPrice, mImageUrl, mProviderId, mProviderName, mProviderAddress);
+        final OrderDetails orderDetails = new OrderDetails(orderNo, cName, cAddress, cPhone, mQuantity, mExtraItem, mExtraQuantity, mTotal, "COD",mDate, mTime, "Processing",time);
 
         databaseReference.child("orders/" + mDate).child(mId).child("menuDetails").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.getValue()!=null){
-                    databaseReference.child("orders/" + mDate).child(mId).child("orders").child(key).setValue(orderDetails);
-                     }
-                if(dataSnapshot.getValue()==null){
+
+                if (dataSnapshot.getValue() != null) {
+                    databaseReference.child("orders/" + mDate).child(mId).child("orders").child(orderNo).setValue(orderDetails);
+                    Toast.makeText(AddOrder.this, "Order Confirmed", Toast.LENGTH_SHORT).show();
+                }
+                if (dataSnapshot.getValue() == null) {
                     databaseReference.child("orders/" + mDate).child(mId).child("menuDetails").setValue(menuDetails);
-                    databaseReference.child("orders/" + mDate).child(mId).child("orders").child(key).setValue(orderDetails);
+                    databaseReference.child("orders/" + mDate).child(mId).child("orders").child(orderNo).setValue(orderDetails);
 
+                    Toast.makeText(AddOrder.this, "Order Confirmed", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -313,16 +349,25 @@ public class AddOrder extends AppCompatActivity {
             }
         });
 
-        databaseReference.child("providers/" + mProviderId+"/orders").child(mDate).child(mId).child("menuDetails").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("providers/" + mProviderId + "/orders").child(mDate).child(orderNo).child("menuDetails").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null){
-                    databaseReference.child("providers/" + mProviderId+"/orders").child(mDate).child(mId).child("orders").child(key).setValue(orderDetails);
-                }
-                if(dataSnapshot.getValue()==null){
-                    databaseReference.child("providers/" + mProviderId+"/orders").child(mDate).child(mId).child("menuDetails").setValue(menuDetails);
 
-                    databaseReference.child("providers/" + mProviderId+"/orders").child(mDate).child(mId).child("orders").child(key).setValue(orderDetails);
+                final Notification notification2=new Notification();
+                notification2.orderId=orderNo;
+                notification2.status="placed";
+                notification2.time=date;
+
+                if (dataSnapshot.getValue() != null) {
+                    databaseReference.child("providers/" + mProviderId + "/orders").child(mDate).child(orderNo).child("orderDetails").setValue(orderDetails);
+                    databaseReference.child("providers/" + userID + "/notifications").child(key).setValue(notification2);
+
+                }
+                if (dataSnapshot.getValue() == null) {
+                    databaseReference.child("providers/" + mProviderId + "/orders").child(mDate).child(orderNo).child("menuDetails").setValue(menuDetails);
+
+                    databaseReference.child("providers/" + mProviderId + "/orders").child(mDate).child(orderNo).child("orderDetails").setValue(orderDetails);
+                    databaseReference.child("providers/" + userID + "/notifications").child(key).setValue(notification2);
 
                 }
             }
@@ -333,16 +378,22 @@ public class AddOrder extends AppCompatActivity {
             }
         });
 
-        databaseReference.child("customers/" +userID+"/orders").child(mDate).child(mId).child("menuDetails").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("customers/" + userID + "/orders").child(mDate).child(orderNo).child("menuDetails").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null){
-                    databaseReference.child("customers/" +userID+"/orders").child(mDate).child(mId).child("orders").child(key).setValue(orderDetails);
-                }
-                if(dataSnapshot.getValue()==null){
-                    databaseReference.child("customers/" +userID+"/orders").child(mDate).child(mId).child("menuDetails").setValue(menuDetails);
+                if (dataSnapshot.getValue() != null) {
+                    databaseReference.child("customers/" + userID + "/orders").child(mDate).child(orderNo).child("orderDetails").setValue(orderDetails);
 
-                    databaseReference.child("customers/" +userID+"/orders").child(mDate).child(mId).child("orders").child(key).setValue(orderDetails);
+                   String key= databaseReference.push().getKey();
+                    databaseReference.child("customers/" + userID + "/notifications").child(key).setValue(notification);
+
+                }
+                if (dataSnapshot.getValue() == null) {
+                    databaseReference.child("customers/" + userID + "/orders").child(mDate).child(orderNo).child("menuDetails").setValue(menuDetails);
+
+                    databaseReference.child("customers/" + userID + "/orders").child(mDate).child(orderNo).child("orderDetails").setValue(orderDetails);
+                    databaseReference.child("customers/" + userID + "/notifications").child(key).setValue(notification);
+
 
                 }
             }
@@ -353,8 +404,9 @@ public class AddOrder extends AppCompatActivity {
             }
         });
 
-        //databaseReference.child("orders/" + mDate).child(mId).setValue(menuDetails);
-        //databaseReference.child("orders/" + mDate).child(mId).child("orders").push().setValue(orderDetails);
+
+        startActivity(new Intent(this, HomeCustomer.class));
+        finish();
 
     }
 }

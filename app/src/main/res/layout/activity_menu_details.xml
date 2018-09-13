@@ -22,77 +22,97 @@
                     android:id="@+id/mdImage"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/food2" />
 
                 <TextView
-                    android:id="@+id/mdName"
+                    android:id="@+id/osName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/mdImage"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="16dp"
                     android:text="Name"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/mdDate"
+                    android:id="@+id/osDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/mdName"
+                    android:layout_below="@id/osName"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="16dp"
+                    android:textSize="14sp"
                     android:text="Date" />
 
                 <TextView
-                    android:id="@+id/seperator"
+                    android:id="@+id/separator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/mdName"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@id/mdDate"
+                    android:layout_below="@id/osName"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_toEndOf="@id/osDate"
+                    android:textSize="14sp"
                     android:text="|" />
 
                 <TextView
-                    android:id="@+id/mdType"
+                    android:id="@+id/osType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/mdName"
-                    android:layout_toEndOf="@id/seperator"
+                    android:layout_below="@id/osName"
+                    android:layout_toEndOf="@id/separator"
+                    android:textSize="14sp"
                     android:text="Type" />
 
                 <TextView
                     android:id="@+id/by"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/mdDate"
+                    android:layout_below="@id/osDate"
                     android:layout_marginBottom="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    android:text="by" />
+                    android:layout_marginStart="16dp"
+                    android:textSize="18sp"
+                    android:text="By" />
 
                 <TextView
-                    android:id="@+id/mdProvider"
+                    android:id="@+id/osProvider"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/mdDate"
+                    android:layout_below="@id/osDate"
                     android:layout_toEndOf="@id/by"
                     android:text="Provider Name"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/mdProviderLocation"
+                    android:id="@+id/osProviderLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/mdProvider"
+                    android:layout_below="@id/osProvider"
                     android:layout_toEndOf="@id/by"
+                    android:textSize="16sp"
                     android:text="Location" />
+
+                <View
+                    android:id="@+id/separator2"
+                    android:layout_below="@id/osProviderLocation"
+                    android:background="@color/gray"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
 
                 <TextView
                     android:id="@+id/mdDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/mdProviderLocation"
-                    android:layout_margin="20dp"
+                    android:layout_below="@id/separator2"
+                   android:layout_margin="16dp"
+                    android:textSize="16sp"
                     android:text="Details" />
 
                 <View
@@ -115,20 +135,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:background="@color/colorAccent"
+                android:background="@drawable/corner_black_border_filled"
                 android:gravity="center"
-                android:text="Price TK"
-                android:textColor="@color/white" />
+                android:text="Price"
+                android:textSize="16sp"
+                android:layout_margin="4dp"
+                android:textColor="@color/gray" />
 
             <TextView
                 android:id="@+id/mdOrder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:background="@android:color/holo_orange_dark"
+                android:background="@drawable/green"
                 android:gravity="center"
                 android:text="Order Now"
+                android:textSize="16sp"
                 android:onClick="order"
+                android:layout_margin="4dp"
                 android:textColor="@color/white" />
         </LinearLayout>
     </RelativeLayout>

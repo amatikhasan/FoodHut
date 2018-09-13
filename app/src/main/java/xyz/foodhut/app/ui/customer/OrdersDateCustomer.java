@@ -18,7 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import xyz.foodhut.app.R;
-import xyz.foodhut.app.classes.OrdersDateAdapterProvider;
+import xyz.foodhut.app.adapter.OrderDateProvider;
 import xyz.foodhut.app.data.StaticConfig;
 
 public class OrdersDateCustomer extends AppCompatActivity {
@@ -28,14 +28,14 @@ public class OrdersDateCustomer extends AppCompatActivity {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-    OrdersDateAdapterProvider orderAdapter;
+    OrderDateProvider orderAdapter;
     private ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_date_customer);
 
-        getSupportActionBar().setTitle("Orders");
+        getSupportActionBar().setTitle("OrdersProvider");
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -44,7 +44,7 @@ public class OrdersDateCustomer extends AppCompatActivity {
         recyclerView=findViewById(R.id.rvOrderDateCustomer);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        orderAdapter=new OrdersDateAdapterProvider(this,arrayList,"customer");
+        orderAdapter=new OrderDateProvider(this,arrayList,"customer");
         recyclerView.setAdapter(orderAdapter);
 
         dialog=new ProgressDialog(this);
@@ -57,7 +57,7 @@ public class OrdersDateCustomer extends AppCompatActivity {
         }
 
         if(StaticConfig.UID!=null) {
-            FirebaseDatabase.getInstance().getReference("customers/" + userID+"/orders").addValueEventListener(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference("customers/" + userID+"/orders").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     dialog.dismiss();
@@ -71,13 +71,13 @@ public class OrdersDateCustomer extends AppCompatActivity {
                     }
 
 
-                    // for(int i=0;i<arrayList.size();i++){
-                    //    if(arrayList.get(i).imageUrl==null||arrayList.get(i).imageUrl==null){
-                    //         arrayList.remove(i);
+                    // for(int i=0;i<obj.size();i++){
+                    //    if(obj.get(i).mImageUrl==null||obj.get(i).mImageUrl==null){
+                    //         obj.remove(i);
                     //     }
                     //  }
 
-                    //  Collections.reverse(arrayList);
+                    //  Collections.reverse(obj);
 
                     //bind the data in adapter
                     Log.d("Check list", "out datachange: " + arrayList.size());

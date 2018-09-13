@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,27 +21,20 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import xyz.foodhut.app.R;
-import xyz.foodhut.app.classes.MenuAdapterCustomer;
-import xyz.foodhut.app.classes.MenuAdapterProvider;
-import xyz.foodhut.app.data.SharedPreferenceHelper;
+import xyz.foodhut.app.adapter.MenuCustomer;
 import xyz.foodhut.app.data.StaticConfig;
-import xyz.foodhut.app.model.MenuCustomer;
-import xyz.foodhut.app.model.MenuProvider;
-import xyz.foodhut.app.model.User;
-import xyz.foodhut.app.ui.PhoneAuthActivity;
-import xyz.foodhut.app.ui.ProfileUpdate;
-import xyz.foodhut.app.ui.provider.AddMenu;
+import xyz.foodhut.app.ui.Profile;
 
 
 public class CustomerHome extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    ArrayList<MenuCustomer> arrayList = new ArrayList<>();
+    ArrayList<xyz.foodhut.app.model.MenuCustomer> arrayList = new ArrayList<>();
     String userID = null;
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-    MenuAdapterCustomer menuAdapter;
+    MenuCustomer menuAdapter;
     private ProgressDialog dialog;
 
     @Override
@@ -59,7 +51,7 @@ public class CustomerHome extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvCustomerHome);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        menuAdapter = new MenuAdapterCustomer(this, arrayList);
+        menuAdapter = new MenuCustomer(this, arrayList);
         recyclerView.setAdapter(menuAdapter);
 
         dialog = new ProgressDialog(this);
@@ -87,7 +79,7 @@ public class CustomerHome extends AppCompatActivity {
                             dialog.dismiss();
                             //fetch files from firebase database and push in arraylist
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                MenuCustomer customer = snapshot.getValue(MenuCustomer.class);
+                                xyz.foodhut.app.model.MenuCustomer customer = snapshot.getValue(xyz.foodhut.app.model.MenuCustomer.class);
                                 arrayList.add(customer);
                                 //menuAdapter.notifyDataSetChanged();
                                 Log.d("Check list", "onDataChange: " + arrayList.size());
@@ -123,12 +115,12 @@ public class CustomerHome extends AppCompatActivity {
                 if (snapshot.getValue() != null) {
 
                     HashMap hashUser = (HashMap) snapshot.getValue();
-                    String name = (String) hashUser.get("name");
+                    String name = (String) hashUser.get("tvName");
 
-                    Log.d("check", "name in customer: "+name);
+                    Log.d("check", "tvName in customer: "+name);
 
-                    if (name.equals("name")) {
-                        Intent y = new Intent(CustomerHome.this, ProfileUpdate.class);
+                    if (name.equals("tvName")) {
+                        Intent y = new Intent(CustomerHome.this, Profile.class);
                         y.putExtra("type","customer");
 
                         startActivity(y);

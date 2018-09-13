@@ -6,6 +6,7 @@ public class MenuCustomer {
     public String providerName;
     public String providerAvatar;
     public String providerAddress;
+    public String providerPhone;
 
     public String name;
     public String id;
@@ -20,6 +21,7 @@ public class MenuCustomer {
 
     public String schedule;
     public String location;
+    public String sheduleId;
 
 
 

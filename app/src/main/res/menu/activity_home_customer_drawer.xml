@@ -3,24 +3,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/chG1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/cmHome"
+            android:icon="@drawable/home_32"
+            android:title="Home" />
         <item
             android:id="@+id/cmProfile"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/profile_32"
             android:title="Profile" />
         <item
-            android:id="@+id/cmOrders"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Orders" />
-        <item
             android:id="@+id/cmWishList"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/favourite_32"
             android:title="Wish List" />
         <item
-            android:id="@+id/cmLogout"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Log Out" />
+            android:id="@+id/cmOrders"
+            android:icon="@drawable/orders_32"
+            android:title="Orders" />
+    </group>
 
+    <group
+        android:id="@+id/chG2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/cmWeb"
+            android:icon="@drawable/website_32"
+            android:title="Visit Website" />
+        <item
+            android:id="@+id/cmFAQ"
+            android:icon="@drawable/faq_32"
+            android:title="FAQ" />
+        <item
+            android:id="@+id/cmAboutUs"
+            android:icon="@drawable/about_32"
+            android:title="About Us" />
+        <item
+            android:id="@+id/cmTerms"
+            android:icon="@drawable/terms_32"
+            android:title="Terms and Condition" />
+        <item
+            android:id="@+id/cmPrivacy"
+            android:icon="@drawable/privacy_32"
+            android:title="Privacy Policy" />
+    </group>
+
+    <group
+        android:id="@+id/chG3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/cmLogout"
+            android:icon="@drawable/logout_nav_24"
+            android:title="Log Out" />
     </group>
 
 </menu>

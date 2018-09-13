@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/txtRTO"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="10dp"
+        android:text="Review this order"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/rlOrderNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="order no"
+        android:textSize="16sp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="8dp"
+        android:textColor="@android:color/darker_gray" />
+
+    <RatingBar
+        android:id="@+id/rlRatingBar"
+        style="?android:attr/ratingBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtRTO"
+        android:layout_margin="8dp"
+        android:layout_centerHorizontal="true"
+        android:numStars="5"
+        android:stepSize=".5" />
+
+    <EditText
+        android:id="@+id/rlReview"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/rlRatingBar"
+        android:background="@drawable/corner_black_border"
+        android:ellipsize="end"
+        android:ems="10"
+        android:gravity="start"
+        android:hint="write a review (optional)"
+        android:inputType="textMultiLine"
+        android:padding="5dp"
+        android:textSize="16sp" />
+
+
+</RelativeLayout>

@@ -16,7 +16,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 
 import xyz.foodhut.app.R;
-import xyz.foodhut.app.classes.SharedPrefManager;
 import xyz.foodhut.app.data.SharedPreferenceHelper;
 import xyz.foodhut.app.data.StaticConfig;
 import xyz.foodhut.app.ui.customer.CustomerHome;
@@ -35,6 +34,8 @@ public class Splash extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        getSupportActionBar().hide();
 
         mAuth = FirebaseAuth.getInstance();
 

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "xyz.foodhut.app"
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -38,8 +38,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:11.0.4'
     implementation 'com.google.firebase:firebase-database:11.0.4'
     implementation 'com.google.firebase:firebase-storage:11.0.4'
-
+    implementation 'com.android.volley:volley:1.1.0'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.tuyenmonkey:mkloader:1.4.0'
     implementation 'com.hbb20:ccp:2.0.5'
 
@@ -47,7 +48,10 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     implementation 'com.google.android.gms:play-services:11.0.4'
-
     implementation 'com.android.support:multidex:1.0.3'
+
+    implementation 'com.hbb20:ccp:2.2.2'
+    implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
+    implementation 'com.github.Jay-Goo:RangeSeekBar:v2.0.4'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#F04949</color>
+    <color name="colorPrimaryDark">#c40404</color>
+    <color name="colorAccent">#F04949</color>
+    <color name="colorKitchen">#59B386</color>
     <color name="white">#ffffff</color>
+    <color name="gray">@android:color/darker_gray</color>
     <drawable name="bg_screen1">#B33395ff</drawable>
+    <drawable name="dodgerBlue">#B33395ff</drawable>
+    <drawable name="green">#00C853</drawable>
 </resources>

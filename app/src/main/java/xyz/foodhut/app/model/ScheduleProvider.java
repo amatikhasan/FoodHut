@@ -8,4 +8,6 @@ public class ScheduleProvider {
     public String type;
     public String price;
     public String date;
+    public String scheduleId;
+
 }

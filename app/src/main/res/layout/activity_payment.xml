@@ -6,4 +6,63 @@
     android:layout_height="match_parent"
     tools:context=".ui.provider.Payments">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ptxtCurrent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Balance" />
+
+        <TextView
+            android:id="@+id/pCurrentBalance"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/ptxtCurrent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"/>
+
+        <TextView
+            android:id="@+id/ptxtPending"
+            android:layout_below="@id/ptxtCurrent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Withdraw Request" />
+        <TextView
+            android:id="@+id/pWithdrawRequest"
+            android:layout_marginStart="5dp"
+            android:layout_below="@id/ptxtCurrent"
+            android:layout_toEndOf="@id/ptxtPending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"/>
+
+        <TextView
+            android:id="@+id/ptxtWithdrawn"
+            android:layout_below="@id/ptxtPending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Withdrawn" />
+        <TextView
+            android:id="@+id/pWithdrawn"
+            android:layout_marginStart="5dp"
+            android:layout_below="@id/ptxtPending"
+            android:layout_toEndOf="@id/ptxtWithdrawn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"/>
+
+        <Button
+            android:id="@+id/btnRequestPayment"
+            android:layout_below="@id/ptxtWithdrawn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="requestWithdraw"
+            android:text="Request" />
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>

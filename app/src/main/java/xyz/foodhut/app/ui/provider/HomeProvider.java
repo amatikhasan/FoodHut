@@ -2,8 +2,6 @@ package xyz.foodhut.app.ui.provider;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -27,8 +25,7 @@ import xyz.foodhut.app.R;
 import xyz.foodhut.app.data.SharedPreferenceHelper;
 import xyz.foodhut.app.data.StaticConfig;
 import xyz.foodhut.app.ui.MainActivity;
-import xyz.foodhut.app.ui.ProfileUpdate;
-import xyz.foodhut.app.ui.customer.HomeCustomer;
+import xyz.foodhut.app.ui.Profile;
 
 public class HomeProvider extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -71,7 +68,7 @@ public class HomeProvider extends AppCompatActivity
                     if (name.equals("name")) {
                         Log.d("check", "name in provider2: "+name+" "+address);
 
-                        Intent y = new Intent(HomeProvider.this, ProfileUpdate.class);
+                        Intent y = new Intent(HomeProvider.this, Profile.class);
                         y.putExtra("type","provider");
 
                         startActivity(y);
@@ -95,6 +92,10 @@ public class HomeProvider extends AppCompatActivity
     }
     public void orders(View view){
         startActivity(new Intent(this,OrdersDate.class));
+    }
+
+    public void viewPayments(View view){
+        startActivity(new Intent(this,Payments.class));
     }
 
     @Override
@@ -137,7 +138,7 @@ public class HomeProvider extends AppCompatActivity
 
         if (id == R.id.pmProfile) {
             // Handle the camera action
-            Intent intent=new Intent(this,ProfileUpdate.class);
+            Intent intent=new Intent(this,Profile.class);
             intent.putExtra("type","provider");
             intent.putExtra("name",name);
             intent.putExtra("address",address);

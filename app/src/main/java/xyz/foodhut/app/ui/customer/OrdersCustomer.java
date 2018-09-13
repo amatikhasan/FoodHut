@@ -18,38 +18,45 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import xyz.foodhut.app.R;
-import xyz.foodhut.app.classes.OrdersAdapterProvider;
+import xyz.foodhut.app.adapter.OrdersProvider;
 import xyz.foodhut.app.data.StaticConfig;
+import xyz.foodhut.app.model.OrderDetails;
 import xyz.foodhut.app.model.OrderDetailsProvider;
 
 public class OrdersCustomer extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<OrderDetailsProvider> arrayList = new ArrayList<>();
+    ArrayList<OrderDetails> orderDetails;
     String userID = null;
     String mdate;
     Bundle extras;
-    ArrayList<String> menuList;
+    ArrayList<String> orderList;
+    ArrayList<String> dateList;
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-    OrdersAdapterProvider adapter;
+    xyz.foodhut.app.adapter.OrdersCustomer adapter;
     private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_customer);
 
-        getSupportActionBar().setTitle("Orders");
+        getSupportActionBar().setTitle("OrdersProvider");
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        menuList = new ArrayList<>();
+        orderList = new ArrayList<>();
+        dateList = new ArrayList<>();
         arrayList = new ArrayList<>();
+        orderDetails = new ArrayList<>();
+
         recyclerView = findViewById(R.id.rvOrdersCustomer);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new OrdersAdapterProvider(this, arrayList);
+        adapter = new xyz.foodhut.app.adapter.OrdersCustomer(this, arrayList, orderDetails);
         recyclerView.setAdapter(adapter);
 
         dialog = new ProgressDialog(this);
@@ -57,18 +64,56 @@ public class OrdersCustomer extends AppCompatActivity {
         dialog.show();
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        userID = user.getUid();
-
-        extras = getIntent().getExtras();
+        if (user != null) {
+            userID = user.getUid();
+        }
+     /*   extras = getIntent().getExtras();
         if (extras != null) {
             mdate = extras.getString("date");
+            StaticConfig.DATE=mdate;
 
             getSupportActionBar().setTitle(mdate);
-        }
+        }  */
 
+        getDate();
+    }
+
+    public void getDate() {
         if (StaticConfig.UID != null) {
+            FirebaseDatabase.getInstance().getReference("customers/" + userID + "/orders").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    dialog.dismiss();
+                    //fetch files from firebase database and push in arraylist
 
-            databaseReference.child("customers/" + userID).child("orders").child(mdate).addValueEventListener(new ValueEventListener() {
+                    //List<String> lst = new ArrayList<String>(); // Result will be holded Here
+                    for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                        dateList.add(String.valueOf(dsp.getKey())); //add result into array list
+
+                        Log.d("check", "onDataChange: date " + dsp.getKey());
+                    }
+
+                    Log.d("check", "dateList size: " + dateList.size());
+                    getOrderList();
+                    //  Collections.reverse(obj);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    dialog.dismiss();
+                }
+            });
+
+        }
+    }
+
+    public void getOrderList() {
+        for (int i = 0; i < dateList.size(); i++) {
+            String date = dateList.get(i);
+
+
+            final int finalI = i;
+            databaseReference.child("customers/" + userID).child("orders").child(date).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     // dialog.dismiss();
@@ -76,12 +121,13 @@ public class OrdersCustomer extends AppCompatActivity {
 
                     //List<String> lst = new ArrayList<String>(); // Result will be holded Here
                     for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                        menuList.add(String.valueOf(dsp.getKey())); //add result into array list
+                        orderList.add(String.valueOf(dsp.getKey())); //add result into array list
 
-                        Log.d("check", "onDataChange: date " + dsp.getKey());
+                        Log.d("check", "onDataChange: orderId " + dsp.getKey());
                     }
 
-                    getMenu();
+                    getMenu(finalI);
+                    Log.d("check", "orderList size: " + orderList.size());
                 }
 
                 @Override
@@ -89,45 +135,72 @@ public class OrdersCustomer extends AppCompatActivity {
                     //  dialog.dismiss();
                 }
             });
-
         }
+
+
     }
 
-    public void getMenu() {
-        for (int i = 0; i < menuList.size(); i++) {
-            String menuId=menuList.get(i);
-            databaseReference.child("customers/" + userID).child("orders").child(mdate).child(menuId).child("menuDetails")
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            dialog.dismiss();
-                            //fetch files from firebase database and push in arraylist
-                            // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            //  Log.d("Check list", "onDataChange: " + snapshot.getValue());
-                            OrderDetailsProvider orderDetailsProvider = dataSnapshot.getValue(OrderDetailsProvider.class);
-                            arrayList.add(orderDetailsProvider);
-                            //menuAdapter.notifyDataSetChanged();
-                            Log.d("Check list", "onDataChange: " + arrayList.size());
-                            //   }
+    public void getMenu(int i) {
+       // for (int i = 0; i < dateList.size(); i++) {
+            String date = dateList.get(i);
+            StaticConfig.DATE = date;
 
-                            //    for(int i=0;i<arrayList.size();i++){
-                            //      if(arrayList.get(i).imageUrl==null||arrayList.get(i).imageUrl==null){
-                            //          arrayList.remove(i);
-                            //      }
-                            //   }
+            for (int j = 0; j < orderList.size(); j++) {
+                String orderId = orderList.get(j);
+                StaticConfig.ORDERID.add(orderId);
 
-                            //  Collections.reverse(arrayList);
+                databaseReference.child("customers/" + userID).child("orders").child(date).child(orderId).child("orderDetails")
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                OrderDetails details = dataSnapshot.getValue(OrderDetails.class);
+                                orderDetails.add(details);
+                                //  Collections.reverse(obj);
 
-                            //bind the data in adapter
-                            Log.d("Check list", "out datachange: " + arrayList.size());
-                            adapter.notifyDataSetChanged();
-                        }
+                                Log.d("Check", "orderDetails: " + orderDetails.size());
+                            }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            dialog.dismiss();
-                        }
-                    });
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                databaseReference.child("customers/" + userID).child("orders").child(date).child(orderId).child("menuDetails")
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dialog.dismiss();
+                                //fetch files from firebase database and push in arraylist
+                                // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                //  Log.d("Check list", "onDataChange: " + snapshot.getValue());
+                                OrderDetailsProvider orderDetailsProvider = dataSnapshot.getValue(OrderDetailsProvider.class);
+                                arrayList.add(orderDetailsProvider);
+                                //menuAdapter.notifyDataSetChanged();
+                                //   }
+
+                                //    for(int i=0;i<obj.size();i++){
+                                //      if(obj.get(i).mImageUrl==null||obj.get(i).mImageUrl==null){
+                                //          obj.remove(i);
+                                //      }
+                                //   }
+
+                                //  Collections.reverse(obj);
+
+                                //bind the data in adapter
+                                adapter.notifyDataSetChanged();
+                                Log.d("Check", "menuDetails: " + arrayList.size());
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                dialog.dismiss();
+                            }
+                        });
+            }
+
+            orderList.clear();
         }
-    }
+   // }
+
 }

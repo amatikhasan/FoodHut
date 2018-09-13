@@ -10,8 +10,8 @@ public class MenuProvider {
     public String desc;
     public String extraItem;
     public String extraItemPrice;
-    public float rating;
-    public int ratingCount;
+    public String rating;
+    public String ratingCount;
 
     /*
     public MenuProvider(int id,String name,String type, String price, String desc, byte[] image) {
@@ -23,7 +23,7 @@ public class MenuProvider {
         this.desc = desc;
     }  */
 
-    public MenuProvider(String id, String name, String type, String price, String desc,String extraItem,String extraItemPrice, String imageUrl, float rating, int ratingCount) {
+    public MenuProvider(String id, String name, String type, String price, String desc,String extraItem,String extraItemPrice, String imageUrl, String rating, String ratingCount) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.id = id;

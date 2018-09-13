@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/NoActionBarTheme"
+    android:background="@drawable/bg"
     tools:context=".ui.Splash">
 
     <LinearLayout
@@ -12,12 +14,16 @@
         android:orientation="vertical"
         android:gravity="center">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:src="@drawable/start_logo"/>
 
-    <com.tuyenmonkey.mkloader.MKLoader
+ <!--   <com.tuyenmonkey.mkloader.MKLoader
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:mk_type="Sharingan"
         app:mk_color="@color/colorPrimary"
-        />
+        />  -->
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -1,7 +1,6 @@
 package xyz.foodhut.app.ui;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,11 +34,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import xyz.foodhut.app.R;
-import xyz.foodhut.app.classes.SharedPrefManager;
 import xyz.foodhut.app.data.SharedPreferenceHelper;
 import xyz.foodhut.app.data.StaticConfig;
 import xyz.foodhut.app.model.User;
-import xyz.foodhut.app.ui.customer.CustomerHome;
 import xyz.foodhut.app.ui.customer.HomeCustomer;
 import xyz.foodhut.app.ui.provider.HomeProvider;
 import xyz.foodhut.app.ui.provider.ProviderHome;
@@ -84,16 +82,18 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     private Button mResendButton;
     private String phone,name,type,userType;
     private TextView timer;
-    private TextView tvLogin, tvVerifyCode, tvDRC, tvPLTVC,tvSuccess;
-
+    private TextView tvLogin, tvVerifyCode, tvDRC, tvPEVC,tvGSWF;
+    ImageView ivCustomer,ivKitchen;
     private LinearLayout timerLayout;
     private LinearLayout layoutSuccess;
-    private LinearLayout layoutMain;
+    private LinearLayout layoutPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_auth);
+
+        getSupportActionBar().hide();
 
         // Restore instance state
         if (savedInstanceState != null) {
@@ -108,15 +108,15 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         //smsCode = (Pinview) findViewById(R.id.sms_code);
         timer = (TextView) findViewById(R.id.timer);
 
-        tvLogin = (TextView) findViewById(R.id.tvLogin);
-        tvVerifyCode = (TextView) findViewById(R.id.tvVC);
         tvDRC = (TextView) findViewById(R.id.tvDRC);
-        tvPLTVC = (TextView) findViewById(R.id.tvPTVC);
-        tvSuccess = (TextView) findViewById(R.id.tvSuccess);
+        tvPEVC = (TextView) findViewById(R.id.txtPEVC);
+        tvGSWF = (TextView) findViewById(R.id.txtGSWF);
 
         timerLayout = findViewById(R.id.timerLayout);
-        //layoutSuccess = findViewById(R.id.layoutSuccess);
-        layoutMain = findViewById(R.id.layoutMain);
+        layoutPhone = findViewById(R.id.llPhone);
+
+        ivCustomer=findViewById(R.id.iv_round_customer);
+        ivKitchen=findViewById(R.id.iv_round_kitchen);
 
         mStartButton = (Button) findViewById(R.id.button_start_verification);
         mVerifyButton = (Button) findViewById(R.id.button_verify_phone);
@@ -137,6 +137,15 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         extras = getIntent().getExtras();
         if (extras != null) {
             type = extras.getString("type");
+
+            if(type.equals("provider")){
+
+                ivKitchen.setVisibility(View.VISIBLE);
+                ivCustomer.setVisibility(View.GONE);
+                mStartButton.setBackground(getResources().getDrawable(R.drawable.round_button_green));
+                mVerifyButton.setBackground(getResources().getDrawable(R.drawable.round_button_green));
+                mResendButton.setBackground(getResources().getDrawable(R.drawable.round_button_green));
+            }
         }
 
         initFirebase();
@@ -391,8 +400,8 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
                 //cancel countdowntimer
                 countDownTimer.cancel();
-                disableViews(mVerifyButton, mResendButton, mVerificationField, timerLayout, tvDRC, tvVerifyCode, tvPLTVC);
-                enableViews(mStartButton, mPhoneNumberField, tvLogin);
+                disableViews(mVerifyButton, mResendButton, mVerificationField, timerLayout, tvDRC,tvPEVC);
+                enableViews(mStartButton,layoutPhone);
                 //  mDetailText.setText(R.string.status_verification_failed);
 
 
@@ -520,8 +529,8 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 startPhoneNumberVerification(mPhoneNumberField.getText().toString());
                 setTimer();
 
-                disableViews(mStartButton, mPhoneNumberField, tvLogin);
-                enableViews(mVerifyButton, mVerificationField, timerLayout, tvDRC, tvVerifyCode, tvPLTVC);
+                disableViews(mStartButton,layoutPhone,tvGSWF);
+                enableViews(mVerifyButton, mVerificationField, timerLayout, tvDRC,tvPEVC);
                 break;
             case R.id.button_verify_phone:
                 String code = mVerificationField.getText().toString();
@@ -536,6 +545,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 setTimer();
                 resendVerificationCode(mPhoneNumberField.getText().toString(), mResendToken);
                 mResendButton.setVisibility(View.INVISIBLE);
+                timerLayout.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -561,6 +571,8 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                     timer.setText(0 + " s");
                     mResendButton.startAnimation(AnimationUtils.loadAnimation(PhoneAuthActivity.this, android.R.anim.slide_out_right));
                     mResendButton.setVisibility(View.VISIBLE);
+
+                    timerLayout.setVisibility(View.GONE);
 
                     checkTimer=0;
                 }
@@ -604,7 +616,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                         User newUser2 = new User();
                         newUser2.phone = phone;
                         newUser2.name = "name";
-                        newUser2.address = "Address";
+                        newUser2.address = "address";
                         newUser2.status = "false";
                         newUser2.avatar = StaticConfig.STR_DEFAULT_BASE64;
                         FirebaseDatabase.getInstance().getReference().child("providers/" + userId).child("about").setValue(newUser2);
@@ -651,7 +663,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                         User newUser3 = new User();
                         newUser3.phone = phone;
                         newUser3.name = "name";
-                        newUser3.address = "Address";
+                        newUser3.address = "address";
                         newUser3.status = "false";
                         newUser3.avatar = StaticConfig.STR_DEFAULT_BASE64;
                         FirebaseDatabase.getInstance().getReference().child("customers/" + userId).child("about").setValue(newUser3);

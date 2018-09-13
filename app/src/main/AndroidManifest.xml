@@ -2,12 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="xyz.foodhut.app">
 
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -36,8 +39,9 @@
         <activity android:name=".ui.provider.AddMenu" />
         <activity android:name=".ui.customer.AddOrder" />
         <activity android:name=".ui.customer.MenuDetails" />
-        <activity android:name=".ui.provider.Orders" />
-        <activity android:name=".ui.ProfileUpdate" />
+        <activity android:name=".ui.provider.OrdersProvider" />
+        <activity android:name=".ui.Profile" />
+        <activity android:name=".ui.customer.ProfileCustomer" />
         <activity
             android:name=".ui.customer.HomeCustomer"
             android:label="@string/title_activity_home_customer"
@@ -47,7 +51,11 @@
             android:label="@string/title_activity_home_provider"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.customer.OrdersCustomer" />
-        <activity android:name=".ui.customer.OrdersDateCustomer"></activity>
+        <activity android:name=".ui.customer.OrdersDateCustomer" />
+        <activity android:name=".ui.customer.OrderStatusCustomer" />
+        <activity android:name=".ui.provider.OrderStatusProvider" />
+        <activity android:name=".ui.customer.Favourites" />
+        <activity android:name=".ui.customer.Notifications"></activity>
     </application>
 
 </manifest>
