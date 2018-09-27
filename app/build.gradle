@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "xyz.foodhut.app"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -53,5 +53,8 @@ dependencies {
     implementation 'com.hbb20:ccp:2.2.2'
     implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     implementation 'com.github.Jay-Goo:RangeSeekBar:v2.0.4'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+    implementation 'id.zelory:compressor:2.1.0'
 }
 apply plugin: 'com.google.gms.google-services'

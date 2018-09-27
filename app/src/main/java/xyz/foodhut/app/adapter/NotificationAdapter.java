@@ -56,8 +56,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         holder.setTextDrawable(obj.status);
 
-        String title="Your order O-"+obj.orderId+" is "+obj.status;
-        holder.title.setText(title);
+       // String title="Your order O-"+obj.orderId+" is "+obj.status;
+        holder.title.setText(obj.status);
         holder.time.setText(obj.time);
     }
 

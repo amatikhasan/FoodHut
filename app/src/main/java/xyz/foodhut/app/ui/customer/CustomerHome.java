@@ -42,7 +42,7 @@ public class CustomerHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
 
-        getSupportActionBar().setTitle("Menus");
+     //   getSupportActionBar().setTitle("Menus");
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -115,13 +115,12 @@ public class CustomerHome extends AppCompatActivity {
                 if (snapshot.getValue() != null) {
 
                     HashMap hashUser = (HashMap) snapshot.getValue();
-                    String name = (String) hashUser.get("tvName");
+                    String name = (String) hashUser.get("name");
 
-                    Log.d("check", "tvName in customer: "+name);
+                    Log.d("check", "name in customer: "+name);
 
-                    if (name.equals("tvName")) {
-                        Intent y = new Intent(CustomerHome.this, Profile.class);
-                        y.putExtra("type","customer");
+                    if (name.equals("name")) {
+                        Intent y = new Intent(CustomerHome.this, ProfileCustomer.class);
 
                         startActivity(y);
 

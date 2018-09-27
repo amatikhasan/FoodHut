@@ -70,7 +70,9 @@ import java.util.Scanner;
 import xyz.foodhut.app.R;
 import xyz.foodhut.app.classes.GetReverseGeoCoding;
 import xyz.foodhut.app.classes.RequestHandler;
+import xyz.foodhut.app.data.SharedPreferenceHelper;
 import xyz.foodhut.app.data.StaticConfig;
+import xyz.foodhut.app.ui.MainActivity;
 import xyz.foodhut.app.ui.provider.HomeProvider;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -138,13 +140,13 @@ public class ProfileCustomer extends AppCompatActivity {
 
         checkAddress();
 
-        requestPermission();
+     //   requestPermission();
 
-        client = LocationServices.getFusedLocationProviderClient(this);
+     //   client = LocationServices.getFusedLocationProviderClient(this);
 
         //show();
 
-        getOrdinate();
+      //  getOrdinate();
 
         //getAddress(23.798428,90.353462);
 
@@ -169,6 +171,63 @@ public class ProfileCustomer extends AppCompatActivity {
             public void onCancelled(DatabaseError arg0) {
             }
         });
+    }
+
+    public void goBack(View view){
+        FirebaseDatabase.getInstance().getReference().child("customers").child(StaticConfig.UID).child("about").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.getValue() != null) {
+
+                    HashMap hashUser = (HashMap) snapshot.getValue();
+                    String name = (String) hashUser.get("name");
+                    String address = (String) hashUser.get("address");
+
+                    Log.d("check", "name in provider: " + name+" "+address);
+
+
+                    if ((name.equals("")||name.equals("name"))||(address.equals("")||address.equals("address"))){
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(ProfileCustomer.this);
+                        builder.setMessage("Please update all information before you leave.")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(final DialogInterface dialog, final int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        final AlertDialog alert = builder.create();
+                        alert.show();
+                        Log.d("check method", "from alert");
+                    }
+                    else {
+                        startActivity(new Intent(ProfileCustomer.this,HomeProvider.class));
+                        finish();
+                        finishAffinity();
+                    }
+                }
+            }
+
+            public void onCancelled(DatabaseError arg0) {
+            }
+        });
+    }
+
+    public void favourites(View view){
+        startActivity(new Intent(this,Favourites.class));
+        finish();
+    }
+
+    public void orders(View view){
+        startActivity(new Intent(this,OrdersCustomer.class));
+        finish();
+    }
+
+    public void logout(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        SharedPreferenceHelper.getInstance(this).logout();
+        auth.signOut();
+        finish();
     }
 
     public void updateName(View view) {

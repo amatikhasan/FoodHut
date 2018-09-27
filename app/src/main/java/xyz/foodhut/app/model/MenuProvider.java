@@ -10,6 +10,7 @@ public class MenuProvider {
     public String desc;
     public String extraItem;
     public String extraItemPrice;
+    public String pkgSize;
     public String rating;
     public String ratingCount;
 
@@ -23,7 +24,7 @@ public class MenuProvider {
         this.desc = desc;
     }  */
 
-    public MenuProvider(String id, String name, String type, String price, String desc,String extraItem,String extraItemPrice, String imageUrl, String rating, String ratingCount) {
+    public MenuProvider(String id, String name, String type, String price, String desc,String extraItem,String extraItemPrice,String pkgSize, String imageUrl, String rating, String ratingCount) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.id = id;
@@ -34,6 +35,7 @@ public class MenuProvider {
         this.ratingCount=ratingCount;
         this.extraItem=extraItem;
         this.extraItemPrice=extraItemPrice;
+        this.pkgSize=pkgSize;
     }
 
     public MenuProvider() {

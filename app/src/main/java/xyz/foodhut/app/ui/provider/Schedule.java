@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,6 +39,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     private TabLayout tabLayout = null;
     public static String STR_TODAY_FRAGMENT = "Today";
     public static String STR_TOMORROW_FRAGMENT = "Tomorrow";
+    public static String STR_DAT_FRAGMENT = "Day After Tomorrow";
 
     private FloatingActionButton floatButton;
     private ViewPagerAdapter adapter;
@@ -51,11 +53,11 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setTitle("My Schedule");
-        }
+     //   Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+     //   if (toolbar != null) {
+      //      setSupportActionBar(toolbar);
+     //      getSupportActionBar().setTitle("My Schedule");
+     //   }
 
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -84,6 +86,11 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         };
     }
 
+    public void goBack(View view){
+        startActivity(new Intent(this,HomeProvider.class));
+        finish();
+        finishAffinity();
+    }
 
     /**
      * Khoi tao 3 tab
@@ -100,6 +107,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     private void setupTabIcons() {
         int[] tabIcons = {
                 R.drawable.ic_check_white_24dp,
+                R.drawable.ic_check_white_24dp,
                 R.drawable.ic_check_white_24dp
         };
 
@@ -109,12 +117,14 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         //tabLayout.getTabAt(3).setIcon(tabIcons[3]);
         tabLayout.getTabAt(0).setText("Today");
         tabLayout.getTabAt(1).setText("Tomorrow");
+        tabLayout.getTabAt(2).setText("Day After Tomorrow");
     }
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new FragmentToday(), STR_TODAY_FRAGMENT);
         adapter.addFrag(new FragmentTomorrow(), STR_TOMORROW_FRAGMENT);
+        adapter.addFrag(new FragmentDAT(), STR_DAT_FRAGMENT);
 
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);

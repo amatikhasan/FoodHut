@@ -1,6 +1,7 @@
 package xyz.foodhut.app.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,7 +36,7 @@ public class ScheduleProvider extends RecyclerView.Adapter<ScheduleProvider.View
     public ScheduleProvider(Context contex, ArrayList<xyz.foodhut.app.model.ScheduleProvider> data, int code) {
         this.contex = contex;
         this.data = data;
-        this.code=code;
+        this.code = code;
     }
 
     @NonNull
@@ -50,79 +52,105 @@ public class ScheduleProvider extends RecyclerView.Adapter<ScheduleProvider.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final xyz.foodhut.app.model.ScheduleProvider obj = data.get(position);
-       // Log.d("check", "onBindViewHolder: " + obj.name + " " + obj.menuId + " " + obj.imageUrl);
+         Log.d("check", "schedule: " + obj.name + " " + obj.id + " " + obj.date);
 
-       // if(obj.date.equals(checkDate())) {
+        // if(obj.date.equals(checkDate())) {
 
-            String price = obj.price + " TK";
-            holder.foodName.setText(obj.name);
-            holder.price.setText(price);
-            holder.type.setText(obj.type);
-            //holder.desc.setText(obj.desc);
-            Picasso.get().load(obj.imageUrl).placeholder(R.drawable.image).into(holder.image);
-            //Glide.with(contex).load(obj.imageUrl).into(holder.image);
+        String price = "৳ " + obj.price;
+        holder.foodName.setText(obj.name);
+        holder.price.setText(price);
+        //  holder.type.setText(obj.type);
+        holder.desc.setText(obj.desc);
+        Picasso.get().load(obj.imageUrl).placeholder(R.drawable.image).into(holder.image);
+        //Glide.with(contex).load(obj.imageUrl).into(holder.image);
 
         holder.deleteSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("schedule").child(obj.scheduleId).removeValue();
-                FirebaseDatabase.getInstance().getReference().child("schedule").child(obj.scheduleId).removeValue();
 
-                Toast.makeText(contex, "Schedule for this item is deleted", Toast.LENGTH_SHORT).show();
+                final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(contex);
+                builder.setMessage("Are you sure you want to delete this menu schedule?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+
+                                FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("schedule").child(obj.date).child(obj.scheduleId).removeValue();
+                                FirebaseDatabase.getInstance().getReference().child("schedule").child(obj.scheduleId).removeValue();
+                                Toast.makeText(contex, "Schedule for this menu is deleted", Toast.LENGTH_SHORT).show();
+
+                                notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                dialog.cancel();
+                            }
+                        });
+                final android.app.AlertDialog alert = builder.create();
+                alert.show();
+                Log.d("check method", "from alert");
             }
         });
 
-            holder.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        holder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-                    Intent intent = new Intent(contex, AddMenu.class);
-                    intent.putExtra("name", obj.name);
-                    intent.putExtra("price", obj.price);
-                    //intent.putExtra("id", obj.menuId);
-                    //intent.putExtra("desc", obj.desc);
-                    intent.putExtra("type", obj.type);
-                    // intent.putExtra("extraItem", obj.extraItem);
-                    // intent.putExtra("extraItemPrice", obj.extraItemPrice);
-                    intent.putExtra("url", obj.imageUrl);
+                Intent intent = new Intent(contex, AddMenu.class);
+                intent.putExtra("name", obj.name);
+                intent.putExtra("price", obj.price);
+                //intent.putExtra("id", obj.menuId);
+                //intent.putExtra("desc", obj.desc);
+                intent.putExtra("type", obj.type);
+                // intent.putExtra("extraItem", obj.extraItem);
+                // intent.putExtra("extraItemPrice", obj.extraItemPrice);
+                intent.putExtra("url", obj.imageUrl);
 
-                    //  Log.d(TAG, "onClick: name: " + obj.name + " id: " + obj.menuId + " url " + obj.imageUrl);
+                //  Log.d(TAG, "onClick: name: " + obj.name + " id: " + obj.menuId + " url " + obj.imageUrl);
 
-                    //  contex.startActivity(intent);
+                //  contex.startActivity(intent);
 
-                }
-            });
+            }
+        });
 
-       // }
+        // }
 
     }
 
-    public String checkDate(){
+    public String checkDate() {
         // Get the calander
-        int day,month,year;
+        int day, month, year;
         String date = null;
         Calendar c = Calendar.getInstance();
 
         // From calander get the year, month, day, hour, minute
-        year= c.get(Calendar.YEAR);
+        year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
 
-        if(code==1) {
+        if (code == 1) {
             c.set(year, month, day);
             date = day + "-" + (month + 1) + "-" + year;
         }
-        if(code==2) {
-            c.set(year, month, (day+1));
-            date = (day+1) + "-" + (month + 1) + "-" + year;
+        if (code == 2) {
+            c.set(year, month, (day + 1));
+            date = (day + 1) + "-" + (month + 1) + "-" + year;
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date date1 = null;
+        try {
+            date1 = dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
         String formattedDate;
         SimpleDateFormat sdtf = new SimpleDateFormat("dd MMM yyyy");
         Date now = c.getTime();
-        formattedDate = sdtf.format(now);
+        formattedDate = sdtf.format(date1);
 
-        Log.d("check", "checkDate: "+date+" "+formattedDate);
+        Log.d("check", "checkDate: " + date + " " + formattedDate);
 
         return date;
     }
@@ -134,9 +162,9 @@ public class ScheduleProvider extends RecyclerView.Adapter<ScheduleProvider.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView foodName, price, type, desc, ratingCount;
+        TextView foodName, price, type, desc, ratingCount, deleteSchedule;
         RatingBar ratingBar;
-        ImageView image, deleteSchedule;
+        ImageView image;
         CardView card;
 
 
@@ -144,10 +172,10 @@ public class ScheduleProvider extends RecyclerView.Adapter<ScheduleProvider.View
             super(itemView);
             foodName = itemView.findViewById(R.id.mFoodName);
             price = itemView.findViewById(R.id.mFoodPrice);
-            type = itemView.findViewById(R.id.mFoodType);
-           //desc = itemView.findViewById(R.id.mFoodDesc);
+            //  type = itemView.findViewById(R.id.mFoodType);
+            desc = itemView.findViewById(R.id.mFoodDesc);
 
-            deleteSchedule = (ImageView) itemView.findViewById(R.id.deleteSchedule);
+            deleteSchedule = itemView.findViewById(R.id.deleteSchedule);
             image = (ImageView) itemView.findViewById(R.id.mItemImage);
             card = itemView.findViewById(R.id.cardMenu);
         }

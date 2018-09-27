@@ -14,8 +14,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,6 +40,7 @@ import java.util.Random;
 import xyz.foodhut.app.R;
 import xyz.foodhut.app.data.DBHelper;
 import xyz.foodhut.app.model.MenuProvider;
+import xyz.foodhut.app.ui.customer.HomeCustomer;
 
 import static xyz.foodhut.app.ui.PhoneAuthActivity.userID;
 
@@ -44,11 +48,15 @@ public class AddMenu extends AppCompatActivity {
     boolean isUpdate = false;
     EditText name, type, price, desc,extraItem,extraItemPrice;
     ImageView image;
+    Button submit;
+    TextView tvLocation, tvLunch, tvSnacks, tvDinner, tvBF, nName,tvPkg1,tvPkg2,tvPkg3,tvPkg4,tvPkg5;
+    LinearLayout llLunch, llSnacks, llDinner, llBF;
+
     byte[] byteArray;
     public static byte[] bytes;
     private static final int IMAGE_REQUEST = 1;
     private Uri filePath;
-    String mName, mType, mPrice, mDesc, mImageUrl, mId,mExtraItem,mExtraItemPrice;
+    String mName, mType,mPackage="1", mPrice, mDesc, mImageUrl, mId,mExtraItem,mExtraItemPrice;
     int id;
     DBHelper dbHelper;
     Bundle extras;
@@ -64,23 +72,41 @@ public class AddMenu extends AppCompatActivity {
         setContentView(R.layout.activity_add_menu);
 
         //toolbar = findViewById(R.id.toolbar);
-        getSupportActionBar();
+       // getSupportActionBar();
         //setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Add Menu");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       // getSupportActionBar().setTitle("Add Menu");
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         name = findViewById(R.id.etItemName);
-        type = findViewById(R.id.etItemType);
+     //   type = findViewById(R.id.etItemType);
         price = findViewById(R.id.etItemPrice);
         extraItem = findViewById(R.id.etExtraItem);
         extraItemPrice = findViewById(R.id.etExtraPrice);
         name = findViewById(R.id.etItemName);
         image = (ImageView) findViewById(R.id.ivItemImage);
+        submit =  findViewById(R.id.btnSubmit);
         desc=findViewById(R.id.etItemDesc);
+
+        tvBF = findViewById(R.id.tvBF);
+        tvDinner = findViewById(R.id.tvDinner);
+        tvLunch = findViewById(R.id.tvLunch);
+        tvSnacks = findViewById(R.id.tvSnacks);
+
+        llBF = findViewById(R.id.llBF);
+        llDinner = findViewById(R.id.llDinner);
+        llLunch = findViewById(R.id.llLunch);
+        llSnacks = findViewById(R.id.llSnacks);
+
+        tvPkg1 = findViewById(R.id.pkg1);
+        tvPkg2 = findViewById(R.id.pkg2);
+        tvPkg3 = findViewById(R.id.pkg3);
+        tvPkg4 = findViewById(R.id.pkg4);
+        tvPkg5 = findViewById(R.id.pkg5);
+
         dbHelper = new DBHelper(getApplicationContext());
 
         //get Intent Data
@@ -89,6 +115,7 @@ public class AddMenu extends AppCompatActivity {
             mId = extras.getString("id");
             mName = extras.getString("name");
             mType = extras.getString("type");
+            mPackage = extras.getString("pkgSize");
             mPrice = extras.getString("price");
             mDesc = extras.getString("desc");
             mExtraItem = extras.getString("extraItem");
@@ -98,14 +125,16 @@ public class AddMenu extends AppCompatActivity {
             // Log.d("check", "onCreate: "+byteArray);
 
             isUpdate = true;
-            getSupportActionBar().setTitle("Update Menu");
+           // getSupportActionBar().setTitle("Update Menu");
 
             name.setText(mName);
-            type.setText(mType);
             price.setText(mPrice);
             desc.setText(mDesc);
             extraItem.setText(mExtraItem);
             extraItemPrice.setText(mExtraItemPrice);
+            submit.setText("Update");
+            setType();
+            setPackage();
 
             Picasso.get().load(mImageUrl).placeholder(R.drawable.image).into(image);
             //Glide.with(contex).load(obj.imageUrl).into(holder.image);
@@ -122,6 +151,12 @@ public class AddMenu extends AppCompatActivity {
         Log.d("Extra Data Check", id + " " + mName + " " + isUpdate);
 
         checkFilePermissions();
+    }
+
+    public void goBack(View view){
+        startActivity(new Intent(this,HomeProvider.class));
+        finish();
+
     }
 
     public void browsImages(View view) {
@@ -179,7 +214,7 @@ public class AddMenu extends AppCompatActivity {
                 image.setImageBitmap(bitmap);
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+              //  bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byteArray = stream.toByteArray();
                 // bitmap.recycle();
 
@@ -195,6 +230,7 @@ public class AddMenu extends AppCompatActivity {
             try {
 
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+
                 image.setImageBitmap(bitmap);
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -211,10 +247,9 @@ public class AddMenu extends AppCompatActivity {
         }
     }
 
-    public void addList() {
+    public void submit(View view) {
 
         mName = name.getText().toString().trim();
-        mType = type.getText().toString().trim();
         mPrice = price.getText().toString().trim();
         mDesc = desc.getText().toString().trim();
         mExtraItem=extraItem.getText().toString().trim();
@@ -229,6 +264,7 @@ public class AddMenu extends AppCompatActivity {
 
         Log.d("check", "addList: " + id);
     }
+
 
     public void save() {
 
@@ -271,14 +307,14 @@ public class AddMenu extends AppCompatActivity {
 
                                 //and displaying a success toast
                                 if (imageURL[0] != null) {
-                                    Toast.makeText(getApplicationContext(), "Image Uploaded ", Toast.LENGTH_LONG).show();
+                                   // Toast.makeText(getApplicationContext(), "Image Uploaded ", Toast.LENGTH_LONG).show();
                                 } else {
                                     Toast.makeText(AddMenu.this, "Something Wrong! Please try again", Toast.LENGTH_SHORT).show();
                                 }
                                 Log.d("state", "onSuccess::  imageURL: " + imageURL[0]);
                                 //save image info in database
                                 String key = databaseReference.push().getKey();
-                                MenuProvider menuProvider = new MenuProvider(key, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice, taskSnapshot.getDownloadUrl().toString(), "0", "0");
+                                MenuProvider menuProvider = new MenuProvider(key, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice, mPackage,taskSnapshot.getDownloadUrl().toString(), "0", "0");
                                 databaseReference.child("providers/" + userID).child("menu").child(key).setValue(menuProvider);
 
                                 isError[0] = false;
@@ -403,7 +439,7 @@ public class AddMenu extends AppCompatActivity {
                                 Log.d("state", "onSuccess::  imageURL: " + imageURL[0]);
                                 //save image info in database
                                 String id = databaseReference.push().getKey();
-                                MenuProvider menuProvider = new MenuProvider(mId, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice, taskSnapshot.getDownloadUrl().toString(), "0", "0");
+                                MenuProvider menuProvider = new MenuProvider(mId, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice,mPackage ,taskSnapshot.getDownloadUrl().toString(), "0", "0");
                                 databaseReference.child("providers/" + userID).child("menu").child(mId).setValue(menuProvider);
 
                                 isError[0] = false;
@@ -435,7 +471,7 @@ public class AddMenu extends AppCompatActivity {
                         });
 
             } else if (mImageUrl != null) {
-                MenuProvider menuProvider = new MenuProvider(mId, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice, mImageUrl, "0", "0");
+                MenuProvider menuProvider = new MenuProvider(mId, mName, mType, mPrice, mDesc,mExtraItem,mExtraItemPrice,mPackage ,mImageUrl, "0", "0");
                 databaseReference.child("providers/" + userID).child("menu").child(mId).setValue(menuProvider);
 
             } else {
@@ -448,9 +484,278 @@ public class AddMenu extends AppCompatActivity {
         }
     }
 
+    public void getType(View view) {
+        if (view.getId() == R.id.llLunch) {
+
+            mType = "Lunch";
+
+            llLunch.setBackground(getResources().getDrawable(R.drawable.corner_primary_filled));
+            llSnacks.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llDinner.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llBF.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+
+            tvLunch.setTextColor(getResources().getColor(R.color.white));
+            tvSnacks.setTextColor(getResources().getColor(R.color.gray));
+            tvDinner.setTextColor(getResources().getColor(R.color.gray));
+            tvBF.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (view.getId() == R.id.llSnacks) {
+
+            mType = "Snacks";
+
+            llLunch.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llSnacks.setBackground(getResources().getDrawable(R.drawable.corner_primary_filled));
+            llDinner.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llBF.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+
+            tvLunch.setTextColor(getResources().getColor(R.color.gray));
+            tvSnacks.setTextColor(getResources().getColor(R.color.white));
+            tvDinner.setTextColor(getResources().getColor(R.color.gray));
+            tvBF.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (view.getId() == R.id.llDinner) {
+
+            mType = "Dinner";
+
+            llLunch.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llSnacks.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llDinner.setBackground(getResources().getDrawable(R.drawable.corner_primary_filled));
+            llBF.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+
+            tvLunch.setTextColor(getResources().getColor(R.color.gray));
+            tvSnacks.setTextColor(getResources().getColor(R.color.gray));
+            tvDinner.setTextColor(getResources().getColor(R.color.white));
+            tvBF.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (view.getId() == R.id.llBF) {
+
+            mType = "Breakfast";
+
+            llLunch.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llSnacks.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llDinner.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llBF.setBackground(getResources().getDrawable(R.drawable.corner_primary_filled));
+
+            tvLunch.setTextColor(getResources().getColor(R.color.gray));
+            tvSnacks.setTextColor(getResources().getColor(R.color.gray));
+            tvDinner.setTextColor(getResources().getColor(R.color.gray));
+            tvBF.setTextColor(getResources().getColor(R.color.white));
+        }
+    }
+
+
+    public void getPackage(View view) {
+        if (view.getId() == R.id.pkg1) {
+
+            mPackage = "1";
+
+            tvPkg1.setBackground(getResources().getDrawable(R.drawable.round_primary_filled));
+            tvPkg2.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg3.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg4.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg5.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+
+            tvPkg1.setTextColor(getResources().getColor(R.color.white));
+            tvPkg2.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg3.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg4.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg5.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (view.getId() == R.id.pkg2) {
+
+            mPackage = "2";
+
+            tvPkg1.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg2.setBackground(getResources().getDrawable(R.drawable.round_primary_filled));
+            tvPkg3.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg4.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg5.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+
+            tvPkg1.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg2.setTextColor(getResources().getColor(R.color.white));
+            tvPkg3.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg4.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg5.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (view.getId() == R.id.pkg3) {
+
+            mPackage = "3";
+
+            tvPkg1.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg2.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg3.setBackground(getResources().getDrawable(R.drawable.round_primary_filled));
+            tvPkg4.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg5.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+
+            tvPkg1.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg2.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg3.setTextColor(getResources().getColor(R.color.white));
+            tvPkg4.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg5.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (view.getId() == R.id.pkg4) {
+
+            mPackage = "4";
+
+            tvPkg1.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg2.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg3.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg4.setBackground(getResources().getDrawable(R.drawable.round_primary_filled));
+            tvPkg5.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+
+            tvPkg1.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg2.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg3.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg4.setTextColor(getResources().getColor(R.color.white));
+            tvPkg5.setTextColor(getResources().getColor(R.color.gray));
+        }
+
+        if (view.getId() == R.id.pkg5) {
+            mPackage = "5";
+
+            tvPkg1.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg2.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg3.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg4.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg5.setBackground(getResources().getDrawable(R.drawable.round_primary_filled));
+
+            tvPkg1.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg2.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg3.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg4.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg5.setTextColor(getResources().getColor(R.color.white));
+        }
+    }
+
+    public void setType() {
+        if (mType.equals("Lunch")) {
+
+            llLunch.setBackground(getResources().getDrawable(R.drawable.corner_primary_filled));
+            llSnacks.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llDinner.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llBF.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+
+            tvLunch.setTextColor(getResources().getColor(R.color.white));
+            tvSnacks.setTextColor(getResources().getColor(R.color.gray));
+            tvDinner.setTextColor(getResources().getColor(R.color.gray));
+            tvBF.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (mType.equals("Snacks")) {
+
+
+            llLunch.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llSnacks.setBackground(getResources().getDrawable(R.drawable.corner_primary_filled));
+            llDinner.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llBF.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+
+            tvLunch.setTextColor(getResources().getColor(R.color.gray));
+            tvSnacks.setTextColor(getResources().getColor(R.color.white));
+            tvDinner.setTextColor(getResources().getColor(R.color.gray));
+            tvBF.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (mType.equals("Dinner")) {
+
+            llLunch.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llSnacks.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llDinner.setBackground(getResources().getDrawable(R.drawable.corner_primary_filled));
+            llBF.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+
+            tvLunch.setTextColor(getResources().getColor(R.color.gray));
+            tvSnacks.setTextColor(getResources().getColor(R.color.gray));
+            tvDinner.setTextColor(getResources().getColor(R.color.white));
+            tvBF.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (mType.equals("Breakfast")) {
+
+            llLunch.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llSnacks.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llDinner.setBackground(getResources().getDrawable(R.drawable.corner_black_border));
+            llBF.setBackground(getResources().getDrawable(R.drawable.corner_primary_filled));
+
+            tvLunch.setTextColor(getResources().getColor(R.color.gray));
+            tvSnacks.setTextColor(getResources().getColor(R.color.gray));
+            tvDinner.setTextColor(getResources().getColor(R.color.gray));
+            tvBF.setTextColor(getResources().getColor(R.color.white));
+        }
+    }
+
+    public void setPackage() {
+        if (mPackage.equals("1")) {
+
+            tvPkg1.setBackground(getResources().getDrawable(R.drawable.round_primary_filled));
+            tvPkg2.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg3.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg4.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg5.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+
+            tvPkg1.setTextColor(getResources().getColor(R.color.white));
+            tvPkg2.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg3.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg4.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg5.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (mPackage.equals("2")) {
+
+            tvPkg1.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg2.setBackground(getResources().getDrawable(R.drawable.round_primary_filled));
+            tvPkg3.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg4.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg5.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+
+            tvPkg1.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg2.setTextColor(getResources().getColor(R.color.white));
+            tvPkg3.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg4.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg5.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (mPackage.equals("3")) {
+
+            tvPkg1.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg2.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg3.setBackground(getResources().getDrawable(R.drawable.round_primary_filled));
+            tvPkg4.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg5.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+
+            tvPkg1.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg2.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg3.setTextColor(getResources().getColor(R.color.white));
+            tvPkg4.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg5.setTextColor(getResources().getColor(R.color.gray));
+        }
+        if (mPackage.equals("4")) {
+
+            tvPkg1.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg2.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg3.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg4.setBackground(getResources().getDrawable(R.drawable.round_primary_filled));
+            tvPkg5.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+
+            tvPkg1.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg2.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg3.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg4.setTextColor(getResources().getColor(R.color.white));
+            tvPkg5.setTextColor(getResources().getColor(R.color.gray));
+        }
+
+        if (mPackage.equals("5")) {
+
+            tvPkg1.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg2.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg3.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg4.setBackground(getResources().getDrawable(R.drawable.round_primary_empty));
+            tvPkg5.setBackground(getResources().getDrawable(R.drawable.round_primary_filled));
+
+            tvPkg1.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg2.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg3.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg4.setTextColor(getResources().getColor(R.color.gray));
+            tvPkg5.setTextColor(getResources().getColor(R.color.white));
+        }
+    }
+
     //For Action Bar
 
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //return super.onCreateOptionsMenu(menu);
@@ -486,4 +791,6 @@ public class AddMenu extends AppCompatActivity {
 
         return true;
     }
+
+    */
 }

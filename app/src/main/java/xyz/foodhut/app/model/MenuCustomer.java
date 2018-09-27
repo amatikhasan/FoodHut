@@ -21,7 +21,7 @@ public class MenuCustomer {
 
     public String schedule;
     public String location;
-    public String sheduleId;
+    public String scheduleId;
 
 
 

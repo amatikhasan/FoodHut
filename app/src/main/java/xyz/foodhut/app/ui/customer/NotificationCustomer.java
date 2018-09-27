@@ -1,11 +1,13 @@
 package xyz.foodhut.app.ui.customer;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,10 +20,9 @@ import java.util.Collections;
 import xyz.foodhut.app.R;
 import xyz.foodhut.app.adapter.NotificationAdapter;
 import xyz.foodhut.app.data.StaticConfig;
-import xyz.foodhut.app.model.MenuCustomer;
 import xyz.foodhut.app.model.Notification;
 
-public class Notifications extends AppCompatActivity {
+public class NotificationCustomer extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<Notification> arrayList = new ArrayList<>();
     NotificationAdapter adapter;
@@ -29,7 +30,7 @@ public class Notifications extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notifications);
+        setContentView(R.layout.activity_notification_customer);
 
 
         arrayList = new ArrayList<>();
@@ -69,5 +70,11 @@ public class Notifications extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
+    }
+
+    public void goBack(View view){
+        startActivity(new Intent(this,HomeCustomer.class));
+        finish();
+        finishAffinity();
     }
 }

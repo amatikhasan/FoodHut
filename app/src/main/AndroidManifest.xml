@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="xyz.foodhut.app">
 
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
-
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -55,7 +54,14 @@
         <activity android:name=".ui.customer.OrderStatusCustomer" />
         <activity android:name=".ui.provider.OrderStatusProvider" />
         <activity android:name=".ui.customer.Favourites" />
-        <activity android:name=".ui.customer.Notifications"></activity>
+        <activity android:name=".ui.customer.NotificationCustomer" />
+        <activity android:name=".ui.provider.OrdersToday" />
+        <activity android:name=".ui.FeedBack" />
+        <activity android:name=".ui.provider.Sales" />
+        <activity android:name=".ui.provider.ProfileProvider" />
+        <activity android:name=".ui.provider.NotificationProvider">
+
+        </activity>
     </application>
 
 </manifest>

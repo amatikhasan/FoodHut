@@ -66,6 +66,8 @@ public class OrderStatusProvider extends AppCompatActivity {
 
     }
 
+
+
     public void getOrderList(){
         //orderList.clear();
         FirebaseDatabase.getInstance().getReference().child("providers/" + StaticConfig.UID).child("orders").child(mDate).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -96,7 +98,7 @@ public class OrderStatusProvider extends AppCompatActivity {
         for (int i = 0; i < orderList.size(); i++) {
             final String orderNo = orderList.get(i);
 
-            FirebaseDatabase.getInstance().getReference().child("orders/" + mDate).child(mMenuId).child("orders").child(orderNo).addListenerForSingleValueEvent(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child("admin/orders/" + mDate).child(mMenuId).child("orders").child(orderNo).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if (snapshot.getValue() != null) {

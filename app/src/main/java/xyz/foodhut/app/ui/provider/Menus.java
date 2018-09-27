@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,11 +24,13 @@ import java.util.Collections;
 import xyz.foodhut.app.R;
 import xyz.foodhut.app.adapter.MenuProvider;
 import xyz.foodhut.app.data.StaticConfig;
+import xyz.foodhut.app.ui.customer.HomeCustomer;
 
 public class Menus extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<xyz.foodhut.app.model.MenuProvider> arrayList = new ArrayList<>();
     String userID=null;
+    TextView emptyList;
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
@@ -38,10 +41,11 @@ public class Menus extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        getSupportActionBar().setTitle("Add Menu");
+      //  getSupportActionBar().setTitle("Add Menu");
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        emptyList=findViewById(R.id.emptyList);
 
         arrayList=new ArrayList<>();
         recyclerView=findViewById(R.id.rvMenu);
@@ -71,25 +75,31 @@ public class Menus extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     dialog.dismiss();
-                    //fetch files from firebase database and push in arraylist
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        xyz.foodhut.app.model.MenuProvider menuProvider = snapshot.getValue(xyz.foodhut.app.model.MenuProvider.class);
-                        arrayList.add(menuProvider);
-                        //menuAdapter.notifyDataSetChanged();
-                        Log.d("Check list", "onDataChange: " + arrayList.size());
-                    }
-
-                    for(int i=0;i<arrayList.size();i++){
-                        if(arrayList.get(i).imageUrl==null||arrayList.get(i).imageUrl==null){
-                            arrayList.remove(i);
+                    if (dataSnapshot.getValue() != null) {
+                        //fetch files from firebase database and push in arraylist
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            xyz.foodhut.app.model.MenuProvider menuProvider = snapshot.getValue(xyz.foodhut.app.model.MenuProvider.class);
+                            arrayList.add(menuProvider);
+                            //menuAdapter.notifyDataSetChanged();
+                            Log.d("Check list", "onDataChange: " + arrayList.size());
                         }
+
+                        for (int i = 0; i < arrayList.size(); i++) {
+                            if (arrayList.get(i).imageUrl == null || arrayList.get(i).imageUrl == null) {
+                                arrayList.remove(i);
+                            }
+                        }
+
+                        Collections.reverse(arrayList);
+
+                        //bind the data in adapter
+                        Log.d("Check list", "out datachange: " + arrayList.size());
+                        menuAdapter.notifyDataSetChanged();
                     }
-
-                    Collections.reverse(arrayList);
-
-                    //bind the data in adapter
-                    Log.d("Check list", "out datachange: " + arrayList.size());
-                    menuAdapter.notifyDataSetChanged();
+                    else {
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }
                 }
 
                 @Override
@@ -100,6 +110,12 @@ public class Menus extends AppCompatActivity {
 
         }
 
+    }
+
+    public void goBack(View view){
+        startActivity(new Intent(this,HomeProvider.class));
+        finish();
+        finishAffinity();
     }
 
     public void fabBtn(View view){

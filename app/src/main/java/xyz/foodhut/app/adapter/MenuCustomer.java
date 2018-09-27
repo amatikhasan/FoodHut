@@ -2,7 +2,6 @@ package xyz.foodhut.app.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -72,17 +71,19 @@ public class MenuCustomer extends RecyclerView.Adapter<MenuCustomer.ViewHolder> 
         checkRating(obj.providerId, obj.id, position, holder);
 
         //holder.ratingBar.setRating((float) obj.rating);
+       // Transformation transformation=new RoundedTransformationBuilder().cornerRadius(12).oval(false).build();
+
         Picasso.get().load(obj.imageUrl).placeholder(R.drawable.image).into(holder.image);
 
         //Glide.with(contex).load(obj.imageUrl).into(holder.image);
 
-        checkFav(obj.sheduleId,holder);
+        checkFav(obj.scheduleId,holder);
 
         holder.fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                FirebaseDatabase.getInstance().getReference().child("customers/" + StaticConfig.UID + "/favourites").child(obj.sheduleId)
+                FirebaseDatabase.getInstance().getReference().child("customers/" + StaticConfig.UID + "/favourites").child(obj.scheduleId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -90,11 +91,11 @@ public class MenuCustomer extends RecyclerView.Adapter<MenuCustomer.ViewHolder> 
                                 String key=FirebaseDatabase.getInstance().getReference().push().getKey();
                                 if (dataSnapshot.getValue() == null) {
                                     holder.fav.setImageDrawable(contex.getResources().getDrawable(R.drawable.fav_64_filled_red));
-                                    FirebaseDatabase.getInstance().getReference().child("customers/" + StaticConfig.UID + "/favourites").child(obj.sheduleId).setValue(obj.id);
+                                    FirebaseDatabase.getInstance().getReference().child("customers/" + StaticConfig.UID + "/favourites").child(obj.scheduleId).setValue(obj.id);
                                  }
                                 if (dataSnapshot.getValue() != null) {
                                     holder.fav.setImageDrawable(contex.getResources().getDrawable(R.drawable.fav_64_empty_white));
-                                    FirebaseDatabase.getInstance().getReference().child("customers/" + StaticConfig.UID + "/favourites").child(obj.sheduleId).removeValue();
+                                    FirebaseDatabase.getInstance().getReference().child("customers/" + StaticConfig.UID + "/favourites").child(obj.scheduleId).removeValue();
                                 }
 
 
@@ -116,6 +117,7 @@ public class MenuCustomer extends RecyclerView.Adapter<MenuCustomer.ViewHolder> 
                 intent.putExtra("name", obj.name);
                 intent.putExtra("price", obj.price);
                 intent.putExtra("menuId", obj.id);
+               // intent.putExtra("scheduleId", obj.scheduleId);
                 intent.putExtra("desc", obj.desc);
                 intent.putExtra("extraItem", obj.extraItem);
                 intent.putExtra("extraItemPrice", obj.extraItemPrice);
@@ -166,6 +168,7 @@ public class MenuCustomer extends RecyclerView.Adapter<MenuCustomer.ViewHolder> 
     }
 
     public void checkFav(String sheduleId, final ViewHolder holder){
+        Log.d(TAG, "checkFav: "+StaticConfig.UID+" "+sheduleId);
         FirebaseDatabase.getInstance().getReference().child("customers/" + StaticConfig.UID + "/favourites").child(sheduleId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

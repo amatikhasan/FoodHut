@@ -93,7 +93,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_auth);
 
-        getSupportActionBar().hide();
+      //  getSupportActionBar().hide();
 
         // Restore instance state
         if (savedInstanceState != null) {
@@ -616,8 +616,9 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                         User newUser2 = new User();
                         newUser2.phone = phone;
                         newUser2.name = "name";
+                        newUser2.kitchenName = "kitchen";
                         newUser2.address = "address";
-                        newUser2.status = "false";
+                        newUser2.status = "Active";
                         newUser2.avatar = StaticConfig.STR_DEFAULT_BASE64;
                         FirebaseDatabase.getInstance().getReference().child("providers/" + userId).child("about").setValue(newUser2);
 
@@ -664,7 +665,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                         newUser3.phone = phone;
                         newUser3.name = "name";
                         newUser3.address = "address";
-                        newUser3.status = "false";
+                        newUser3.status = "true";
                         newUser3.avatar = StaticConfig.STR_DEFAULT_BASE64;
                         FirebaseDatabase.getInstance().getReference().child("customers/" + userId).child("about").setValue(newUser3);
 

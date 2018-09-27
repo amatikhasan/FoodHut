@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 import xyz.foodhut.app.R;
@@ -34,7 +35,7 @@ public class FragmentToday extends Fragment {
 
     RecyclerView recyclerView;
     ArrayList<xyz.foodhut.app.model.ScheduleProvider> arrayList = new ArrayList<>();
-    String userID=null;
+    String userID = null;
     ScheduleProvider adapter;
 
     private DatabaseReference databaseReference;
@@ -42,6 +43,7 @@ public class FragmentToday extends Fragment {
     private Context context;
 
     private ProgressDialog dialog;
+    private String mDate;
 
     public FragmentToday() {
         // Required empty public constructor
@@ -58,7 +60,7 @@ public class FragmentToday extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //userDB = FirebaseDatabase.getInstance().getReference().child("user").child(StaticConfig.UID);
-       // userDB.addListenerForSingleValueEvent(userListener);
+        // userDB.addListenerForSingleValueEvent(userListener);
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -67,57 +69,68 @@ public class FragmentToday extends Fragment {
         View view = inflater.inflate(R.layout.fragment_today, container, false);
         context = view.getContext();
 
-        dialog=new ProgressDialog(context);
+        dialog = new ProgressDialog(context);
         dialog.setMessage("Loading Menu...");
 
-        arrayList=new ArrayList<>();
-        recyclerView=view.findViewById(R.id.rvToday);
-       recyclerView.setHasFixedSize(true);
+        arrayList = new ArrayList<>();
+        recyclerView = view.findViewById(R.id.rvToday);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-       adapter= new ScheduleProvider(getContext(),arrayList,1);
+        adapter = new ScheduleProvider(getContext(), arrayList, 1);
         recyclerView.setAdapter(adapter);
+
+        mDate=checkDate();
 
         getSchedule();
 
         return view;
     }
 
-    public void getSchedule(){
+    public void getSchedule() {
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
-       if(user!=null) {
+        if (user != null) {
             userID = user.getUid();
         }
 
 
-
-        if(StaticConfig.UID!=null) {
-           dialog.show();
-            FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule")
+        if (StaticConfig.UID != null) {
+            dialog.show();
+            FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule").child(mDate)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            dialog.dismiss();
-                            //fetch files from firebase database and push in arraylist
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                xyz.foodhut.app.model.ScheduleProvider scheduleProvider = snapshot.getValue(xyz.foodhut.app.model.ScheduleProvider.class);
-                                arrayList.add(scheduleProvider);
-                                //menuAdapter.notifyDataSetChanged();
-                                Log.d("Check list", "onDataChange: " + arrayList.size());
+                            if (dataSnapshot.getValue() != null) {
+                                dialog.dismiss();
+                                //fetch files from firebase database and push in arraylist
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    xyz.foodhut.app.model.ScheduleProvider scheduleProvider = snapshot.getValue(xyz.foodhut.app.model.ScheduleProvider.class);
+
+                                 //   if (scheduleProvider.date.equals(mDate)) {
+                                  //      arrayList.add(scheduleProvider);
+                                 //   }
+                                     arrayList.add(scheduleProvider);
+                                    //menuAdapter.notifyDataSetChanged();
+                                    Log.d("Check list", "onDataChange: " + arrayList.size());
+                                }
+
+                              //  for (int i = 0; i < arrayList.size(); i++) {
+                              //      if (!arrayList.get(i).date.equals(mDate)) {
+                                //        arrayList.remove(i);
+                              //      }
+                              //  }
+
+
+                                  Collections.reverse(arrayList);
+
+                                //bind the data in adapter
+                                Log.d("Check list", "out datachange: " + arrayList.size());
+                                adapter.notifyDataSetChanged();
                             }
-
-                               for(int i=0;i<arrayList.size();i++){
-                                   if(!arrayList.get(i).date.equals(checkDate())){
-                                      arrayList.remove(i);
-                                 }
-                               }
-
-                            //  Collections.reverse(arrayList);
-
-                            //bind the data in adapter
-                            Log.d("Check list", "out datachange: " + arrayList.size());
-                            adapter.notifyDataSetChanged();
+                            else {
+                                dialog.dismiss();
+                            }
                         }
 
                         @Override
@@ -125,41 +138,41 @@ public class FragmentToday extends Fragment {
                             dialog.dismiss();
                         }
                     });
-        }
-        }
+                    }
+    }
 
-    public String checkDate(){
+    public String checkDate() {
         // Get the calander
-        int day,month,year;
+        int day, month, year;
         String date = null;
         Calendar c = Calendar.getInstance();
 
         // From calander get the year, month, day, hour, minute
-        year= c.get(Calendar.YEAR);
+        year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
 
-            c.set(year, month, day);
-            date = day + "-" + (month + 1) + "-" + year;
+        c.set(year, month, day);
+        date = day + "-" + (month + 1) + "-" + year;
 
         String formattedDate;
         SimpleDateFormat sdtf = new SimpleDateFormat("dd MMM yyyy");
         Date now = c.getTime();
         formattedDate = sdtf.format(now);
 
-        Log.d("check", "checkDate: "+date+" "+formattedDate);
+        Log.d("check", "checkDate: " + date + " " + formattedDate);
 
-        return date;
+        return formattedDate;
     }
 
 
     @Override
-    public void onDestroyView (){
+    public void onDestroyView() {
         super.onDestroyView();
     }
 
     @Override
-    public void onDestroy (){
+    public void onDestroy() {
         super.onDestroy();
     }
 

@@ -9,6 +9,10 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -25,8 +29,8 @@ public class MenuDetails extends AppCompatActivity {
     //Button order;
     RatingBar rating;
     String mName, mType, mPrice, mDesc, mDate, mImageUrl, mId, mExtraItem, mExtraItemPrice,
-            mProviderId, mProviderName, mProviderAddress,mProviderPhone;
-    int id, mRatingCount;
+            mProviderId, mProviderName, mProviderAddress,mProviderPhone,mScheduleId;
+    int id, mRatingCount,deliveryCharge=0;
     float mRating;
     Bundle extras;
 
@@ -48,12 +52,13 @@ public class MenuDetails extends AppCompatActivity {
 
         image=findViewById(R.id.mdImage);
 
-
+        getDC();
 
         //get Intent Data
         extras = getIntent().getExtras();
         if (extras != null) {
             mId = extras.getString("menuId");
+            mScheduleId = extras.getString("scheduleId");
             mName = extras.getString("name");
             mType = extras.getString("type");
             mPrice = extras.getString("price");
@@ -71,9 +76,9 @@ public class MenuDetails extends AppCompatActivity {
             // Log.d("check", "onCreate: "+byteArray);
 
 
-            getSupportActionBar().setTitle("Menu Details");
+         //   getSupportActionBar().setTitle("Menu Details");
 
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");
+      /*      SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");
             Date date1= null;
             try {
                 date1 = dateFormat.parse(mDate);
@@ -82,13 +87,14 @@ public class MenuDetails extends AppCompatActivity {
             }
             SimpleDateFormat newFormate=new SimpleDateFormat("dd MMM, yyyy");
             String date2=newFormate.format(date1);
+            */
 
             String total="৳ "+mPrice;
             name.setText(mName);
             type.setText(mType);
             price.setText(total);
             desc.setText(mDesc);
-            date.setText(date2);
+            date.setText(mDate);
             providerName.setText(mProviderName);
             providerAddress.setText(mProviderAddress);
 
@@ -108,12 +114,37 @@ public class MenuDetails extends AppCompatActivity {
 
     }
 
+    public void goBack(View view){
+        startActivity(new Intent(this,HomeCustomer.class));
+        finish();
+        finishAffinity();
+    }
+
+    public void getDC() {
+        FirebaseDatabase.getInstance().getReference().child("admin/appControl").child("deliveryCharge").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.getValue() != null) {
+
+                    deliveryCharge=Integer.parseInt(snapshot.getValue().toString());
+
+                    Log.d("check", "dc in addorder: " + deliveryCharge);
+
+                }
+            }
+
+            public void onCancelled(DatabaseError arg0) {
+            }
+        });
+    }
+
     public void order(View view){
 
         Intent intent = new Intent(this, AddOrder.class);
         intent.putExtra("name", mName);
         intent.putExtra("price", mPrice);
         intent.putExtra("menuId", mId);
+        intent.putExtra("scheduleId", mScheduleId);
         intent.putExtra("desc", mDesc);
         intent.putExtra("extraItem",mExtraItem);
         intent.putExtra("extraItemPrice", mExtraItemPrice);
@@ -124,6 +155,7 @@ public class MenuDetails extends AppCompatActivity {
         intent.putExtra("providerAddress", mProviderAddress);
         intent.putExtra("providerPhone", mProviderPhone);
         intent.putExtra("providerId", mProviderId);
+        intent.putExtra("dc", deliveryCharge);
 
         startActivity(intent);
 

@@ -1,5 +1,7 @@
 package xyz.foodhut.app.ui.provider;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,8 +23,10 @@ import xyz.foodhut.app.data.StaticConfig;
 public class Payments extends AppCompatActivity {
 
     TextView current,paid,pendingWithdraw;
+
     Button request;
-    long mCurrent,mPendingWithdraw,mPaid;
+    long mCurrent=0,mPendingWithdraw=0,mPaid=0;
+    Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +39,36 @@ public class Payments extends AppCompatActivity {
 
         request=findViewById(R.id.btnRequestPayment);
 
+     /*   extras = getIntent().getExtras();
+        if (extras != null) {
+            mCurrent = extras.getLong("current");
+            mPendingWithdraw = extras.getLong("pending");
+            mPaid = extras.getLong("paid");
+
+            if (mCurrent>0||mPendingWithdraw>0||mPaid>0) {
+                String currentBal = String.valueOf(mCurrent);
+                String pendingWith = String.valueOf(mPendingWithdraw);
+                String paidBal = String.valueOf(mPaid);
+                current.setText(currentBal);
+                pendingWithdraw.setText(pendingWith);
+                paid.setText(paidBal);
+            }
+        }
+        */
+
         checkBalance();
     }
 
+    public void goBack(View view){
+        startActivity(new Intent(this,HomeProvider.class));
+        finish();
+        finishAffinity();
+    }
+
     public void checkBalance() {
+        final ProgressDialog dialog=new ProgressDialog(this);
+        dialog.setMessage("Please wait..");
+        dialog.show();
 
             FirebaseDatabase.getInstance().getReference().child("providers/" + StaticConfig.UID).child("payments").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -58,6 +88,7 @@ public class Payments extends AppCompatActivity {
                         pendingWithdraw.setText(pendingWith);
                         paid.setText(paidBal);
 
+                        dialog.dismiss();
                         Log.d("check", "balance: " + mCurrent);
 
                     }
@@ -71,15 +102,15 @@ public class Payments extends AppCompatActivity {
     public void requestWithdraw(View view){
 
         if(mPendingWithdraw==0) {
-            FirebaseDatabase.getInstance().getReference().child("providers/" + StaticConfig.UID).child("payments").child("withdrawRequest").setValue(mCurrent);
-            FirebaseDatabase.getInstance().getReference().child("payments/" + StaticConfig.UID).child("withdrawRequest").setValue(mCurrent);
+           // long newCurrent=(mCurrent-mPendingWithdraw);
+            FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("payments").child("withdrawRequest").setValue(mCurrent);
+            FirebaseDatabase.getInstance().getReference().child("admin/payments").child(StaticConfig.UID).child("withdrawRequest").setValue(mCurrent);
+            FirebaseDatabase.getInstance().getReference().child("admin/payments").child(StaticConfig.UID).child("currentBalance").setValue(mCurrent);
 
-            long newCurrent=(mCurrent-mPendingWithdraw);
-            FirebaseDatabase.getInstance().getReference().child("payments/" + StaticConfig.UID).child("currentBalance").setValue(newCurrent);
-
-            String temp= String.valueOf(newCurrent);
-            current.setText(temp);
-            pendingWithdraw.setText((int) mPendingWithdraw);
+            String temp= String.valueOf(mPendingWithdraw);
+          //  current.setText(temp);
+            pendingWithdraw.setText(temp);
+            Toast.makeText(this, "Withdraw request is successful!", Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(this, "you have a pending request", Toast.LENGTH_SHORT).show();

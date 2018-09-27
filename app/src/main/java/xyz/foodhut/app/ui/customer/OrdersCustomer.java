@@ -1,11 +1,14 @@
 package xyz.foodhut.app.ui.customer;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +28,7 @@ import xyz.foodhut.app.model.OrderDetailsProvider;
 
 public class OrdersCustomer extends AppCompatActivity {
     RecyclerView recyclerView;
+    ImageView emptyOrder;
     ArrayList<OrderDetailsProvider> arrayList = new ArrayList<>();
     ArrayList<OrderDetails> orderDetails;
     String userID = null;
@@ -43,7 +47,7 @@ public class OrdersCustomer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_customer);
 
-        getSupportActionBar().setTitle("OrdersProvider");
+      //  getSupportActionBar().setTitle("OrdersProvider");
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -53,6 +57,7 @@ public class OrdersCustomer extends AppCompatActivity {
         arrayList = new ArrayList<>();
         orderDetails = new ArrayList<>();
 
+        emptyOrder=findViewById(R.id.emptyOrder);
         recyclerView = findViewById(R.id.rvOrdersCustomer);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -86,16 +91,21 @@ public class OrdersCustomer extends AppCompatActivity {
                     dialog.dismiss();
                     //fetch files from firebase database and push in arraylist
 
-                    //List<String> lst = new ArrayList<String>(); // Result will be holded Here
-                    for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                        dateList.add(String.valueOf(dsp.getKey())); //add result into array list
+                    if (dataSnapshot.getValue() != null) {
+                        //List<String> lst = new ArrayList<String>(); // Result will be holded Here
+                        for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            dateList.add(String.valueOf(dsp.getKey())); //add result into array list
 
-                        Log.d("check", "onDataChange: date " + dsp.getKey());
+                            Log.d("check", "onDataChange: date " + dsp.getKey());
+                        }
+                        Log.d("check", "dateList size: " + dateList.size());
+                        getOrderList();
+                        //  Collections.reverse(obj);
                     }
-
-                    Log.d("check", "dateList size: " + dateList.size());
-                    getOrderList();
-                    //  Collections.reverse(obj);
+                    else {
+                        emptyOrder.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }
                 }
 
                 @Override
@@ -103,7 +113,6 @@ public class OrdersCustomer extends AppCompatActivity {
                     dialog.dismiss();
                 }
             });
-
         }
     }
 
@@ -202,5 +211,11 @@ public class OrdersCustomer extends AppCompatActivity {
             orderList.clear();
         }
    // }
+
+    public void goBack(View view){
+        startActivity(new Intent(this,HomeCustomer.class));
+        finish();
+        finishAffinity();
+    }
 
 }

@@ -4,9 +4,6 @@
         <shape>
 
             <solid android:color="@android:color/holo_orange_light"/>
-            <stroke
-                android:width="2dp"
-                android:color="#ffffff"/>
             <corners android:radius="10dp"/>
         </shape>
 
@@ -16,9 +13,7 @@
         <shape>
 
             <solid android:color="@android:color/holo_orange_light"/>
-            <stroke
-                android:width="2dp"
-                android:color="#ffffff"/>
+           
             <corners android:radius="5dp"/>
         </shape>
 

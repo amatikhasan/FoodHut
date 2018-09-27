@@ -8,4 +8,7 @@ public class Review {
     public String rating;
     public String review;
 
+    public Review(){
+
+    }
 }

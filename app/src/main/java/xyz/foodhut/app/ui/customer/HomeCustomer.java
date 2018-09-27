@@ -26,14 +26,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,9 +49,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.jaygoo.widget.OnRangeChangedListener;
+import com.squareup.picasso.Picasso;
 
-import org.florescu.android.rangeseekbar.RangeSeekBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +68,6 @@ import xyz.foodhut.app.classes.RequestHandler;
 import xyz.foodhut.app.data.SharedPreferenceHelper;
 import xyz.foodhut.app.data.StaticConfig;
 import xyz.foodhut.app.ui.MainActivity;
-import xyz.foodhut.app.ui.Profile;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -90,7 +85,7 @@ public class HomeCustomer extends AppCompatActivity
     private FirebaseAuth firebaseAuth;
     MenuCustomer menuAdapter;
     private ProgressDialog dialog;
-    String name, address, avatar, mLocation = "", mType = "";
+    String name, address, avatar, mLocation = "", mLocationTemp = "", mType = "";
     int lunch = 0, bf = 0, dinner = 0, snacks = 0, search = 0;
     int minPrice, maxPrice;
     LocationManager locationManager;
@@ -100,11 +95,11 @@ public class HomeCustomer extends AppCompatActivity
     int provider;
 
     Spinner spLocation, spType;
-    TextView tvLocation, tvLunch, tvSnacks, tvDinner, tvBF;
-    LinearLayout llLunch, llSnacks, llDinner, llBF;
+    TextView tvLocation, tvLunch, tvSnacks, tvDinner, tvBF, nName;
+    LinearLayout llLunch, llSnacks, llDinner, llBF, emptyOrder;
     CardView cvSearch;
     EditText etSearch;
-    ImageView ivSearch;
+    ImageView ivSearch, nImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +116,10 @@ public class HomeCustomer extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View nView = navigationView.getHeaderView(0);
+        nImage = nView.findViewById(R.id.circlePhoto);
+        nName = nView.findViewById(R.id.navName);
+
 
         //   getSupportActionBar().setTitle("Menus");
 
@@ -136,6 +135,7 @@ public class HomeCustomer extends AppCompatActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         menuAdapter = new MenuCustomer(this, arrayList);
         recyclerView.setAdapter(menuAdapter);
+        emptyOrder = findViewById(R.id.emptyOrder);
 
         tvLocation = findViewById(R.id.txtCLocation);
         tvBF = findViewById(R.id.tvBF);
@@ -160,28 +160,32 @@ public class HomeCustomer extends AppCompatActivity
 
         checkProfile();
 
-
         if (StaticConfig.UID != null) {
             FirebaseDatabase.getInstance().getReference("schedule")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             dialog.dismiss();
-                            //fetch files from firebase database and push in arraylist
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                xyz.foodhut.app.model.MenuCustomer customer = snapshot.getValue(xyz.foodhut.app.model.MenuCustomer.class);
-                                arrayList.add(customer);
-                                Log.d("Check list", "onDataChange: " + arrayList.size());
-                            }
-                            for (int i = 0; i < arrayList.size(); i++) {
-                                if (arrayList.get(i).imageUrl == null || arrayList.get(i).imageUrl == null) {
-                                    arrayList.remove(i);
+                            if (dataSnapshot.getValue() != null) {
+                                //fetch files from firebase database and push in arraylist
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    xyz.foodhut.app.model.MenuCustomer customer = snapshot.getValue(xyz.foodhut.app.model.MenuCustomer.class);
+                                    arrayList.add(customer);
+                                    Log.d("Check list", "onDataChange: " + arrayList.size());
                                 }
+                                for (int i = 0; i < arrayList.size(); i++) {
+                                    if (arrayList.get(i).imageUrl == null || arrayList.get(i).imageUrl == null) {
+                                        arrayList.remove(i);
+                                    }
+                                }
+                                Collections.reverse(arrayList);
+                                //bind the data in adapter
+                                Log.d("Check list", "out datachange: " + arrayList.size());
+                                menuAdapter.notifyDataSetChanged();
+                            } else {
+                                emptyOrder.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
                             }
-                            Collections.reverse(arrayList);
-                            //bind the data in adapter
-                            Log.d("Check list", "out datachange: " + arrayList.size());
-                            menuAdapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -270,12 +274,14 @@ public class HomeCustomer extends AppCompatActivity
 
                     Log.d("check", "name in customer: " + name);
 
-                    if (name.equals("name")) {
+                    if (name.equals("name") || address.equals("address")) {
                         Intent y = new Intent(HomeCustomer.this, ProfileCustomer.class);
-                        y.putExtra("name", "Update your name");
-                        y.putExtra("address", "Update your address");
 
                         startActivity(y);
+                    } else {
+                        nName.setText(name);
+                        if (!avatar.equals("default"))
+                            Picasso.get().load(avatar).placeholder(R.drawable.default_avatar).into(nImage);
                     }
                 }
             }
@@ -301,6 +307,7 @@ public class HomeCustomer extends AppCompatActivity
         locations.add("Gulshan");
 
         LinearLayout locate = inflate.findViewById(R.id.llLocateMe);
+        final TextView tvLocate = inflate.findViewById(R.id.tvLocateMe);
         final Spinner location = inflate.findViewById(R.id.spMyLocation);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, locations);
@@ -310,7 +317,8 @@ public class HomeCustomer extends AppCompatActivity
         location.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selected[0] = location.getSelectedItem().toString();
+                mLocation = location.getSelectedItem().toString();
+
             }
 
             @Override
@@ -323,9 +331,10 @@ public class HomeCustomer extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 requestPermission();
-                getOrdinate();
+                getOrdinate(tvLocate);
 
-                dialog.cancel();
+                //  if(!mLocationTemp.equals(""))
+                //  tvLocate.setText(mLocationTemp);
             }
         });
 
@@ -334,8 +343,8 @@ public class HomeCustomer extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // DBHelper dbHelper=new DBHelper(contex);
-                        tvLocation.setText(selected[0]);
-                        filterLocation(selected[0]);
+                        tvLocation.setText(mLocation);
+                        filterLocation(mLocation);
                         cvSearch.setVisibility(View.GONE);
                         etSearch.setText("");
                         // Toast.makeText(contex, "Menu Added in Schedule", Toast.LENGTH_SHORT).show();
@@ -372,7 +381,11 @@ public class HomeCustomer extends AppCompatActivity
                         maxPrice = Integer.parseInt(max.getText().toString().trim());
 
                         Log.d("check", "price: " + minPrice + " " + maxPrice);
-                        filterPrice(minPrice, maxPrice);
+
+                        if (minPrice == 0 && maxPrice == 0)
+                            filterPrice(minPrice, maxPrice);
+                        else
+                            Toast.makeText(HomeCustomer.this, "Please select Price Range", Toast.LENGTH_SHORT).show();
 
                         // Toast.makeText(contex, "Menu Added in Schedule", Toast.LENGTH_SHORT).show();
                     }
@@ -467,7 +480,25 @@ public class HomeCustomer extends AppCompatActivity
                 xyz.foodhut.app.model.MenuCustomer mc = new xyz.foodhut.app.model.MenuCustomer();
                 mc = dummy.get(i);
                 // if (mc.providerAddress.toLowerCase(Locale.getDefault()).contains(value)||mc.tvLocation.toLowerCase(Locale.getDefault()).contains(value)) {
-                if (Integer.parseInt(mc.price) > min && Integer.parseInt(mc.price) < max) {
+                if (Integer.parseInt(mc.price) >= min && Integer.parseInt(mc.price) <= max) {
+
+                    Log.d("check", "in filter: iffff");
+                    dummy2.add(mc);
+                }
+
+            }
+            dummy.clear();
+            dummy = dummy2;
+            menuAdapter = new MenuCustomer(this, dummy);
+            recyclerView.setAdapter(menuAdapter);
+            menuAdapter.notifyDataSetChanged();
+        } else {
+            dummy2.clear();
+            for (int i = 0; i < arrayList.size(); i++) {
+                xyz.foodhut.app.model.MenuCustomer mc = new xyz.foodhut.app.model.MenuCustomer();
+                mc = arrayList.get(i);
+                // if (mc.providerAddress.toLowerCase(Locale.getDefault()).contains(value)||mc.tvLocation.toLowerCase(Locale.getDefault()).contains(value)) {
+                if (Integer.parseInt(mc.price) >= min && Integer.parseInt(mc.price) <= max) {
 
                     Log.d("check", "in filter: iffff");
                     dummy2.add(mc);
@@ -611,7 +642,7 @@ public class HomeCustomer extends AppCompatActivity
         ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1);
     }
 
-    public void getOrdinate() {
+    public void getOrdinate(final TextView tvLocation) {
         if (ActivityCompat.checkSelfPermission(HomeCustomer.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
@@ -630,11 +661,11 @@ public class HomeCustomer extends AppCompatActivity
                     // GetReverseGeoCoding geoCoding=new GetReverseGeoCoding();
                     // geoCoding.getAddress(lattitude,longitude);
 
-                   // getAddress(lattitude, longitude);
-                    getArea(lattitude, longitude);
+                    // getAddress(lattitude, longitude);
+                    getArea(lattitude, longitude, tvLocation);
 
                 } else {
-                    show();
+                    show(tvLocation);
                 }
 
             }
@@ -689,36 +720,42 @@ public class HomeCustomer extends AppCompatActivity
         */
     }
 
-    public void getArea(double lati, double longi) {
+    public void getArea(double lati, double longi, final TextView tvLocate) {
 
-        longi=90.353655;
-        lati=23.795604;
+        // longi=90.353655;
+        // lati=23.795604;
 
-        String reqUrl = "http://barikoi.xyz/v1/api/search/reverse/geocode/MTEzMjo0Nk03MecyNjRC=/place?longitude="+longi+"&latitude="+lati;
+        final String[] subLocality = new String[1];
+        final String[] area_level_3 = new String[1];
+
+        String reqUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lati + ","
+                + longi + "&sensor=true";
         StringRequest sr = new StringRequest(Request.Method.GET, reqUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i("check json response ", response);
+                        Log.i("tagconvertstr getData", response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            Log.d("check", "onResponse: results " + jsonObject.toString());
+                            String Status = jsonObject.getString("status");
+                            if (Status.equalsIgnoreCase("OK")) {
+                                JSONArray Results = jsonObject.getJSONArray("results");
+                                Log.d("check", "onResponse: results" + Results.toString());
+                                JSONObject zero = Results.getJSONObject(0);
+                                Log.d("check", "onResponse: zero" + zero.toString());
 
-                                JSONArray result = jsonObject.getJSONArray("Place");
-                                Log.d("check", "onResponse: results " + result.toString());
+                                String formatted_address = zero.getString("formatted_address");
+                                String parts[] = formatted_address.split(",");
 
-                                for (int i = 0; i < result.length(); i++) {
-                                    JSONObject obj = result.getJSONObject(i);
+                                if (parts[2] != null) {
+                                    mLocation = parts[2];
+                                    mLocationTemp = parts[2];
+                                    tvLocate.setText(parts[2]);
+                                }
 
-                                    String area = obj.getString("area");
-                                    String address = obj.getString("address");
 
-                                    if (!area.isEmpty()) {
-
-                                            Log.d("check", "onResponse: Area " +area +" address "+address);
-                                        //  Toast.makeText(ProfileCustomer.this, location[0], Toast.LENGTH_SHORT).show();
-                                    }
-                               }
+                                Log.d("check", "onResponse address: " + formatted_address);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -736,18 +773,18 @@ public class HomeCustomer extends AppCompatActivity
     }
 
 
-    public void show() {
+    public void show(TextView tvLocate) {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
             provider = 1;
-            getLocation();
+            getLocation(tvLocate);
             Log.d("check method", "network condition");
         } else if (locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)) {
 
             provider = 2;
-            getLocation();
+            getLocation(tvLocate);
             Log.d("check method", "passive condition");
 
         } else if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -757,13 +794,13 @@ public class HomeCustomer extends AppCompatActivity
         } else if (gps_check && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
             provider = 3;
-            getLocation();
+            getLocation(tvLocate);
             Log.d("check method", "gps condition");
         }
         Log.d("check provider", String.valueOf(provider));
     }
 
-    private void getLocation() {
+    private void getLocation(TextView tvLocate) {
         Log.d("check method", "from getLocation");
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -784,8 +821,8 @@ public class HomeCustomer extends AppCompatActivity
 
                 Log.d("check", "location " + lattitude + " " + longitude);
 
-               // getAddress(lattitude, longitude);
-                getArea(lattitude, longitude);
+                // getAddress(lattitude, longitude);
+                getArea(lattitude, longitude, tvLocate);
 
 
             } else {
@@ -806,8 +843,8 @@ public class HomeCustomer extends AppCompatActivity
                 Log.d("check method", "provider:" + provider);
                 Log.d("check", "location " + lattitude + " " + longitude);
 
-              //  getAddress(lattitude, longitude);
-                getArea(lattitude, longitude);
+                //  getAddress(lattitude, longitude);
+                getArea(lattitude, longitude, tvLocate);
 
 
             } else {
@@ -828,8 +865,8 @@ public class HomeCustomer extends AppCompatActivity
                 Log.d("check method", "provider:" + provider);
                 Log.d("check", "location " + lattitude + " " + longitude);
 
-             //   getAddress(lattitude, longitude);
-                getArea(lattitude, longitude);
+                //   getAddress(lattitude, longitude);
+                getArea(lattitude, longitude, tvLocate);
 
 
             } else {
@@ -895,7 +932,7 @@ public class HomeCustomer extends AppCompatActivity
                 search = 0;
                 cvSearch.setVisibility(View.GONE);
 
-                if (dummy.isEmpty())
+                if (dummy.size() == 0)
                     menuAdapter = new MenuCustomer(this, arrayList);
                 else
                     menuAdapter = new MenuCustomer(this, dummy);
@@ -933,7 +970,8 @@ public class HomeCustomer extends AppCompatActivity
         }
         if (view.getId() == R.id.chNoti) {
 
-            Intent intent = new Intent(this, Notifications.class);
+            Intent intent = new Intent(this, NotificationCustomer.class);
+            intent.putExtra("user", "customer");
             startActivity(intent);
         }
         if (view.getId() == R.id.chProfile) {

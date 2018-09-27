@@ -1,11 +1,13 @@
 package xyz.foodhut.app.ui.customer;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -68,13 +70,42 @@ public class Favourites extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
-
-
     }
 
-    public void getMenu(String id){
+    public void goBack(View view){
+        startActivity(new Intent(this,HomeCustomer.class));
+        finish();
+        finishAffinity();
+    }
+
+    public void getMenu(final String id){
         FirebaseDatabase.getInstance().getReference("schedule").child(id)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        dialog.dismiss();
+                        //fetch files from firebase database and push in arraylist
+                        if (dataSnapshot.getValue()!=null) {
+                            xyz.foodhut.app.model.MenuCustomer customer = dataSnapshot.getValue(xyz.foodhut.app.model.MenuCustomer.class);
+
+                            String menuId=customer.id;
+                            getFavourites(id,menuId);
+                          //  arrayList.add(customer);
+                            Log.d("Check", "menu fav: " + menuId);
+                        }
+                     //   Log.d("Check", "out list fav: " + arrayList.size());
+                      //  menuAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        dialog.dismiss();
+                    }
+                });
+    }
+
+    public void getFavourites(String id,String menuId){
+        FirebaseDatabase.getInstance().getReference("schedule").child(id).orderByChild("id").equalTo(menuId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

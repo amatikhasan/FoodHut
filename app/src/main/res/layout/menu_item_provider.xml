@@ -1,135 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardMenu"
         android:layout_width="match_parent"
-        android:layout_height="180dp">
+        android:layout_height="wrap_content"
+        app:cardElevation="2dp"
+        app:cardCornerRadius="4dp"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:layout_marginBottom="4dp"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:orientation="vertical"
-                android:padding="5dp"
-                android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/ivItemImage"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="5dp"
-                android:src="@drawable/image" />
-
-            <LinearLayout
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:orientation="vertical"
+                android:padding="5dp">
 
-                <RatingBar
+                <ImageView
+                    android:id="@+id/ivItemImage"
+                    android:layout_width="108dp"
+                    android:layout_height="92dp"
                     android:layout_gravity="center_vertical"
-                    android:id="@+id/ratingBar"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:isIndicator="true"
-                    android:rating="3.5"
-                    android:numStars="5"
-                    android:stepSize=".5" />
+                    android:layout_margin="5dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/image" />
 
-                <TextView
-                    android:id="@+id/mRatingCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="50"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
             </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingTop="20dp"
-                android:padding="10dp">
+                android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:paddingTop="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/mFoodName"
+                    android:id="@+id/ll"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="marquee"
-                    android:singleLine="true"
-                    android:text="Food Name"
-                    android:textSize="20sp" />
-
-                <LinearLayout
-                    android:id="@+id/ll1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_below="@id/mFoodName"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/line"
+                    android:orientation="vertical"
+                    android:paddingTop="16dp">
 
                     <TextView
-                        android:id="@+id/mFoodPrice"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/mFoodName"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Price"
+                        android:layout_marginEnd="4dp"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
+                        android:text="Food Name"
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/separator"
+                        android:id="@+id/mFoodDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
+                        android:text="Description"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:id="@+id/ll1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/mFoodPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Price"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="1dp"
+                    android:layout_height="100dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/ll3"
+                    android:background="@color/gray" />
+
+                <LinearLayout
+                    android:id="@+id/ll3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/addToSchedule"
+                        android:layout_width="88dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="32dp"
+                        android:text="Schedule"
+                        android:gravity="center"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:textColor="@color/white"
+                        android:background="@drawable/corner_button_green" />
+
+                    <RelativeLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_height="24dp">
+                        <TextView
+                            android:id="@+id/mEdit"
+                            android:gravity="center_vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="Edit"
+                            android:textColor="@color/green" />
+                    <TextView
+                        android:id="@+id/mDelete"
+                        android:gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Delete"
+                        android:layout_alignParentEnd="true"
+                        android:textColor="@color/colorPrimary" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RatingBar
+                        android:id="@+id/ratingBar"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize=".5" />
+
+                    <TextView
+                        android:id="@+id/mRatingCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
                         android:layout_marginStart="5dp"
-                        android:text="|"
+                        android:text="0"
                         android:textSize="16sp" />
 
-                    <TextView
-                        android:id="@+id/mFoodType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Type"
-                        android:textSize="16sp" />
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/mFoodDesc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:layout_below="@id/ll1"
-                    android:ellipsize="marquee"
-                    android:text="Description"
-                    android:textSize="16sp" />
-                </LinearLayout>
-                <ImageView
-                    android:id="@+id/addToSchedule"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:src="@drawable/schedule" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

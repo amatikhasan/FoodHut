@@ -9,5 +9,6 @@ public class ScheduleProvider {
     public String price;
     public String date;
     public String scheduleId;
+    public String desc;
 
 }

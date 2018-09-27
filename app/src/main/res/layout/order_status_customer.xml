@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-<RelativeLayout
-    android:layout_margin="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/oscOderNo"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="order No"/>
+        app:cardElevation="2dp"
+        android:layout_marginBottom="2dp"
+        app:cardCornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/oscDate"
-        android:layout_alignParentTop="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_toStartOf="@id/ll1"
-        android:textSize="12sp"
-        android:text="Date"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/oscOderNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="order No" />
+
+            <TextView
+                android:id="@+id/oscDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:text="Date"
+                android:textSize="12sp" />
 
 
-    <LinearLayout
-        android:id="@+id/ll1"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_marginBottom="4dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/ll1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="4dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/oscTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:text="time"/>
-
-  <!--  <TextView
+                <!--  <TextView
         android:id="@+id/oscPayment"
         android:gravity="center"
         android:background="@android:color/holo_green_light"
@@ -60,45 +62,64 @@
         android:textSize="12sp"
         android:text="Due"/>  -->
 
-    <TextView
-        android:id="@+id/oscStatus"
-        android:gravity="center"
-        android:background="@drawable/dodgerBlue"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="12sp"
-        android:text="Status"/>
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/oscStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/orange"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Pending"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/oscTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="time"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
-    <TextView
-        android:id="@+id/oscKitchen"
-        android:layout_below="@id/ll1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/kitchen_20"
-        android:drawablePadding="7dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginBottom="4dp"
-        android:textSize="12sp"
-        android:gravity="center"
-        android:text="Kitchen Name"/>
+            <ImageView
+                android:id="@+id/ivKitchen"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_below="@id/ll1"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/icon_kitchen"/>
 
-    <TextView
-        android:id="@+id/oscFood"
-        android:layout_below="@id/oscKitchen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/meal_24"
-        android:drawablePadding="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="4dp"
-        android:textSize="12sp"
-        android:gravity="center"
-        android:text="Food Name"/>
+            <TextView
+                android:id="@+id/oscKitchen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ll1"
+                android:layout_toEndOf="@id/ivKitchen"
+                android:layout_marginStart="4dp"
+                android:gravity="center"
+                android:text="Kitchen Name"
+                android:textSize="12sp" />
 
-    <TextView
+            <ImageView
+                android:id="@+id/ivFood"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_below="@id/ivKitchen"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/icon_meal"/>
+
+            <TextView
+                android:id="@+id/oscFood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/ivFood"
+                android:layout_below="@id/ivKitchen"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:text="Food Name"
+                android:textSize="12sp" />
+
+            <!--  <TextView
         android:text="100"
         android:id="@+id/oscUnitPrice"
         android:layout_below="@id/oscKitchen"
@@ -119,69 +140,81 @@
         android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="24dp" />
+        -->
 
-    <TextView
-        android:text="5"
-        android:id="@+id/oscQty"
-        android:layout_below="@id/oscKitchen"
-        android:layout_toStartOf="@id/pkt"
-        android:textSize="12sp"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"  />
-    <TextView
-        android:id="@+id/pkt"
-        android:text="pkt."
-        android:layout_marginStart="4dp"
-        android:layout_below="@id/oscKitchen"
-        android:layout_toStartOf="@id/tk"
-        android:layout_marginEnd="24dp"
-        android:textSize="12sp"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp" />
-    <TextView
-        android:id="@+id/tk"
-        android:text="৳ "
-        android:layout_below="@id/oscKitchen"
-        android:layout_toStartOf="@id/oscAmount"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"  />
-    <TextView
-        android:text="500"
-        android:id="@+id/oscAmount"
-        android:layout_below="@id/oscKitchen"
-        android:layout_alignParentEnd="true"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"  />
+            <TextView
+                android:id="@+id/oscQty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ivKitchen"
+                android:layout_toStartOf="@id/pkt"
+                android:gravity="center"
+                android:text="5"
+                android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/oscAddress"
-        android:layout_below="@id/oscFood"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/locate_24"
-        android:drawablePadding="5dp"
-        android:layout_marginBottom="4dp"
-        android:textSize="12sp"
-        android:gravity="center"
-        android:text="Address"/>
+            <TextView
+                android:id="@+id/pkt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ivKitchen"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="4dp"
+                android:layout_toStartOf="@id/tk"
+                android:gravity="center"
+                android:text="pkt."
+                android:textSize="12sp" />
 
-    <TextView
-        android:text="Give review"
-        android:id="@+id/oscReview"
-        android:textColor="@color/colorPrimary"
-        android:layout_below="@id/oscFood"
-        android:layout_alignParentEnd="true"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"  />
+            <TextView
+                android:id="@+id/tk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ivKitchen"
+                android:layout_toStartOf="@id/oscAmount"
+                android:gravity="center"
+                android:text="৳ "
+                android:textSize="14sp" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/oscAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/ivKitchen"
+                android:gravity="center"
+                android:text="500"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/ivLocate"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_below="@id/ivFood"
+                android:layout_marginBottom="4dp"
+                android:src="@drawable/locate_64"/>
+
+            <TextView
+                android:id="@+id/oscAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ivFood"
+                android:layout_toEndOf="@id/ivLocate"
+                android:layout_marginStart="4dp"
+                android:gravity="center"
+                android:text="Address"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/oscReview"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/oscFood"
+                android:gravity="center"
+                android:text="Give review"
+                android:visibility="invisible"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 </android.support.constraint.ConstraintLayout>

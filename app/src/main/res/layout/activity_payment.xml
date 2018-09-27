@@ -1,68 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.provider.Payments">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        app:cardElevation="2dp"
+        app:cardPreventCornerOverlap="false">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/home_logo" />
+
+            <ImageView
+                android:id="@+id/arrow"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:onClick="goBack"
+                android:src="@drawable/icon_back" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_marginTop="32dp"
+        android:gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/ptxtCurrent"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/rlCurrent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Current Balance" />
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="64dp"
+            android:gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/pCurrentBalance"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/ptxtCurrent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"/>
+            <ImageView
+                android:id="@+id/boxCurrent"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/box_green" />
 
-        <TextView
-            android:id="@+id/ptxtPending"
-            android:layout_below="@id/ptxtCurrent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Withdraw Request" />
-        <TextView
-            android:id="@+id/pWithdrawRequest"
-            android:layout_marginStart="5dp"
-            android:layout_below="@id/ptxtCurrent"
-            android:layout_toEndOf="@id/ptxtPending"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"/>
+            <TextView
+                android:id="@+id/txtCurrent"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/boxCurrent"
+                android:text="Current Balance"
+                android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/ptxtWithdrawn"
-            android:layout_below="@id/ptxtPending"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tk1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="৳"
+                android:layout_toEndOf="@id/txtCurrent"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/pCurrentBalance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/tk1"
+                android:text="0"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlPending"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Total Withdrawn" />
-        <TextView
-            android:id="@+id/pWithdrawn"
-            android:layout_marginStart="5dp"
-            android:layout_below="@id/ptxtPending"
-            android:layout_toEndOf="@id/ptxtWithdrawn"
-            android:layout_width="wrap_content"
+            android:layout_below="@id/rlCurrent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="64dp"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/boxPending"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/box_orange" />
+
+            <TextView
+                android:id="@+id/txtPending"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/boxPending"
+                android:text="Withdraw Request"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tk2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="৳"
+                android:layout_toEndOf="@id/txtPending"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/pWithdrawRequest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/tk2"
+                android:text="0"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlWithdrawn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="0"/>
+            android:layout_below="@id/rlPending"
+            android:layout_marginStart="64dp"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/boxWithdrawn"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/box_red" />
+
+            <TextView
+                android:id="@+id/txtWithdrawn"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/boxWithdrawn"
+                android:text="Total Withdrawn"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tk3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="৳"
+                android:layout_toEndOf="@id/txtWithdrawn"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/pWithdrawn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/tk3"
+                android:text="0"
+                android:textSize="18sp" />
+        </RelativeLayout>
 
         <Button
             android:id="@+id/btnRequestPayment"
-            android:layout_below="@id/ptxtWithdrawn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/rlWithdrawn"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/round_button_primary"
             android:onClick="requestWithdraw"
-            android:text="Request" />
+            android:text="Request Withdraw"
+            android:textColor="@color/white" />
+
     </RelativeLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

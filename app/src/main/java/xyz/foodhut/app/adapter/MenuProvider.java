@@ -1,8 +1,10 @@
 package xyz.foodhut.app.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -19,12 +21,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,8 +41,10 @@ import xyz.foodhut.app.data.StaticConfig;
 import xyz.foodhut.app.model.MenuCustomer;
 import xyz.foodhut.app.model.ScheduleProvider;
 import xyz.foodhut.app.ui.provider.AddMenu;
+import xyz.foodhut.app.ui.provider.Menus;
 
 import static android.content.ContentValues.TAG;
+import static xyz.foodhut.app.ui.PhoneAuthActivity.userID;
 
 public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> {
     private Context contex;
@@ -66,10 +72,10 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
         final xyz.foodhut.app.model.MenuProvider obj = data.get(position);
         Log.d("check", "onBindViewHolder: " + obj.name + " " + obj.id + " " + obj.imageUrl);
 
-        String price = obj.price + " TK";
+        String price ="৳ "+ obj.price;
         holder.foodName.setText(obj.name);
         holder.price.setText(price);
-        holder.type.setText(obj.type);
+      //  holder.type.setText(obj.type);
         holder.desc.setText(obj.desc);
         holder.ratingCount.setText(String.valueOf(obj.ratingCount));
         holder.ratingBar.setRating(Float.parseFloat(obj.rating));
@@ -77,7 +83,7 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
         //Glide.with(contex).load(obj.imageUrl).into(holder.image);
 
 
-        holder.card.setOnClickListener(new View.OnClickListener() {
+        holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -87,6 +93,7 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                 intent.putExtra("id", obj.id);
                 intent.putExtra("desc", obj.desc);
                 intent.putExtra("type", obj.type);
+                intent.putExtra("pkgSize", obj.pkgSize);
                 intent.putExtra("extraItem", obj.extraItem);
                 intent.putExtra("extraItemPrice", obj.extraItemPrice);
                 intent.putExtra("url", obj.imageUrl);
@@ -94,6 +101,33 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                 Log.d(TAG, "onClick: name: " + obj.name + " id: " + obj.id + " url " + obj.imageUrl);
 
                 contex.startActivity(intent);
+
+            }
+        });
+
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(contex);
+                builder.setMessage("Are you sure you want to delete this menu?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                deleteItem(obj);
+
+                                notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                dialog.cancel();
+                            }
+                        });
+                final android.app.AlertDialog alert = builder.create();
+                alert.show();
+                Log.d("check method", "from alert");
 
             }
         });
@@ -114,6 +148,7 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                 List<String> days = new ArrayList<String>();
                 days.add("Today");
                 days.add("Tomorrow");
+                days.add("Day After Tomorrow");
 
 
                 final Spinner date = view.findViewById(R.id.spDaySchedule);
@@ -153,14 +188,25 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                                 if (selected[0].equals("Tomorrow")){
                                     day[0] = c.get(Calendar.DAY_OF_MONTH)+1;
                                 }
+                                if (selected[0].equals("Day After Tomorrow")){
+                                    day[0] = c.get(Calendar.DAY_OF_MONTH)+2;
+                                }
 
                                 c.set(year[0], month[0], day[0]);
                                 String date = day[0] + "-" + (month[0] + 1) + "-" + year[0];
 
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                Date date1 = null;
+                                try {
+                                    date1 = dateFormat.parse(date);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
                                 String formattedDate;
                                 SimpleDateFormat sdtf = new SimpleDateFormat("dd MMM yyyy");
                                 Date now = c.getTime();
-                                formattedDate = sdtf.format(now);
+                                formattedDate = sdtf.format(date1);
 
                                 Log.d("check", "onClick: date " + date + " " + formattedDate);
 
@@ -171,12 +217,13 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                                 schedule.price=obj.price;
                                 schedule.type=obj.type;
                                 schedule.imageUrl=obj.imageUrl;
-                                schedule.date=date;
+                                schedule.date=formattedDate;
+                                schedule.desc=obj.desc;
 
                                 String pushkey= FirebaseDatabase.getInstance().getReference().push().getKey();
                                 schedule.scheduleId=pushkey;
 
-                                FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("schedule").child(pushkey).setValue(schedule);
+                                FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("schedule").child(formattedDate).child(pushkey).setValue(schedule);
 
                                 MenuCustomer customer=new MenuCustomer();
                                 customer.id=obj.id;
@@ -184,8 +231,8 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                                 customer.price=obj.price;
                                 customer.type=obj.type;
                                 customer.imageUrl=obj.imageUrl;
-                                customer.schedule=date;
-                                customer.sheduleId=pushkey;
+                                customer.schedule=formattedDate;
+                                customer.scheduleId =pushkey;
                                 customer.desc=obj.desc;
                                 customer.extraItem=obj.extraItem;
                                 customer.extraItemPrice=obj.extraItemPrice;
@@ -227,6 +274,16 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
         });
     }
 
+    public void deleteItem(xyz.foodhut.app.model.MenuProvider obj) {
+
+        //displaying a progress dialog while upload is going on
+        final ProgressDialog progressDialog = new ProgressDialog(contex);
+        progressDialog.setMessage("Please Wait...");
+
+        FirebaseDatabase.getInstance().getReference().child("providers/" + StaticConfig.UID).child("menu").child(obj.id).removeValue();
+
+    }
+
     public void providerInfo(){
         FirebaseDatabase.getInstance().getReference("providers/"+ StaticConfig.UID).child("about")
                 .addValueEventListener(new ValueEventListener() {
@@ -258,9 +315,9 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView foodName, price, type, desc, ratingCount;
+        TextView foodName, price, edit, desc, ratingCount,addToSchedule,delete;
         RatingBar ratingBar;
-        ImageView image, addToSchedule;
+        ImageView image;
         CardView card;
 
 
@@ -268,12 +325,13 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
             super(itemView);
             foodName = itemView.findViewById(R.id.mFoodName);
             price = itemView.findViewById(R.id.mFoodPrice);
-            type = itemView.findViewById(R.id.mFoodType);
+            edit = itemView.findViewById(R.id.mEdit);
+            delete = itemView.findViewById(R.id.mDelete);
             desc = itemView.findViewById(R.id.mFoodDesc);
             ratingCount = itemView.findViewById(R.id.mRatingCount);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             image = (ImageView) itemView.findViewById(R.id.ivItemImage);
-            addToSchedule = (ImageView) itemView.findViewById(R.id.addToSchedule);
+            addToSchedule =  itemView.findViewById(R.id.addToSchedule);
             card = itemView.findViewById(R.id.cardMenu);
         }
 
