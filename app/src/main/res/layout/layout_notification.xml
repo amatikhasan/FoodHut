@@ -18,36 +18,40 @@
 
             <ImageView
                 android:id="@+id/notiDrawable"
-                android:layout_margin="10dp"
+                android:layout_margin="8dp"
                 android:layout_width="64dp"
                 android:layout_height="64dp" />
 
             <RelativeLayout
-                android:layout_margin="10dp"
+                android:layout_margin="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/notiTitle"
                     android:text="notification Title"
-                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_marginBottom="8dp"
+                    android:textSize="14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <ImageView
                     android:id="@+id/clock"
                     android:src="@drawable/time_32"
-                    android:layout_alignParentBottom="true"
+                    android:layout_below="@id/notiTitle"
                     android:layout_marginEnd="8dp"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp" />
+                    android:layout_alignBottom="@id/notiTime"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp" />
 
                 <TextView
                     android:id="@+id/notiTime"
                     android:text="Time"
-                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="12sp"
                     android:textColor="@color/colorPrimary"
-                    android:layout_alignParentBottom="true"
+                    android:layout_below="@id/notiTitle"
                     android:layout_toEndOf="@id/clock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

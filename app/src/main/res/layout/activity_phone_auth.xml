@@ -12,6 +12,7 @@
         android:id="@+id/ll1"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/corner_white"
         android:gravity="center"
         android:orientation="vertical"
@@ -24,19 +25,27 @@
             android:id="@+id/txtGSWF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="sans-serif-light"
             android:text="Get Started with FoodHut.xyz"
             android:textColor="#545454"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/txtPEVC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="sans-serif-light"
             android:text="Please Enter Verification Code"
             android:textColor="#545454"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:visibility="gone" />
 
         <LinearLayout
@@ -55,11 +64,11 @@
                 app:ccp_defaultNameCode="bd"
                 app:ccp_showFlag="false"
                 app:ccp_showNameCode="false"
-                app:ccp_textSize="16dp" />
+                app:ccp_textSize="14dp" />
 
             <EditText
                 android:id="@+id/field_phone_number"
-                android:layout_width="220dp"
+                android:layout_width="200dp"
                 android:layout_height="45dp"
                 android:background="@drawable/edit_text_style"
                 android:hint=" Phone Number"
@@ -75,28 +84,87 @@
         <Button
             android:id="@+id/button_start_verification"
             android:layout_width="140dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/round_button_orange"
-            android:padding="10dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/round_button_yellow"
+            android:padding="8dp"
             android:text="Login"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/llGoogle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="50dp"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/txtCWG"
+                    android:background="@color/gray" />
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="50dp"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/txtCWG"
+                    android:background="@color/gray" />
+
+                <TextView
+                    android:id="@+id/txtCWG"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Or Connect With"
+                    android:textColor="@color/gray" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/llGoogleSignIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/icon_google" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Google"
+                    android:textColor="@color/gray" />
+            </LinearLayout>
+        </LinearLayout>
 
 
         <EditText
             android:id="@+id/field_verification_code"
             android:layout_width="220dp"
             android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/corner_orange_border"
+            android:layout_margin="10dp"
+            android:background="@drawable/edit_text_style"
             android:hint=" Enter Code"
             android:inputType="number"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:textColor="#545454"
-            android:textColorHint="#545454"
+            android:textColor="#AFA59F"
+            android:textColorHint="#AFA59F"
             android:textSize="14sp"
             android:visibility="gone" />
 
@@ -105,20 +173,21 @@
             android:layout_width="140dp"
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/round_button_orange"
+            android:background="@drawable/round_button_yellow"
             android:padding="10dp"
             android:text="Verify"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#ffffff"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvDRC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="sans-serif-light"
             android:text="Didn't receive the code?"
             android:textColor="@color/colorPrimary"
             android:textSize="12sp"
@@ -137,6 +206,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="Please wait "
+                android:fontFamily="sans-serif-light"
                 android:textColor="@color/colorPrimary"
                 android:textSize="12sp" />
 
@@ -154,12 +224,12 @@
             android:layout_width="140dp"
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/round_button_orange"
+            android:background="@drawable/round_button_yellow"
             android:padding="10dp"
             android:text="Resend Code"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#ffffff"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:visibility="gone" />
 
 
@@ -181,38 +251,37 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/round_kitchen"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/ll1"
         app:layout_constraintEnd_toEndOf="@+id/ll1"
         app:layout_constraintStart_toStartOf="@+id/ll1"
-        app:layout_constraintTop_toTopOf="@+id/ll1"
-        android:visibility="gone"
-        />
+        app:layout_constraintTop_toTopOf="@+id/ll1" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent=".075" />
+        app:layout_constraintGuide_percent=".1" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.925" />
+        app:layout_constraintGuide_percent="0.90" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".90" />
+        app:layout_constraintGuide_percent=".85" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".15" />
+        app:layout_constraintGuide_percent=".20" />
 </android.support.constraint.ConstraintLayout>

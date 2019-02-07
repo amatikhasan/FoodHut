@@ -1,9 +1,11 @@
 package xyz.foodhut.app.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,14 +17,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
@@ -30,9 +41,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hbb20.CountryCodePicker;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
 import xyz.foodhut.app.R;
 import xyz.foodhut.app.data.SharedPreferenceHelper;
 import xyz.foodhut.app.data.StaticConfig;
@@ -54,6 +67,9 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     private static final int STATE_VERIFY_SUCCESS = 4;
     private static final int STATE_SIGNIN_FAILED = 5;
     private static final int STATE_SIGNIN_SUCCESS = 6;
+
+    private static final int RC_SIGN_IN = 9001;
+    private GoogleSignInClient mGoogleSignInClient;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -80,20 +96,25 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     private Button mStartButton;
     private Button mVerifyButton;
     private Button mResendButton;
-    private String phone,name,type,userType;
+    private String phone="", name, type, userType;
     private TextView timer;
-    private TextView tvLogin, tvVerifyCode, tvDRC, tvPEVC,tvGSWF;
-    ImageView ivCustomer,ivKitchen;
+    private TextView tvLogin, tvVerifyCode, tvDRC, tvPEVC, tvGSWF;
+    ImageView ivCustomer, ivKitchen;
     private LinearLayout timerLayout;
     private LinearLayout layoutSuccess;
     private LinearLayout layoutPhone;
+    private LinearLayout layoutGoogle;
+    private LinearLayout llGoogleSignIn;
+
+    CountryCodePicker ccp;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_auth);
 
-      //  getSupportActionBar().hide();
+        //  getSupportActionBar().hide();
 
         // Restore instance state
         if (savedInstanceState != null) {
@@ -102,11 +123,16 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
         // Assign views
 
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("Signing In");
+
         mPhoneNumberField = (EditText) findViewById(R.id.field_phone_number);
         mVerificationField = (EditText) findViewById(R.id.field_verification_code);
-       // mNameField = (EditText) findViewById(R.id.field_name);
+        // mNameField = (EditText) findViewById(R.id.field_name);
         //smsCode = (Pinview) findViewById(R.id.sms_code);
         timer = (TextView) findViewById(R.id.timer);
+
+        ccp=findViewById(R.id.ccpicker);
 
         tvDRC = (TextView) findViewById(R.id.tvDRC);
         tvPEVC = (TextView) findViewById(R.id.txtPEVC);
@@ -114,9 +140,11 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
         timerLayout = findViewById(R.id.timerLayout);
         layoutPhone = findViewById(R.id.llPhone);
+        layoutGoogle = findViewById(R.id.llGoogle);
+        llGoogleSignIn = findViewById(R.id.llGoogleSignIn);
 
-        ivCustomer=findViewById(R.id.iv_round_customer);
-        ivKitchen=findViewById(R.id.iv_round_kitchen);
+        ivCustomer = findViewById(R.id.iv_round_customer);
+        ivKitchen = findViewById(R.id.iv_round_kitchen);
 
         mStartButton = (Button) findViewById(R.id.button_start_verification);
         mVerifyButton = (Button) findViewById(R.id.button_verify_phone);
@@ -133,12 +161,20 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
 
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         //get Intent Data
         extras = getIntent().getExtras();
         if (extras != null) {
             type = extras.getString("type");
 
-            if(type.equals("provider")){
+            if (type != null && type.equals("provider")) {
 
                 ivKitchen.setVisibility(View.VISIBLE);
                 ivCustomer.setVisibility(View.GONE);
@@ -241,6 +277,18 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         });
 
         */
+        llGoogleSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                googleSignIn();
+            }
+        });
+    }
+
+
+    private void googleSignIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
 
@@ -275,14 +323,24 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
 
     private void startPhoneNumberVerification(String phoneNumber) {
-        // [START start_phone_auth]
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+88" + phoneNumber,        // Phone number to verify
-                60,                 // Timeout duration
-                TimeUnit.SECONDS,   // Unit of timeout
-                this,               // Activity (for callback binding)
-                mCallbacks);        // OnVerificationStateChangedCallbacks
-        // [END start_phone_auth]
+        if (phoneNumber.length()==11) {
+            PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                    "+88" + phoneNumber,        // Phone number to verify
+                    60,                 // Timeout duration
+                    TimeUnit.SECONDS,   // Unit of timeout
+                    this,               // Activity (for callback binding)
+                    mCallbacks        // OnVerificationStateChangedCallbacks
+                    );
+        }// ForceResendingToken from callbacks
+        if (phoneNumber.length()==10) {
+            PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                    "+880" + phoneNumber,        // Phone number to verify
+                    60,                 // Timeout duration
+                    TimeUnit.SECONDS,   // Unit of timeout
+                    this,               // Activity (for callback binding)
+                    mCallbacks         // OnVerificationStateChangedCallbacks
+                    );
+        }// ForceResendingToken from callbacks
 
         mVerificationInProgress = true;
     }
@@ -297,18 +355,34 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     // [START resend_verification]
     private void resendVerificationCode(String phoneNumber,
                                         PhoneAuthProvider.ForceResendingToken token) {
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+88" + phoneNumber,        // Phone number to verify
-                60,                 // Timeout duration
-                TimeUnit.SECONDS,   // Unit of timeout
-                this,               // Activity (for callback binding)
-                mCallbacks,         // OnVerificationStateChangedCallbacks
-                token);             // ForceResendingToken from callbacks
+        if (phoneNumber.length()==11) {
+            PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                    "+88" + phoneNumber,        // Phone number to verify
+                    60,                 // Timeout duration
+                    TimeUnit.SECONDS,   // Unit of timeout
+                    this,               // Activity (for callback binding)
+                    mCallbacks,         // OnVerificationStateChangedCallbacks
+                    token);
+        }// ForceResendingToken from callbacks
+        if (phoneNumber.length()==10) {
+            PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                    "+880" + phoneNumber,        // Phone number to verify
+                    60,                 // Timeout duration
+                    TimeUnit.SECONDS,   // Unit of timeout
+                    this,               // Activity (for callback binding)
+                    mCallbacks,         // OnVerificationStateChangedCallbacks
+                    token);
+        }// ForceResendingToken from callbacks
     }
     // [END resend_verification]
 
     // [START sign_in_with_phone]
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please Wait...");
+        progressDialog.show();
+
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -324,7 +398,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
 
                             userID = user.getUid();
-                            StaticConfig.UID=userID;
+                            StaticConfig.UID = userID;
 
                             newUserInfo(userID);
 
@@ -334,6 +408,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                             //  myRef.child(userID).child("url").setValue("true");
                             // [START_EXCLUDE]
                             updateUI(STATE_SIGNIN_SUCCESS, user);
+
                             // [END_EXCLUDE]
                         } else {
                             // Sign in failed, display a message and update the UI
@@ -351,8 +426,64 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                         }
                     }
                 });
+
+        progressDialog.cancel();
     }
     // [END sign_in_with_phone]
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+
+                            FirebaseUser user = task.getResult().getUser();
+                            userID = user.getUid();
+                            StaticConfig.UID = userID;
+                            newUserInfo(userID);
+                            updateUI(STATE_SIGNIN_SUCCESS, user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            //  Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                            //  Toast.makeText(PhoneAuthActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                            updateUI(STATE_SIGNIN_FAILED);
+                        }
+
+                        // ...
+                    }
+                });
+
+        dialog.cancel();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        dialog.show();
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e);
+                dialog.cancel();
+                // ...
+            }
+        }
+    }
 
     private void signOut() {
         mAuth.signOut();
@@ -400,8 +531,8 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
                 //cancel countdowntimer
                 countDownTimer.cancel();
-                disableViews(mVerifyButton, mResendButton, mVerificationField, timerLayout, tvDRC,tvPEVC);
-                enableViews(mStartButton,layoutPhone);
+                disableViews(mVerifyButton, mResendButton, mVerificationField, timerLayout, tvDRC, tvPEVC);
+                enableViews(mStartButton, layoutPhone, layoutGoogle);
                 //  mDetailText.setText(R.string.status_verification_failed);
 
 
@@ -456,7 +587,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
     private boolean validatePhoneNumber() {
         String phoneNumber = mPhoneNumberField.getText().toString();
-        if (TextUtils.isEmpty(phoneNumber)||phoneNumber.length()<11) {
+        if (TextUtils.isEmpty(phoneNumber) || !(phoneNumber.length() > 9 && phoneNumber.length() < 12)) {
             mPhoneNumberField.setError("Invalid phone number.");
             return false;
         }
@@ -488,12 +619,12 @@ public class PhoneAuthActivity extends AppCompatActivity implements
             StaticConfig.UID = user.getUid();
             Log.d("check", "onAuthStateChanged:signed_in:" + user.getUid());
 
-            if(type.equals("provider")) {
+            if (type.equals("provider")) {
                 Intent y = new Intent(PhoneAuthActivity.this, HomeProvider.class);
                 startActivity(y);
                 this.finish();
             }
-            if(type.equals("customer")) {
+            if (type.equals("customer")) {
                 Intent y = new Intent(PhoneAuthActivity.this, HomeCustomer.class);
                 startActivity(y);
                 this.finish();
@@ -503,10 +634,10 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         }
     }
 
-    public void isLoggedIn(){
-        if(SharedPreferenceHelper.getInstance(getApplicationContext()).isLoggedIn()) {
+    public void isLoggedIn() {
+        if (SharedPreferenceHelper.getInstance(getApplicationContext()).isLoggedIn()) {
 
-            startActivity(new Intent(this,ProviderHome.class));
+            startActivity(new Intent(this, ProviderHome.class));
         }
     }
 
@@ -524,21 +655,21 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                     return;
                 }
                 //mStartButton.setBackgroundColor(pink);
-                phone=mPhoneNumberField.getText().toString();
+                phone = mPhoneNumberField.getText().toString();
 
                 startPhoneNumberVerification(mPhoneNumberField.getText().toString());
                 setTimer();
 
-                disableViews(mStartButton,layoutPhone,tvGSWF);
-                enableViews(mVerifyButton, mVerificationField, timerLayout, tvDRC,tvPEVC);
+                disableViews(mStartButton, layoutPhone, tvGSWF, layoutGoogle);
+                enableViews(mVerifyButton, mVerificationField, timerLayout, tvDRC, tvPEVC);
                 break;
             case R.id.button_verify_phone:
                 String code = mVerificationField.getText().toString();
                 if (TextUtils.isEmpty(code)) {
                     mVerificationField.setError("Cannot be empty.");
                     return;
-                }else
-                verifyPhoneNumberWithCode(mVerificationId, code);
+                } else
+                    verifyPhoneNumberWithCode(mVerificationId, code);
                 break;
             case R.id.button_resend:
                 //set timer for resent code
@@ -554,83 +685,90 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     private void setTimer() {
         checkTimer = 1;
 
-            //show loading screen
-            //enableViews(mVerificationField, mVerifyButton, timerLayout);
+        //show loading screen
+        //enableViews(mVerificationField, mVerifyButton, timerLayout);
 
 
-            //time to show retry button
-            countDownTimer=new CountDownTimer(45000, 1000) {
-                @Override
-                public void onTick(long l) {
-                    timer.setText("0:" + l / 1000 + " s");
-                    mResendButton.setVisibility(View.INVISIBLE);
-                }
+        //time to show retry button
+        countDownTimer = new CountDownTimer(45000, 1000) {
+            @Override
+            public void onTick(long l) {
+                timer.setText("0:" + l / 1000 + " s");
+                mResendButton.setVisibility(View.INVISIBLE);
+            }
 
-                @Override
-                public void onFinish() {
-                    timer.setText(0 + " s");
-                    mResendButton.startAnimation(AnimationUtils.loadAnimation(PhoneAuthActivity.this, android.R.anim.slide_out_right));
-                    mResendButton.setVisibility(View.VISIBLE);
+            @Override
+            public void onFinish() {
+                timer.setText(0 + " s");
+                mResendButton.startAnimation(AnimationUtils.loadAnimation(PhoneAuthActivity.this, android.R.anim.slide_out_right));
+                mResendButton.setVisibility(View.VISIBLE);
 
-                    timerLayout.setVisibility(View.GONE);
+                timerLayout.setVisibility(View.GONE);
 
-                    checkTimer=0;
-                }
-            }.start();
-            //timer ends here
+                checkTimer = 0;
+            }
+        }.start();
+        //timer ends here
     }
 
     public void newUserInfo(final String userId) {
 
-       // String phone=mPhoneNumberField.getText().toString();
+        // String phone=mPhoneNumberField.getText().toString();
         StaticConfig.UID = userId;
 
-        if(type.equals("customer")){
+        if (type.equals("customer")) {
             checkCustomer(userId);
         }
-        if(type.equals("provider")){
+        if (type.equals("provider")) {
             checkProvider(userId);
         }
 
     }
 
-    public void checkProvider(final String userId){
+    public void checkProvider(final String userId) {
         FirebaseDatabase.getInstance().getReference().child("providers").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.getValue() != null) {
 
-                    if(type.equals("provider")) {
+                    Intent y = new Intent(PhoneAuthActivity.this, HomeProvider.class);
+                    y.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    y.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                        Intent y = new Intent(PhoneAuthActivity.this, HomeProvider.class);
-                        y.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        y.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(y);
+                    startActivity(y);
+                    finish();
 
-                        SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).setUID(userId);
-                        SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).setType("provider");
-                    }
+                    SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).setUID(userId);
+                    SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).setType("provider");
 
                 } else {
-                    if(type.equals("provider")) {
-                        User newUser2 = new User();
+
+
+                    User newUser2 = new User();
+                    if (!phone.isEmpty())
                         newUser2.phone = phone;
-                        newUser2.name = "name";
-                        newUser2.kitchenName = "kitchen";
-                        newUser2.address = "address";
-                        newUser2.status = "Active";
-                        newUser2.avatar = StaticConfig.STR_DEFAULT_BASE64;
-                        FirebaseDatabase.getInstance().getReference().child("providers/" + userId).child("about").setValue(newUser2);
+                    else
+                        newUser2.phone = "phone";
 
-                        SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).setUID(userId);
-                        SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).setType("provider");
+                    newUser2.name = "name";
+                    newUser2.kitchenName = "kitchen";
+                    newUser2.address = "address";
+                    newUser2.status = "Inactive";
+                    newUser2.rating = "0";
+                    newUser2.ratingCount = "0";
+                    newUser2.latitude = "0";
+                    newUser2.longitude = "0";
+                    newUser2.avatar = StaticConfig.STR_DEFAULT_BASE64;
+                    FirebaseDatabase.getInstance().getReference().child("providers/" + userId).child("about").setValue(newUser2);
 
-                        Intent y = new Intent(PhoneAuthActivity.this, HomeProvider.class);
-                        y.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        y.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(y);
-                    }
+                    SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).setUID(userId);
+                    SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).setType("provider");
 
+                    Intent y = new Intent(PhoneAuthActivity.this, HomeProvider.class);
+                    y.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    y.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(y);
+                    finish();
 
                 }
             }
@@ -640,32 +778,33 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         });
     }
 
-    public void checkCustomer(final String userId){
+    public void checkCustomer(final String userId) {
         FirebaseDatabase.getInstance().getReference().child("customers").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.getValue() != null) {
 
-                    if(type.equals("customer")) {
                         Intent y = new Intent(PhoneAuthActivity.this, HomeCustomer.class);
-                        y.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        y.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(y);
+                    y.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    y.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    finish();
 
                         //saveUserInfo(String);
                         SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).setUID(userId);
                         SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).setType("customer");
-                    }
 
                 } else {
                     //FirebaseDatabase.getInstance().getReference().child("users/" + userId).setValue(newUser);
 
-                    if(type.equals("customer")) {
+                    if (type.equals("customer")) {
                         User newUser3 = new User();
                         newUser3.phone = phone;
                         newUser3.name = "name";
                         newUser3.address = "address";
-                        newUser3.status = "true";
+                        newUser3.status = "Inactive";
+                        //    newUser3.latitude=0;
+                        //    newUser3.longitude=0;
                         newUser3.avatar = StaticConfig.STR_DEFAULT_BASE64;
                         FirebaseDatabase.getInstance().getReference().child("customers/" + userId).child("about").setValue(newUser3);
 
@@ -676,8 +815,8 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                         y.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         y.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(y);
+                        finish();
                     }
-                    
                 }
             }
 
@@ -694,9 +833,9 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 HashMap hashUser = (HashMap) dataSnapshot.getValue();
                 User userInfo = new User();
                 userInfo.phone = (String) hashUser.get("phone");
-               // userInfo.avatar = (String) hashUser.get("avatar");
-                userInfo.phone = (String) hashUser.get("type");
-               // userInfo.phone = (String) hashUser.get("status");
+                // userInfo.avatar = (String) hashUser.get("avatar");
+                userInfo.type = (String) hashUser.get("type");
+                // userInfo.phone = (String) hashUser.get("status");
 
 
                 SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).saveUserInfo(userInfo);
@@ -709,24 +848,24 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         });
     }
 
-    public void getType(){
-            FirebaseDatabase.getInstance().getReference().child("users/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+    public void getType() {
+        FirebaseDatabase.getInstance().getReference().child("users/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    if(dataSnapshot.getValue()!=null){
-                        HashMap hashUser = (HashMap) dataSnapshot.getValue();
-                        userType = (String) hashUser.get("type");
-                        Log.d("check", "type: "+userType);
-                    }
-
+                if (dataSnapshot.getValue() != null) {
+                    HashMap hashUser = (HashMap) dataSnapshot.getValue();
+                    userType = (String) hashUser.get("type");
+                    Log.d("check", "type: " + userType);
                 }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            }
 
-                }
-            });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

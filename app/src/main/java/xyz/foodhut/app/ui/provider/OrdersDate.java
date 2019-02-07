@@ -17,7 +17,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import xyz.foodhut.app.R;
 import xyz.foodhut.app.adapter.OrderDateProvider;
@@ -51,7 +55,7 @@ public class OrdersDate extends AppCompatActivity {
         recyclerView.setAdapter(orderAdapter);
 
         dialog=new ProgressDialog(this);
-        dialog.setMessage("Loading Menu...");
+        dialog.setMessage("Please Wait...");
         dialog.show();
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -83,13 +87,34 @@ public class OrdersDate extends AppCompatActivity {
                             }
 
 
-                           // for(int i=0;i<arrayList.size();i++){
-                            //    if(arrayList.get(i).imageUrl==null||arrayList.get(i).imageUrl==null){
-                           //         arrayList.remove(i);
-                           //     }
-                          //  }
 
-                          //  Collections.reverse(arrayList);
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+
+                            for (int i = 0; i < arrayList.size() - 1; i++) {
+                                for (int j = 0; j < arrayList.size() - i - 1; j++) {
+
+                                    Date date1 = null;
+                                    Date date2 = null;
+                                    try {
+                                        date1 = dateFormat.parse(arrayList.get(j));
+                                        date2 = dateFormat.parse(arrayList.get(j + 1));
+                                        Log.d("Check", "dates : " + date1 + " " + date2);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    if (date1.before(date2)) {
+
+                                        String temp;
+                                        temp = arrayList.get(j);
+                                        arrayList.set(j, arrayList.get(j + 1));
+                                        arrayList.set(j + 1, temp);
+
+                                        Log.d("Check", "dates comparing: " + i + " " + j);
+                                    }
+
+                                }
+                            }
 
                             //bind the data in adapter
                             Log.d("Check list", "out datachange: " + arrayList.size());
@@ -104,11 +129,5 @@ public class OrdersDate extends AppCompatActivity {
 
         }
 
-    }
-
-    public void fabBtn(View view){
-
-        startActivity(new Intent(this,AddMenu.class
-        ));
     }
 }

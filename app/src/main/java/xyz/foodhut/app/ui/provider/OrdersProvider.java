@@ -60,11 +60,11 @@ public class OrdersProvider extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvOrdersProvider);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new xyz.foodhut.app.adapter.OrdersProvider(this, arrayList,orderDetails);
+        adapter = new xyz.foodhut.app.adapter.OrdersProvider(this,orderDetails);
         recyclerView.setAdapter(adapter);
 
         dialog = new ProgressDialog(this);
-        dialog.setMessage("Loading Menu...");
+        dialog.setMessage("Please Wait...");
         dialog.show();
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -81,9 +81,9 @@ public class OrdersProvider extends AppCompatActivity {
     }
 
     public void goBack(View view){
-        startActivity(new Intent(this,HomeProvider.class));
+       // startActivity(new Intent(this,HomeProvider.class));
         finish();
-        finishAffinity();
+       // finishAffinity();
     }
 
     public void getDate() {
@@ -99,10 +99,12 @@ public class OrdersProvider extends AppCompatActivity {
                         for (DataSnapshot dsp : dataSnapshot.getChildren()) {
                             dateList.add(String.valueOf(dsp.getKey())); //add result into array list
 
+                            getMenuList(dsp.getKey());
                             Log.d("check", "onDataChange: date " + dsp.getKey());
                         }
                         Log.d("check", "dateList size: " + dateList.size());
-                        getOrderList();
+                       // getOrderList();
+
                         //  Collections.reverse(obj);
                     }
                     else {
@@ -216,5 +218,125 @@ public class OrdersProvider extends AppCompatActivity {
         }
 
         orderList.clear();
+    }
+
+    public void getMenuList(final String date) {
+
+        databaseReference.child("providers/" + StaticConfig.UID + "/orders").child(date).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // dialog.dismiss();
+                //fetch files from firebase database and push in arraylist
+                if (dataSnapshot.getValue() != null) {
+
+                    //List<String> lst = new ArrayList<String>(); // Result will be holded Here
+                    for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+
+                        //   getMenu(String.valueOf(dsp.getKey()),date);
+                        getOrderList(String.valueOf(dsp.getKey()),date);
+                        Log.d("check", "onDataChange: menuId " + dsp.getKey());
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //  dialog.dismiss();
+            }
+        });
+    }
+
+    public void getMenu(final String menuId, final String date) {
+        arrayList.clear();
+
+        databaseReference.child("providers/" + StaticConfig.UID + "/orders").child(date).child(menuId).child("menuDetails")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //  dialog.dismiss();
+                        //fetch files from firebase database and push in arraylist
+                        if (dataSnapshot.getValue() != null) {
+
+                            OrderDetailsProvider orderDetailsProvider = dataSnapshot.getValue(OrderDetailsProvider.class);
+
+                            getOrderList(menuId,date);
+
+                            Log.d("Check", "menuDetails: " + arrayList.size());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        dialog.dismiss();
+                    }
+                });
+    }
+
+
+    public void getOrderList(final String menuId, final String date) {
+        //menuList.clear();
+        databaseReference.child("providers/" + StaticConfig.UID + "/orders").child(date).child(menuId).child("orders").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    getOrderDetails(menuId,date, String.valueOf(dsp.getKey()));
+
+                    Log.d("check", "onDataChange: orderId from list " + dsp.getKey());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //  dialog.dismiss();
+            }
+        });
+    }
+
+    public void getOrderDetails(final String menuId, String date, String orderId) {
+
+
+        databaseReference.child("providers/" + StaticConfig.UID + "/orders").child(date).child(menuId).child("orders").child(orderId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        dialog.dismiss();
+                        //fetch files from firebase database and push in arraylist
+                        OrderDetails details = dataSnapshot.getValue(OrderDetails.class);
+
+                        orderDetails.add(details);
+
+                        for (int i = 0; i < orderDetails.size()-1; i++) {
+                            for (int j = 0; j < orderDetails.size() - i - 1; j++) {
+
+                                if (Long.parseLong(orderDetails.get(j).orderId)<Long.parseLong(orderDetails.get(j+1).orderId)) {
+
+                                    OrderDetails od=new OrderDetails();
+                                    od=orderDetails.get(j);
+
+                                    orderDetails.set(j, orderDetails.get(j + 1));
+                                    orderDetails.set(j + 1, od);
+
+                                    Log.d("Check", "dates comparing: "+i+" " + j);
+                                }
+
+                            }
+                        }
+
+                        adapter.notifyDataSetChanged();
+                        Log.d("Check list", "onDataChange: details " + orderDetails.size() + " " + orderDetails.get(0).orderId);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        dialog.dismiss();
+                    }
+                });
+
+        //  }
+
+
     }
 }

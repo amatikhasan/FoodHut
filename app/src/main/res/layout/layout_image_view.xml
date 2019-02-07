@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/pvImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:src="@drawable/loading"/>
+
+    <!--
+    <ImageView
+        android:id="@+id/pvImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:src="@drawable/loading"/>
+
+        <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/pvImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        />
+
+        <com.github.piasy.biv.view.BigImageView
+        android:id="@+id/bImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        app:failureImage="@drawable/loading"
+        app:optimizeDisplay="true"
+        app:failureImageInitScaleType="center"
+
+        />
+        -->
+
+
+
+</LinearLayout>

@@ -49,7 +49,7 @@ public class OrderStatusProvider extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         dialog = new ProgressDialog(this);
-        dialog.setMessage("Loading Menu...");
+        dialog.setMessage("Please Wait...");
         dialog.show();
 
         extras = getIntent().getExtras();

@@ -40,13 +40,13 @@ public class Reviews extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvReview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ReviewAdapter(this, arrayList);
+        adapter = new ReviewAdapter(this, arrayList,"reviews");
         recyclerView.setAdapter(adapter);
 
 
 
         dialog = new ProgressDialog(this);
-        dialog.setMessage("Loading Reviews...");
+        dialog.setMessage("Please Wait...");
         dialog.show();
 
 
@@ -76,8 +76,8 @@ public class Reviews extends AppCompatActivity {
     }
 
     public void goBack(View view){
-        startActivity(new Intent(this,HomeProvider.class));
+      //  startActivity(new Intent(this,HomeProvider.class));
         finish();
-        finishAffinity();
+      //  finishAffinity();
     }
 }

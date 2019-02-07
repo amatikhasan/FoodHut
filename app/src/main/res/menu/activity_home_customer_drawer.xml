@@ -49,13 +49,6 @@
             android:title="Privacy Policy" />
     </group>
 
-    <group
-        android:id="@+id/chG3"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/cmLogout"
-            android:icon="@drawable/logout_nav_24"
-            android:title="Log Out" />
-    </group>
+
 
 </menu>

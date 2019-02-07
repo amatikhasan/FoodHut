@@ -18,14 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="48dp">
 
-            <ImageView
-                android:id="@+id/logo"
-                android:layout_width="100dp"
-                android:layout_height="25dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/home_logo" />
 
             <ImageView
                 android:id="@+id/arrow"
@@ -115,6 +107,7 @@
                     android:layout_marginEnd="8dp"
                   android:layout_toEndOf="@id/nameIcon"
                     android:text="Update your name"
+                    android:fontFamily="sans-serif-light"
                     android:textSize="14sp" />
 
                 <TextView
@@ -163,6 +156,7 @@
                     android:layout_toEndOf="@id/AddressIcon"
                     android:layout_toStartOf="@id/editAddress"
                     android:text="Update your address"
+                    android:fontFamily="sans-serif-light"
                     android:textSize="14sp" />
 
                 <TextView

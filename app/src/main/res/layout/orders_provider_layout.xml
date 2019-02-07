@@ -39,11 +39,12 @@
                         android:id="@+id/mOrderNo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
                         android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="16dp"
                         android:ellipsize="marquee"
                         android:singleLine="true"
                         android:text="Order No"
+                        android:fontFamily="sans-serif-light"
                         android:textSize="16sp" />
 
                     <TextView
@@ -55,6 +56,7 @@
                         android:layout_toStartOf="@id/mQty"
                         android:ellipsize="marquee"
                         android:singleLine="true"
+                        android:fontFamily="sans-serif-light"
                         android:text="Food Name"
                         android:textSize="16sp" />
 
@@ -62,8 +64,8 @@
                         android:id="@+id/mQty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
                         android:layout_below="@id/mOrderNo"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginEnd="7dp"
                         android:text="0 pkt." />
 
@@ -73,58 +75,61 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/mFoodName">
 
-                    <TextView
-                        android:id="@+id/mExtraItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="4dp"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="Extra Item"
-                        android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/mExtraItem"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:fontFamily="sans-serif-light"
+                            android:text="Extra Item"
+                            android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/mExtraQty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="4dp"
-                        android:text="0 pcs." />
+                        <TextView
+                            android:id="@+id/mExtraQty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="4dp"
+                            android:text="0 pcs." />
 
                     </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/mCAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/rlExtra"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="4dp"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="Address"
-                        android:textSize="14sp" />
+                    <!--         <TextView
+                                 android:id="@+id/mCAddress"
+                                 android:layout_width="match_parent"
+                                 android:layout_height="wrap_content"
+                                 android:layout_below="@id/rlExtra"
+                                 android:layout_marginBottom="8dp"
+                                 android:layout_marginEnd="4dp"
+                                 android:ellipsize="marquee"
+                                 android:singleLine="true"
+                                 android:text="Address"
+                                 android:textSize="14sp" />
+                                 -->
 
                     <TextView
                         android:id="@+id/mSchedule"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/mCAddress"
-                        android:layout_marginBottom="4dp"
+                        android:layout_below="@id/rlExtra"
                         android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
                         android:layout_toStartOf="@id/mAmount"
                         android:ellipsize="marquee"
                         android:singleLine="true"
                         android:text="Time:"
+                        android:fontFamily="sans-serif-light"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/mAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/rlExtra"
                         android:layout_alignParentEnd="true"
-                        android:layout_below="@+id/mCAddress"
                         android:layout_marginEnd="8dp"
                         android:text="৳ 0"
                         android:textSize="16sp" />
@@ -134,7 +139,7 @@
                 <View
                     android:id="@+id/line"
                     android:layout_width="1dp"
-                    android:layout_height="120dp"
+                    android:layout_height="116dp"
                     android:layout_centerVertical="true"
                     android:layout_margin="4dp"
                     android:layout_toStartOf="@id/ll3"
@@ -147,34 +152,24 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <RelativeLayout
-                        android:layout_width="100dp"
+
+                    <TextView
+                        android:id="@+id/mStatus"
+                        android:layout_width="88dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp">
-
-                        <ImageView
-                            android:id="@+id/mIcon"
-                            android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/icon_accepted" />
-
-                        <TextView
-                            android:id="@+id/mStatus"
-                            android:layout_width="match_parent"
-                            android:layout_toEndOf="@id/mIcon"
-                            android:layout_height="32dp"
-                            android:layout_centerVertical="true"
-                            android:gravity="start|center_vertical"
-                            android:paddingStart="4dp"
-                            android:text="Accepted"
-                            android:textColor="@drawable/green"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
+                        android:background="@drawable/round_button_primary"
+                        android:gravity="center"
+                        android:paddingStart="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="8dp"
+                        android:text="Accept"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/mAction"
@@ -182,10 +177,11 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:gravity="center"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
+                        android:layout_marginTop="20dp"
                         android:paddingStart="16dp"
+                        android:paddingTop="4dp"
                         android:paddingEnd="16dp"
+                        android:paddingBottom="4dp"
                         android:text="Reject"
                         android:textColor="@color/colorPrimary"
                         android:textSize="12sp"
@@ -196,9 +192,9 @@
                     android:id="@+id/mNote"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_alignBottom="@id/line"
-                    android:layout_marginTop="8dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
                     android:text="View Note"
                     android:textColor="@color/colorPrimary"

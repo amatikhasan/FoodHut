@@ -51,7 +51,7 @@ public class CustomerHome extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvCustomerHome);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        menuAdapter = new MenuCustomer(this, arrayList);
+      //  menuAdapter = new MenuCustomer(this, arrayList);
         recyclerView.setAdapter(menuAdapter);
 
         dialog = new ProgressDialog(this);

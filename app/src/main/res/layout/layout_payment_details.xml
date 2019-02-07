@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="32dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/etAmount"
+        android:fontFamily="sans-serif-light"
+        android:layout_marginBottom="16dp"
+        android:textSize="16sp"
+        android:text="Request Withdraw Of"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/etAmount"
+        android:layout_alignBaseline="@id/etAmount"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:text="৳ "/>
+
+    <EditText
+        android:id="@+id/etAmount"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:inputType="number"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/corner_black_border"
+        android:hint="Amount"/>
+
+    <TextView
+        android:id="@+id/txt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_below="@id/etAmount"
+        android:textSize="16sp"
+        android:text="Payment Method"/>
+
+    <TextView
+        android:id="@+id/txtMethod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/etAmount"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
+        android:fontFamily="sans-serif-light"
+        android:text="bKash"/>
+
+
+</RelativeLayout>

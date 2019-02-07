@@ -7,6 +7,8 @@ public class Review {
     public String customerName;
     public String rating;
     public String review;
+    public String time;
+    public String kitchenName;
 
     public Review(){
 

@@ -1,5 +1,6 @@
 package xyz.foodhut.app.ui;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,299 +18,269 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.foodhut.app.R;
+import xyz.foodhut.app.adapter.MenuCustomer;
+import xyz.foodhut.app.data.SharedPreferenceHelper;
 import xyz.foodhut.app.data.StaticConfig;
+import xyz.foodhut.app.ui.customer.Favourites;
 import xyz.foodhut.app.ui.customer.HomeCustomer;
 import xyz.foodhut.app.ui.provider.HomeProvider;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.ContentValues.TAG;
 
 public class Profile extends AppCompatActivity {
 
+    CircleImageView image;
+    TextView name;
+    String mName,mImageUrl="default",mAddress,mPhone,mType,mKitchen;
+    RelativeLayout rlFav;
     Bundle extras;
-    String type;
-    EditText name, address, location;
-    String mName, mAddress,mLocation;
+    private TextDrawable textDrawable;
+    private ColorGenerator mColorGenerator = ColorGenerator.DEFAULT;
 
-    private static final int REQUEST_LOCATION = 1;
-    LocationManager locationManager;
-    double lattitude, longitude;
-    boolean gps_check;
-    int provider;
-
-    private FusedLocationProviderClient client;
+    private DatabaseReference databaseReference;
+    private StorageReference mStorageRef;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-     //   name = findViewById(R.id.etUpName);
-     //   address = findViewById(R.id.etUpAddress);
-     //   location = findViewById(R.id.etUpLocation);
+        auth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        image=findViewById(R.id.circlePhoto);
+        name=findViewById(R.id.name);
+
+        rlFav=findViewById(R.id.rlFav);
 
         //get Intent Data
         extras = getIntent().getExtras();
         if (extras != null) {
-            type = extras.getString("type");
+            mType = extras.getString("type");
             mName=extras.getString("name");
             mAddress=extras.getString("address");
+            mImageUrl=extras.getString("avatar");
+            mPhone=extras.getString("phone");
 
-            Log.d("check", "info: "+mName+" "+mAddress);
-
-         //   name.setText(mName);
-         //   address.setText(mAddress);
-        }
-
-         requestPermission();
-
-        client = LocationServices.getFusedLocationProviderClient(this);
-
-        //show();
-
-         getOrdinate();
-
-        //getAddress(23.798428,90.353462);
-
-    }
-
-    public void updateProfile(View view) {
-        mName = name.getText().toString();
-        mAddress = address.getText().toString();
-        mLocation=location.getText().toString();
-
-        if (type.equals("customer")) {
-            FirebaseDatabase.getInstance().getReference().child("customers/" + StaticConfig.UID).child("about").child("name").setValue(mName);
-            FirebaseDatabase.getInstance().getReference().child("customers/" + StaticConfig.UID).child("about").child("address").setValue(mAddress);
-            FirebaseDatabase.getInstance().getReference().child("customers/" + StaticConfig.UID).child("about").child("location").setValue(mLocation);
-
-            Toast.makeText(this, "Profile Updated", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, HomeCustomer.class));
-
-        }
-        if (type.equals("provider")) {
-            FirebaseDatabase.getInstance().getReference().child("providers/" + StaticConfig.UID).child("about").child("name").setValue(mName);
-            FirebaseDatabase.getInstance().getReference().child("providers/" + StaticConfig.UID).child("about").child("address").setValue(mAddress);
-            FirebaseDatabase.getInstance().getReference().child("providers/" + StaticConfig.UID).child("about").child("location").setValue(mLocation);
-
-            Toast.makeText(this, "Profile Updated", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, HomeProvider.class));
-        }
-
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1);
-    }
-
-    public void getOrdinate() {
-        if (ActivityCompat.checkSelfPermission(Profile.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
-        }
-        client.getLastLocation().addOnSuccessListener(Profile.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-
-                if (location != null) {
-                    lattitude = location.getLatitude();
-                    longitude = location.getLongitude();
-
-                    Log.d("check", "location " + lattitude + " " + longitude);
-
-                    getAddress(lattitude, longitude);
-                }
-                else{
-                    show();
-                }
-
-            }
-        });
-    }
-
-    public void getAddress(double lat, double lng) {
-        Geocoder geocoder = new Geocoder(Profile.this, Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
-            Address obj = addresses.get(0);
-            String add = obj.getAddressLine(0);
-            add = add + "\n" + obj.getCountryName();
-            add = add + "\n" + obj.getCountryCode();
-            add = add + "\n" + obj.getAdminArea();
-            add = add + "\n" + obj.getPostalCode();
-            add = add + "\n" + obj.getSubAdminArea();
-            add = add + "\n" + obj.getLocality();
-            add = add + "\n" + obj.getSubLocality();
-            add = add + "\n" + obj.getPremises();
-            add = add + "\n" + obj.getSubThoroughfare();
-
-            if(obj.getSubLocality()!=null) {
-                location.setText(obj.getSubLocality());
-            }
-            else{
-                location.setText(obj.getLocality());
+            if (mType.equals("provider")) {
+                mKitchen = extras.getString("kitchen");
+                rlFav.setVisibility(View.GONE);
             }
 
-            Log.v("check", "Address" + add);
-            // Toast.makeText(this, "Address=>" + add,
-            // Toast.LENGTH_SHORT).show();
+            if (!mImageUrl.equals("default")){
+                Picasso.get().load(mImageUrl).placeholder(R.drawable.kitchen_icon_colour).into(image);
 
-            // TennisAppActivity.showDialog(add);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+              //  Glide.with(getApplicationContext()).load(mImageUrl).placeholder(R.drawable.kitchen_icon_colour).into(image);
+            }
+
+            Log.d("check", "info: "+mName+" "+mImageUrl);
+
+            //   name.setText(mName);
+            //   address.setText(mAddress);
         }
 
-     /*   try {
-            JSONObject jsonObj = get("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + ","
-                    + longitude + "&sensor=true");
-            String Status = jsonObj.getString("status");
-            if (Status.equalsIgnoreCase("OK")) {
-                JSONArray Results = jsonObj.getJSONArray("results");
-                JSONObject location = Results.getJSONObject(0);
-              String  finalAddress = location.getString("formatted_address");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        */
-    }
+        checkProfile();
 
+      //  setTextDrawable(mName);
 
-
-    public void show() {
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-
-            provider = 1;
-            getLocation();
-            Log.d("check method", "network condition");
-        } else if (locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)) {
-
-            provider = 2;
-            getLocation();
-            Log.d("check method", "passive condition");
-
-        } else if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps();
-            Log.d("check method", "gps alert");
-
-        } else if (gps_check && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-
-            provider = 3;
-            getLocation();
-            Log.d("check method", "gps condition");
-        }
-        Log.d("check provider", String.valueOf(provider));
-    }
-
-    private void getLocation() {
-        Log.d("check method", "from getLocation");
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-
-            return;
-        }
-
-        if (provider == 1) {
-
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-                if (location != null) {
-                    double latti = location.getLatitude();
-                    double longi = location.getLongitude();
-                    lattitude = latti;
-                    longitude = longi;
-                    Log.d("check method", "provider:"+provider);
-
-                    Log.d("check", "location "+lattitude+" "+longitude);
-
-                    getAddress(lattitude,longitude);
-
-                } else {
-
-                    Toast.makeText(this, "Unble to Trace your location, Please On your Location/GPS!", Toast.LENGTH_LONG).show();
-
-
-                }
-                Log.d("check method", "network");
-            }
-            if (provider == 2) {
-                Location location2 = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-                if (location2 != null) {
-                    double latti = location2.getLatitude();
-                    double longi = location2.getLongitude();
-                    lattitude = latti;
-                    longitude = longi;
-                    Log.d("check method", "provider:"+provider);
-                    Log.d("check", "location "+lattitude+" "+longitude);
-
-                    getAddress(lattitude,longitude);
-
-                } else {
-
-                    Toast.makeText(this, "Unble to Trace your location, Please On your Location/GPS!", Toast.LENGTH_LONG).show();
-
-                }
-                Log.d("check method", "passive");
-
-            }
-            if (provider == 3) {
-                Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (location1 != null) {
-                    double latti = location1.getLatitude();
-                    double longi = location1.getLongitude();
-                    lattitude = latti;
-                    longitude = longi;
-                    Log.d("check method", "provider:"+provider);
-                    Log.d("check", "location "+lattitude+" "+longitude);
-
-                    getAddress(lattitude,longitude);
-
-                } else {
-
-                    Toast.makeText(this, "Unble to Trace your location", Toast.LENGTH_SHORT).show();
-
-                }
-                Log.d("check method", "gps");
-
-            }
+        if (mType.equals("customer"))
+        name.setText(mName);
+        else
+            name.setText(mKitchen);
 
     }
 
-    protected void buildAlertMessageNoGps() {
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Please Turn ON your GPS Connection")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                        gps_check = true;
-
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        dialog.cancel();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-        Log.d("check method", "from alert");
+        if (StaticConfig.BITMAP!=null){
+            image.setImageBitmap(StaticConfig.BITMAP);
+        }
     }
 
+    public void callUs(View View){
+        Intent call=new Intent(Intent.ACTION_DIAL);
+        call.setData(Uri.parse("tel:01721195353"));
+
+        startActivity(call);
+
+    }
+
+    public void visitSite(View view){
+        Intent visit=new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.foodhut.xyz"));
+        startActivity(visit);
+    }
+
+    public void editProfile(View view){
+        // Handle the camera action
+        Intent intent = new Intent(this, ProfileUpdate.class);
+        intent.putExtra("type", mType);
+        intent.putExtra("name", mName);
+        intent.putExtra("isUpdate", "true");
+        intent.putExtra("address", mAddress);
+        intent.putExtra("phone", mPhone);
+        intent.putExtra("avatar", mImageUrl);
+        if (mType.equals("provider"))
+            intent.putExtra("kitchen", mKitchen);
+        startActivity(intent);
+
+    }
+
+    public void logout(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        SharedPreferenceHelper.getInstance(this).logout();
+        auth.signOut();
+        finish();
+        finishAffinity();
+    }
+
+    public void feedBack(View view) {
+        Intent intent = new Intent(this, FeedBack.class);
+        intent.putExtra("user", mType);
+        startActivity(intent);
+        finish();
+    }
+
+    public void aboutUs(View view) {
+        Intent intent = new Intent(this, About.class);
+        startActivity(intent);
+       // finish();
+    }
+
+    public void faq(View view) {
+        Intent intent = new Intent(this, FAQ.class);
+        startActivity(intent);
+       // finish();
+    }
+
+    public void privacy(View view) {
+        Intent intent = new Intent(this, Privacy.class);
+        startActivity(intent);
+        // finish();
+    }
+
+    public void myWishList(View view) {
+        Intent intent = new Intent(this, Favourites.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void checkProfile() {
+        if (mType.equals("customer")) {
+            FirebaseDatabase.getInstance().getReference().child("customers/" + StaticConfig.UID + "/about")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            //fetch files from firebase database and push in arraylist
+
+                            if (dataSnapshot.getValue() != null) {
+
+                                HashMap hashUser = (HashMap) dataSnapshot.getValue();
+                                mName = (String) hashUser.get("name");
+                                mImageUrl = (String) hashUser.get("avatar");
+                                mPhone = (String) hashUser.get("phone");
+                                mAddress = (String) hashUser.get("address");
+
+                                name.setText(mName);
+
+
+                           //     if (!mImageUrl.equals("default")){
+                            //        Glide.with(getApplicationContext()).load(mImageUrl).placeholder(R.drawable.kitchen_icon_colour).into(image);
+                           //     }
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+        if (mType.equals("provider")) {
+            FirebaseDatabase.getInstance().getReference().child("providers/" + StaticConfig.UID + "/about")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            //fetch files from firebase database and push in arraylist
+
+                            if (dataSnapshot.getValue() != null) {
+
+                                HashMap hashUser = (HashMap) dataSnapshot.getValue();
+                                mName = (String) hashUser.get("name");
+                                mKitchen = (String) hashUser.get("kitchen");
+                                mImageUrl = (String) hashUser.get("avatar");
+                                mPhone = (String) hashUser.get("phone");
+                                mAddress = (String) hashUser.get("address");
+
+                           //     if (!mImageUrl.equals("default")){
+                           //         Glide.with(getApplicationContext()).load(mImageUrl).placeholder(R.drawable.kitchen_icon_colour).into(image);
+                           //     }
+
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+    }
+
+    public void goBack(View view) {
+        finish();
+
+    }
+
+    // Set reminder title view
+    public void setTextDrawable(String name) {
+        String letter = "N";
+
+        if(name != null && !name.isEmpty()) {
+            letter = name.substring(0, 1);
+        }
+
+        int color = mColorGenerator.getRandomColor();
+
+        // Create a circular icon consisting of  a random background colour and first letter of title
+        textDrawable = TextDrawable.builder()
+                .buildRound(letter, color);
+      //  image.setImageDrawable(textDrawable);
+    }
 }

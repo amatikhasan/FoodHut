@@ -19,14 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp">
 
-            <ImageView
-                android:id="@+id/logo"
-                android:layout_width="100dp"
-                android:layout_height="25dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/home_logo" />
+
 
             <ImageView
                 android:id="@+id/arrow"

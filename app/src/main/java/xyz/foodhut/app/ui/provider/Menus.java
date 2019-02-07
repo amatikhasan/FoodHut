@@ -29,33 +29,34 @@ import xyz.foodhut.app.ui.customer.HomeCustomer;
 public class Menus extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<xyz.foodhut.app.model.MenuProvider> arrayList = new ArrayList<>();
-    String userID=null;
+    String userID = null;
     TextView emptyList;
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     MenuProvider menuAdapter;
     private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-      //  getSupportActionBar().setTitle("Add Menu");
+        //  getSupportActionBar().setTitle("Add Menu");
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        emptyList=findViewById(R.id.emptyList);
+        emptyList = findViewById(R.id.emptyList);
 
-        arrayList=new ArrayList<>();
-        recyclerView=findViewById(R.id.rvMenu);
+        arrayList = new ArrayList<>();
+        recyclerView = findViewById(R.id.rvMenu);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        menuAdapter=new MenuProvider(this,arrayList);
+        menuAdapter = new MenuProvider(this, arrayList);
         recyclerView.setAdapter(menuAdapter);
 
-        dialog=new ProgressDialog(this);
-        dialog.setMessage("Loading Menu...");
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("Please Wait...");
         dialog.show();
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -69,58 +70,57 @@ public class Menus extends AppCompatActivity {
         }  */
 
 
-        if(StaticConfig.UID!=null) {
-            FirebaseDatabase.getInstance().getReference("providers/"+ StaticConfig.UID).child("menu")
+        if (StaticConfig.UID != null) {
+            FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("menu")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    dialog.dismiss();
-                    if (dataSnapshot.getValue() != null) {
-                        //fetch files from firebase database and push in arraylist
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            xyz.foodhut.app.model.MenuProvider menuProvider = snapshot.getValue(xyz.foodhut.app.model.MenuProvider.class);
-                            arrayList.add(menuProvider);
-                            //menuAdapter.notifyDataSetChanged();
-                            Log.d("Check list", "onDataChange: " + arrayList.size());
-                        }
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            dialog.dismiss();
+                            if (dataSnapshot.getValue() != null) {
+                                //fetch files from firebase database and push in arraylist
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    xyz.foodhut.app.model.MenuProvider menuProvider = snapshot.getValue(xyz.foodhut.app.model.MenuProvider.class);
+                                    arrayList.add(menuProvider);
+                                    //menuAdapter.notifyDataSetChanged();
+                                    Log.d("Check list", "onDataChange: " + arrayList.size());
+                                }
 
-                        for (int i = 0; i < arrayList.size(); i++) {
-                            if (arrayList.get(i).imageUrl == null || arrayList.get(i).imageUrl == null) {
-                                arrayList.remove(i);
+                                for (int i = 0; i < arrayList.size(); i++) {
+                                    if (arrayList.get(i).imageUrl == null || arrayList.get(i).imageUrl == null) {
+                                        arrayList.remove(i);
+                                    }
+                                }
+
+                                Collections.reverse(arrayList);
+
+                                //bind the data in adapter
+                                Log.d("Check list", "out datachange: " + arrayList.size());
+                                menuAdapter.notifyDataSetChanged();
+                            } else {
+                                emptyList.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
                             }
                         }
 
-                        Collections.reverse(arrayList);
-
-                        //bind the data in adapter
-                        Log.d("Check list", "out datachange: " + arrayList.size());
-                        menuAdapter.notifyDataSetChanged();
-                    }
-                    else {
-                        emptyList.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    dialog.dismiss();
-                }
-            });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            dialog.dismiss();
+                        }
+                    });
 
         }
 
     }
 
-    public void goBack(View view){
-        startActivity(new Intent(this,HomeProvider.class));
+    public void goBack(View view) {
+      //  startActivity(new Intent(this, HomeProvider.class));
         finish();
-        finishAffinity();
+     //   finishAffinity();
     }
 
-    public void fabBtn(View view){
+    public void fabBtn(View view) {
 
-        startActivity(new Intent(this,AddMenu.class
-        ));
+        startActivity(new Intent(this, AddMenu.class));
+        finish();
     }
 }

@@ -69,10 +69,12 @@ public class FeedBack extends AppCompatActivity {
     }
 
     public void goBack(View view) {
-        if (user.equals("provider"))
+        if (user.equals("provider")) {
             startActivity(new Intent(this, HomeProvider.class));
+            finish();
+        }
         else
-            startActivity(new Intent(this, HomeProvider.class));
+            finish();
 
     }
 }

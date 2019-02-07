@@ -52,6 +52,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -68,17 +69,19 @@ import xyz.foodhut.app.ui.customer.HomeCustomer;
 import xyz.foodhut.app.ui.customer.OrdersCustomer;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static xyz.foodhut.app.ui.PhoneAuthActivity.userID;
 
 public class ProfileProvider extends AppCompatActivity {
 
     Bundle extras;
     String type;
-    TextView tvName,tvKitchen, tvaddress, location;
+    TextView tvName, tvKitchen, tvaddress, location;
     ImageView photo;
-    String mName,mKitchenName, mAddress, mLocation, mImageUrl, mApartment, mHouse, mStreet, mArea;
+    String mName="", mKitchenName="", mAddress="", mLocation, mImageUrl, mApartment, mHouse, mStreet, mArea;
     public String userID;
 
     byte[] byteArray;
+    Bitmap bitmap;
     public static byte[] bytes;
     private static final int IMAGE_REQUEST = 1;
     private Uri filePath;
@@ -122,27 +125,30 @@ public class ProfileProvider extends AppCompatActivity {
             mName = extras.getString("name");
             mAddress = extras.getString("address");
             mImageUrl = extras.getString("avatar");
-            mKitchenName = extras.getString("kitchen")+"";
+            mKitchenName = extras.getString("kitchen");
 
-            Log.d("check", "info: " + mName + " " + mAddress+" "+mKitchenName);
+            Log.d("check", "info: " + mName + " " + mAddress + " " + mKitchenName);
 
-            if (!mName.equals("")||mName!=null) {
+            if (!mName.equals("")) {
                 tvName.setText(mName);
                 tvKitchen.setText(mKitchenName);
                 tvaddress.setText(mAddress);
             }
-            Picasso.get().load(mImageUrl).placeholder(R.drawable.default_avatar).into(photo);
+            Picasso.get().load(mImageUrl).placeholder(R.drawable.kitchen_icon_colour).into(photo);
+        }
+        else {
+            checkProfile();
         }
 
         checkAddress();
 
-     //   requestPermission();
+        //   requestPermission();
 
-     //   client = LocationServices.getFusedLocationProviderClient(this);
+        //   client = LocationServices.getFusedLocationProviderClient(this);
 
         //show();
 
-      //  getOrdinate();
+        //  getOrdinate();
 
         //getAddress(23.798428,90.353462);
 
@@ -169,22 +175,58 @@ public class ProfileProvider extends AppCompatActivity {
         });
     }
 
-    public void favourites(View view){
-        startActivity(new Intent(this,Favourites.class));
+    public void favourites(View view) {
+        startActivity(new Intent(this, Favourites.class));
         finish();
     }
 
-    public void orders(View view){
-        startActivity(new Intent(this,OrdersCustomer.class));
+    public void orders(View view) {
+        startActivity(new Intent(this, OrdersCustomer.class));
         finish();
     }
 
-    public void logout(View view){
+    public void logout(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         SharedPreferenceHelper.getInstance(this).logout();
         auth.signOut();
         finish();
+    }
+
+    public void checkProfile() {
+
+        FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("about").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.getValue() != null) {
+
+                    HashMap hashUser = (HashMap) snapshot.getValue();
+                    String name = (String) hashUser.get("name");
+                    String address = (String) hashUser.get("address");
+                    String avatar = (String) hashUser.get("avatar");
+                    String kitchenName = (String) hashUser.get("kitchenName");
+
+                    if (!name.equals("name")){
+                        mName=name;
+                        tvName.setText(name);}
+                    if (!address.equals("address")){
+                        mAddress=address;
+                        tvaddress.setText(address);}
+                    if (!kitchenName.equals("kitchen")){
+                        mKitchenName=kitchenName;
+                        tvKitchen.setText(kitchenName);}
+                    if (!avatar.equals("default"))
+                        Picasso.get().load(avatar).placeholder(R.drawable.kitchen_icon_colour).into(photo);
+
+                    Log.d("check", "name in provider: " + name + " " + kitchenName);
+
+
+                }
+            }
+
+            public void onCancelled(DatabaseError arg0) {
+            }
+        });
     }
 
     public void updateName(View view) {
@@ -218,6 +260,7 @@ public class ProfileProvider extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (!etName.getText().toString().isEmpty()) {
+                            mName=etName.getText().toString();
                             tvName.setText(etName.getText().toString());
                             databaseReference.child("providers/" + userID).child("about").child("name").setValue(etName.getText().toString());
 
@@ -264,6 +307,7 @@ public class ProfileProvider extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (!etName.getText().toString().isEmpty()) {
+                            mKitchenName=etName.getText().toString();
                             tvKitchen.setText(etName.getText().toString());
                             databaseReference.child("providers/" + userID).child("about").child("kitchenName").setValue(etName.getText().toString());
 
@@ -279,44 +323,47 @@ public class ProfileProvider extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void goBack(View view){
-            FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("about").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.getValue() != null) {
+    public void goBack(View view) {
 
-                        HashMap hashUser = (HashMap) snapshot.getValue();
-                        String name = (String) hashUser.get("name");
-                        String address = (String) hashUser.get("address");
-                        String kitchen = (String) hashUser.get("kitchenName");
-
-                        Log.d("check", "name in provider: " + name+" "+kitchen);
-
-
-                        if ((name.equals("")||name.equals("name"))||(address.equals("")||address.equals("address"))||(kitchen.equals("")||kitchen.equals("kitchen"))){
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(ProfileProvider.this);
-                            builder.setMessage("Please update all information before you leave.")
-                                    .setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(final DialogInterface dialog, final int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                            final AlertDialog alert = builder.create();
-                            alert.show();
-                            Log.d("check method", "from alert");
+        if ((mName.equals("") || mName.equals("name")) || (mAddress.equals("") || mAddress.equals("address")) || (mKitchenName.equals("") || mKitchenName.equals("kitchen"))) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(ProfileProvider.this);
+            builder.setMessage("Please update all information before you leave.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            dialog.cancel();
                         }
-                        else {
-                            startActivity(new Intent(ProfileProvider.this,HomeProvider.class));
-                            finish();
-                            finishAffinity();
-                        }
-                    }
-                }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+            Log.d("check method", "from alert");
+        } else {
+          //  startActivity(new Intent(ProfileProvider.this, HomeProvider.class));
+            finish();
+          //  finishAffinity();
+        }
+    }
 
-                public void onCancelled(DatabaseError arg0) {
-                }
-            });
+    @Override
+    public void onBackPressed() {
+
+        if ((mName.equals("") || mName.equals("name")) || (mAddress.equals("") || mAddress.equals("address")) || (mKitchenName.equals("") || mKitchenName.equals("kitchen"))) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(ProfileProvider.this);
+            builder.setMessage("Please update all information before you leave.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            dialog.cancel();
+                        }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+            Log.d("check method", "from alert");
+        } else {
+          //  startActivity(new Intent(ProfileProvider.this, HomeProvider.class));
+            finish();
+          //  finishAffinity();
+        }
     }
 
     public void updateAddress(View view) {
@@ -357,14 +404,15 @@ public class ProfileProvider extends AppCompatActivity {
                 okButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mApartment = etApartment.getText().toString();
-                        mHouse = etHouse.getText().toString();
-                        mStreet = etStreet.getText().toString();
-                        mArea = etArea.getText().toString();
+                        mApartment = etApartment.getText().toString().trim();
+                        mHouse = etHouse.getText().toString().trim();
+                        mStreet = etStreet.getText().toString().trim();
+                        mArea = etArea.getText().toString().trim();
 
                         if (!mApartment.isEmpty() && !mHouse.isEmpty() && !mStreet.isEmpty() && !mArea.isEmpty()) {
                             String address = mApartment + "/" + mHouse + "," + mStreet + "," + mArea;
-                            StaticConfig.ADDRESS=address;
+                            mAddress=address;
+                            StaticConfig.ADDRESS = address;
                             tvaddress.setText(address);
                             databaseReference.child("providers/" + userID).child("about").child("address").setValue(address);
                             xyz.foodhut.app.model.Address add = new xyz.foodhut.app.model.Address();
@@ -422,32 +470,33 @@ public class ProfileProvider extends AppCompatActivity {
 
         int number = (new Random().nextInt(100));
 
-        if (filePath != null) {
+        if (filePath != null && byteArray != null) {
 
             progressDialog.show();
-            StorageReference riversRef = mStorageRef.child("images/" + userID + "/" + mName + number);
-            riversRef.putFile(filePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            //if the upload is successfull
-                            //hiding the progress dialog
-                            progressDialog.dismiss();
-                            imageURL[0] = String.valueOf(taskSnapshot.getDownloadUrl());
+            StorageReference riversRef = mStorageRef.child("images/" + userID + "/" + mName);
+            UploadTask uploadTask = riversRef.putBytes(byteArray);
 
-                            //and displaying a success toast
-                            if (imageURL[0] != null) {
-                                Toast.makeText(getApplicationContext(), "Photo Uploaded ", Toast.LENGTH_LONG).show();
-                                databaseReference.child("providers/" + userID).child("about").child("avatar").setValue(imageURL[0]);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    //if the upload is successfull
+                    //hiding the progress dialog
+                    progressDialog.dismiss();
+                    imageURL[0] = String.valueOf(taskSnapshot.getDownloadUrl());
 
-                            } else {
-                                Toast.makeText(ProfileProvider.this, "Something Wrong! Please try again", Toast.LENGTH_SHORT).show();
-                            }
-                            Log.d("state", "onSuccess::  imageURL: " + imageURL[0]);
-                            //save image info in database
+                    //and displaying a success toast
+                    if (imageURL[0] != null) {
+                        Toast.makeText(getApplicationContext(), "Photo Uploaded ", Toast.LENGTH_LONG).show();
+                        databaseReference.child("providers/" + userID).child("about").child("avatar").setValue(imageURL[0]);
 
-                        }
-                    })
+                    } else {
+                        Toast.makeText(ProfileProvider.this, "Something Wrong! Please try again", Toast.LENGTH_SHORT).show();
+                    }
+                    Log.d("state", "onSuccess::  imageURL: " + imageURL[0]);
+                    //save image info in database
+
+                }
+            })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
@@ -498,8 +547,13 @@ public class ProfileProvider extends AppCompatActivity {
             filePath = data.getData();
             try {
 
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 photo.setImageBitmap(bitmap);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 25, stream);
+                byteArray = stream.toByteArray();
+
+                stream.close();
 
                 updatePhoto();
 
@@ -780,23 +834,21 @@ public class ProfileProvider extends AppCompatActivity {
                                     String long_name = zero2.getString("long_name");
                                     JSONArray mtypes = zero2.getJSONArray("types");
                                     String type1 = mtypes.getString(0);
-                                    String type2= mtypes.getString(0);
-                                  //  String type2 =mtypes.getString(1) ;
+                                    String type2 = mtypes.getString(0);
+                                    //  String type2 =mtypes.getString(1) ;
 
-                                    if (!long_name.isEmpty()||!long_name.equals("")) {
+                                    if (!long_name.isEmpty() || !long_name.equals("")) {
                                         if (type1.equals("sublocality")) {
                                             subLocality[0] = long_name;
-                                           // Toast.makeText(ProfileCustomer.this, long_name, Toast.LENGTH_SHORT).show();
+                                            // Toast.makeText(ProfileCustomer.this, long_name, Toast.LENGTH_SHORT).show();
                                             Log.d("check", "onResponse: subLocality" + subLocality[0]);
 
-                                        }
-                                        else if (mtypes.getString(1).equals("sublocality")) {
+                                        } else if (mtypes.getString(1).equals("sublocality")) {
                                             subLocality[0] = long_name;
-                                           // Toast.makeText(ProfileCustomer.this, long_name, Toast.LENGTH_SHORT).show();
+                                            // Toast.makeText(ProfileCustomer.this, long_name, Toast.LENGTH_SHORT).show();
                                             Log.d("check", "onResponse: subLocality" + subLocality[0]);
 
                                         }
-
 
 
                                         //  Toast.makeText(ProfileCustomer.this, location[0], Toast.LENGTH_SHORT).show();

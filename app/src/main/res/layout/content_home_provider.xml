@@ -64,16 +64,20 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivProfilePic"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_gravity="center"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="1dp"
                     android:src="@drawable/kitchen_icon_colour" />
 
-          <!--      <RatingBar
+                <RatingBar
                     android:id="@+id/mRatingBar"
                     style="?android:attr/ratingBarStyleSmall"
+                    android:theme="@style/RatingBar2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -81,7 +85,15 @@
                     android:isIndicator="true"
                     android:numStars="5"
                     android:stepSize=".5" />
-                    -->
+                <TextView
+                    android:id="@+id/noRating"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:text="No Rating"/>
+
             </LinearLayout>
 
             <LinearLayout
@@ -89,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="8dp"
                 android:layout_toEndOf="@id/ll1"
                 android:layout_toStartOf="@id/ll3"
                 android:orientation="vertical">
@@ -99,6 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Kitchen Name"
+                    android:fontFamily="sans-serif-light"
                     android:textColor="@color/white"/>
 
                 <TextView
@@ -106,6 +119,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Address"
+                    android:maxLines="1"
+                    android:fontFamily="sans-serif-light"
                     android:textColor="@color/white" />
 
                 <TextView
@@ -114,6 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Manager "
+                    android:fontFamily="sans-serif-light"
                     android:textColor="@color/white" />
 
             </LinearLayout>
@@ -133,6 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:text="Status "
+                    android:fontFamily="sans-serif-light"
                     android:textColor="@color/white" />
             </LinearLayout>
         </RelativeLayout>
@@ -146,6 +163,7 @@
         android:layout_below="@id/cv2"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-light"
         android:text="Hi Dear," />
 
     <TextView
@@ -155,6 +173,7 @@
         android:layout_below="@id/tvHi"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
+        android:fontFamily="sans-serif-light"
         android:text="Welcome back, Let's do some tasty today." />
 
     <android.support.constraint.ConstraintLayout
@@ -185,9 +204,9 @@
                     android:id="@+id/cardMenu"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight=".33"
                     android:onClick="myMenu">
@@ -209,9 +228,9 @@
                     android:id="@+id/cardSchedule"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="12dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight=".33"
                     android:onClick="mySchedule">
@@ -233,9 +252,9 @@
                     android:id="@+id/cardOrders"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="12dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight=".33"
                     android:onClick="orders">
@@ -269,10 +288,10 @@
                     android:id="@+id/cardPayment"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="12dp"
                     android:layout_weight=".33"
                     android:onClick="viewPayments">
 
@@ -294,10 +313,10 @@
                     android:id="@+id/cardReview"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
                     android:layout_weight=".33"
                     android:onClick="myReviews">
 
@@ -319,10 +338,10 @@
                     android:id="@+id/cardSales"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
                     android:layout_weight=".33"
                     android:onClick="mySales">
 
@@ -356,11 +375,11 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="12dp"
                     android:layout_weight=".33"
-                    android:onClick="ordersToday">
+                    android:onClick="myKitchen">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -380,9 +399,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
                     android:layout_weight=".33"
                     android:onClick="feedBack">
 
@@ -404,9 +423,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
                     android:layout_weight=".33">
 
                     <LinearLayout
@@ -489,12 +508,38 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
+          <!--      <ImageView
                     android:id="@+id/phNoti"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:onClick="footerAction"
                     android:src="@drawable/footer_noti" />
+                    -->
+
+                <RelativeLayout
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/phNoti"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:onClick="footerAction"
+                        android:src="@drawable/footer_noti" />
+
+                    <TextView
+                        android:id="@+id/chNotiCount"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/round_primary_filled"
+                        android:gravity="center"
+                        android:text="50"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
 
             </LinearLayout>
 

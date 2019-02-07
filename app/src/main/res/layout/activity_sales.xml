@@ -19,14 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp">
 
-            <ImageView
-                android:id="@+id/logo"
-                android:layout_width="100dp"
-                android:layout_height="25dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/home_logo" />
+
 
             <ImageView
                 android:id="@+id/arrow"
@@ -51,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
+            android:fontFamily="sans-serif-light"
             android:text="Kitchen Name"/>
 
         <TextView
@@ -58,19 +52,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/mKitchen"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
             android:text="Sells in: "/>
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/mChart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+
+        <HorizontalScrollView
             android:layout_below="@id/mTotalSells"
-
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_above="@id/mMonth">
-
-        </com.github.mikephil.charting.charts.BarChart>
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <view
+                android:id="@+id/barView"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                class="im.dacer.androidcharts.LineView"/>
+        </HorizontalScrollView>
 
         <TextView
             android:id="@+id/mMonth"

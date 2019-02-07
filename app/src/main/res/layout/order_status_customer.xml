@@ -22,27 +22,64 @@
             android:layout_margin="10dp">
 
             <TextView
-                android:id="@+id/oscOderNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="order No" />
-
-            <TextView
                 android:id="@+id/oscDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:textSize="12sp"
+                android:text="Date" />
+
+            <TextView
+                android:id="@+id/oscOderNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:text="Date"
+               android:layout_alignParentEnd="true"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="sans-serif-light"
+                android:text="order no"
                 android:textSize="12sp" />
 
+            <TextView
+                android:id="@+id/oscPaymentStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_button_primary"
+                android:gravity="center"
+                android:layout_toStartOf="@id/ll1"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="Corporate Due"
+                android:layout_marginStart="8dp"
+                android:layout_below="@id/oscOderNo"
+                android:layout_marginEnd="8dp"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/oscCancelOrder"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_button_primary"
+                android:gravity="center"
+                android:layout_toStartOf="@id/oscPaymentStatus"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="Cancel"
+                android:visibility="gone"
+                android:layout_marginStart="8dp"
+                android:layout_below="@id/oscOderNo"
+                android:layout_marginEnd="4dp"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:id="@+id/ll1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
+               android:layout_below="@id/oscOderNo"
                 android:layout_marginBottom="4dp"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -64,24 +101,27 @@
 
                 <TextView
                     android:id="@+id/oscStatus"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:background="@color/orange"
+                    android:background="@drawable/round_button_orange"
                     android:gravity="center"
-                    android:padding="5dp"
-                    android:text="Pending"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="Processing"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
                 <TextView
                     android:id="@+id/oscTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/overlay_dark_50"
                     android:text="time"
+                    android:fontFamily="sans-serif-light"
                     android:textSize="12sp" />
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/ivKitchen"
+                android:id="@+id/ivCash"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_below="@id/ll1"
@@ -93,17 +133,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ll1"
-                android:layout_toEndOf="@id/ivKitchen"
+                android:layout_toEndOf="@id/ivCash"
                 android:layout_marginStart="4dp"
                 android:gravity="center"
+                android:fontFamily="sans-serif-light"
                 android:text="Kitchen Name"
                 android:textSize="12sp" />
 
             <ImageView
-                android:id="@+id/ivFood"
+                android:id="@+id/ivMethod"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:layout_below="@id/ivKitchen"
+                android:layout_below="@id/ivCash"
                 android:layout_marginBottom="8dp"
                 android:src="@drawable/icon_meal"/>
 
@@ -111,11 +152,12 @@
                 android:id="@+id/oscFood"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/ivFood"
-                android:layout_below="@id/ivKitchen"
+                android:layout_toEndOf="@id/ivMethod"
+                android:layout_below="@id/ivCash"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="10dp"
                 android:gravity="center"
+                android:fontFamily="sans-serif-light"
                 android:text="Food Name"
                 android:textSize="12sp" />
 
@@ -146,7 +188,7 @@
                 android:id="@+id/oscQty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ivKitchen"
+                android:layout_below="@id/ivCash"
                 android:layout_toStartOf="@id/pkt"
                 android:gravity="center"
                 android:text="5"
@@ -156,19 +198,20 @@
                 android:id="@+id/pkt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ivKitchen"
+                android:layout_below="@id/ivCash"
                 android:layout_marginEnd="24dp"
                 android:layout_marginStart="4dp"
                 android:layout_toStartOf="@id/tk"
                 android:gravity="center"
                 android:text="pkt."
+                android:fontFamily="sans-serif-light"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ivKitchen"
+                android:layout_below="@id/ivCash"
                 android:layout_toStartOf="@id/oscAmount"
                 android:gravity="center"
                 android:text="৳ "
@@ -179,16 +222,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_below="@id/ivKitchen"
+                android:layout_below="@id/ivCash"
                 android:gravity="center"
                 android:text="500"
                 android:textSize="14sp" />
 
             <ImageView
-                android:id="@+id/ivLocate"
+                android:id="@+id/ivTime"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:layout_below="@id/ivFood"
+                android:layout_below="@id/ivMethod"
                 android:layout_marginBottom="4dp"
                 android:src="@drawable/locate_64"/>
 
@@ -196,11 +239,12 @@
                 android:id="@+id/oscAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ivFood"
-                android:layout_toEndOf="@id/ivLocate"
+                android:layout_below="@id/ivMethod"
+                android:layout_toEndOf="@id/ivTime"
                 android:layout_marginStart="4dp"
                 android:gravity="center"
                 android:text="Address"
+                android:fontFamily="sans-serif-light"
                 android:textSize="12sp" />
 
             <TextView

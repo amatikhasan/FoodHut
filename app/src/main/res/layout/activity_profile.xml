@@ -6,7 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".ui.Profile">
 
+    <android.support.v7.widget.CardView
+        android:id="@+id/cvBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        app:cardElevation="2dp"
+        app:cardPreventCornerOverlap="false">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+
+
+
+
+            <ImageView
+                android:id="@+id/arrow"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:onClick="goBack"
+                android:src="@drawable/icon_back" />
+
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
     <ScrollView
+        android:layout_below="@id/cvBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -18,193 +48,244 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+           app:cardBackgroundColor="@color/colorPrimary"
             android:layout_marginBottom="4dp">
 
             <RelativeLayout
-                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/circlePhoto"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
-                android:layout_gravity="center"
-                android:src="@drawable/default_avatar"
-                app:civ_border_color="@color/gray"
-                app:civ_border_width="2dp" />
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="24dp"
+                android:src="@drawable/kitchen_icon_colour"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="1dp" />
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="-32dp"
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/circlePhoto"
-                   android:layout_alignBottom="@id/circlePhoto"
-                    android:src="@drawable/camera_48_red"/>
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Name"/>
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
 
-        <android.support.v7.widget.CardView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp">
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp">
+            <ImageView
+                android:id="@+id/ivEP"
+                android:layout_margin="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/profile_32"/>
+            <TextView
+                android:id="@+id/tvEP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit Profile"
+                android:fontFamily="sans-serif-light"
+                android:onClick="editProfile"
+                android:layout_margin="8dp"
+                android:padding="2dp"
+                android:layout_toEndOf="@id/ivEP"/>
 
             <RelativeLayout
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:gravity="center_vertical"
+                android:id="@+id/rlFav"
+                android:orientation="horizontal"
+                android:layout_below="@id/ivEP"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/nameIcon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_margin="8dp"
-                   android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/name_50"/>
 
-                <TextView
-                    android:id="@+id/profileName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                  android:layout_toEndOf="@id/nameIcon"
-                    android:text="Name"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/editName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:text="Edit"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="16sp" />
+            <ImageView
+                android:id="@+id/ivFav"
+                android:layout_margin="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+               android:onClick="myWishList"
+                android:src="@drawable/favourite_32"/>
+            <TextView
+                android:id="@+id/tvFav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wish List"
+                android:fontFamily="sans-serif-light"
+                android:onClick="myWishList"
+                android:layout_margin="8dp"
+                android:padding="2dp"
+                android:layout_toEndOf="@id/ivFav"/>
             </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
+            <ImageView
+                android:id="@+id/ivVW"
+                android:layout_margin="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/website_32"
+                android:layout_below="@id/rlFav"/>
+            <TextView
+                android:id="@+id/tvVW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Visit Website"
+                android:fontFamily="sans-serif-light"
+                android:onClick="visitSite"
+                android:layout_margin="8dp"
+                android:padding="2dp"
+                android:layout_toEndOf="@id/ivVW"
+                android:layout_below="@id/rlFav"/>
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp">
+            <ImageView
+                android:id="@+id/ivCU"
+                android:layout_margin="8dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/phone_32"
+                android:layout_below="@id/ivVW"/>
+            <TextView
+                android:id="@+id/tvCU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Call Us"
+                android:fontFamily="sans-serif-light"
+                android:onClick="callUs"
+                android:padding="2dp"
+                android:layout_margin="8dp"
+                android:layout_toEndOf="@id/ivEP"
+                android:layout_below="@id/ivVW"/>
 
-            <RelativeLayout
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/ivFB"
+                android:layout_margin="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/feedback_32"
+                android:layout_below="@id/ivCU"/>
+            <TextView
+                android:id="@+id/tvFB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Feed Back"
+                android:fontFamily="sans-serif-light"
+                android:onClick="feedBack"
+                android:layout_margin="8dp"
+                android:padding="2dp"
+                android:layout_toEndOf="@id/ivEP"
+                android:layout_below="@id/ivCU"/>
 
-                <ImageView
-                    android:id="@+id/AddressIcon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_margin="8dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/address_50"/>
+            <ImageView
+                android:id="@+id/ivFAQ"
+                android:layout_margin="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/faq_32"
+                android:layout_below="@id/ivFB"/>
+            <TextView
+                android:id="@+id/tvFAQ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FAQ"
+                android:fontFamily="sans-serif-light"
+                android:onClick="faq"
+                android:padding="2dp"
+                android:layout_margin="8dp"
+                android:layout_toEndOf="@id/ivFAQ"
+                android:layout_below="@id/ivFB"/>
 
-                <TextView
-                    android:id="@+id/profileAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:layout_toEndOf="@id/AddressIcon"
-                    android:text="Address"
-                    android:textSize="16sp" />
+            <ImageView
+                android:id="@+id/ivAU"
+                android:layout_margin="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/about_32"
+                android:layout_below="@id/ivFAQ"/>
+            <TextView
+                android:id="@+id/tvAU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About Us"
+                android:fontFamily="sans-serif-light"
+                android:onClick="aboutUs"
+                android:padding="2dp"
+                android:layout_margin="8dp"
+                android:layout_toEndOf="@id/ivEP"
+                android:layout_below="@id/ivFAQ"/>
 
-                <TextView
-                    android:id="@+id/editAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:text="Edit"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="16sp" />
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/ivTC"
+                android:visibility="gone"
+                android:layout_margin="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/terms_32"
+                android:layout_below="@id/ivAU"/>
+            <TextView
+                android:id="@+id/tvTC"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Terms &amp; Conditions"
+                android:onClick="terms"
+                android:layout_margin="8dp"
+                android:padding="2dp"
+                android:layout_toEndOf="@id/ivEP"
+                android:layout_below="@id/ivAU"/>
 
-        </android.support.v7.widget.CardView>
+            <ImageView
+                android:id="@+id/ivPP"
+                android:layout_margin="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/privacy_32"
+                android:layout_below="@id/ivTC"/>
+            <TextView
+                android:id="@+id/tvPP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Privacy Policy"
+                android:fontFamily="sans-serif-light"
+                android:onClick="privacy"
+                android:layout_margin="8dp"
+                android:padding="2dp"
+                android:layout_toEndOf="@id/ivEP"
+                android:layout_below="@id/ivTC"/>
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp">
 
-            <RelativeLayout
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/FavIcon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_margin="8dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/fav_32_empty_red"/>
-
-                <TextView
-                    android:id="@+id/profileFav"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:layout_toEndOf="@id/FavIcon"
-                    android:text="My Favourites"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp">
-
-            <RelativeLayout
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/orderIcon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_margin="8dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/shopping_48"/>
-
-                <TextView
-                    android:id="@+id/profileOrders"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:layout_toEndOf="@id/orderIcon"
-                    android:text="My Orders"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
+            <ImageView
+                android:id="@+id/ivLO"
+                android:layout_margin="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/logout_nav_24"
+                android:layout_below="@id/ivPP"/>
+            <TextView
+                android:id="@+id/tvLO"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Log Out"
+                android:fontFamily="sans-serif-light"
+                android:onClick="logout"
+                android:layout_margin="8dp"
+                android:padding="2dp"
+                android:layout_toEndOf="@id/ivEP"
+                android:layout_below="@id/ivPP"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
@@ -213,133 +294,4 @@
     </LinearLayout>
     </ScrollView>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/clFooter"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/cv2">
-
-        <LinearLayout
-            android:id="@+id/cvFooter"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/border_shadow"
-            android:baselineAligned="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".25"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/chExplore"
-                    android:onClick="footerAction"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/explore_64" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Explore"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".25"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/chSearch"
-                    android:onClick="footerAction"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/search_64" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:text="Search"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".30"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/chNoti"
-                    android:onClick="footerAction"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/noti_64" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Notification"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".20"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/chProfile"
-                    android:onClick="footerAction"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/profile_64" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Profile"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_above="@id/cvFooter"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/round_logo"
-            app:layout_constraintBottom_toTopOf="@+id/cvFooter"
-            app:layout_constraintEnd_toEndOf="@+id/cvFooter"
-            app:layout_constraintStart_toStartOf="@+id/cvFooter"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.701" />
-
-    </android.support.constraint.ConstraintLayout>
 </RelativeLayout>

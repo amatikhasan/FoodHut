@@ -26,6 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
                 android:orientation="vertical"
                 android:padding="5dp">
 
@@ -60,6 +62,7 @@
                         android:layout_marginEnd="4dp"
                         android:ellipsize="marquee"
                         android:singleLine="true"
+                        android:fontFamily="sans-serif-light"
                         android:text="Food Name"
                         android:textSize="16sp" />
 
@@ -71,24 +74,42 @@
                         android:layout_marginEnd="4dp"
                         android:ellipsize="marquee"
                         android:singleLine="true"
+                        android:fontFamily="sans-serif-light"
                         android:text="Description"
                         android:textSize="14sp" />
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/ll1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="5dp">
+
+                        <TextView
+                            android:id="@+id/mType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:text="Type"/>
 
                         <TextView
                             android:id="@+id/mFoodPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Price"
+                            android:layout_marginEnd="16dp"
+                            android:layout_alignParentEnd="true"
+                            android:fontFamily="sans-serif-light"
                             android:textSize="16sp" />
-                    </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/mLastTime"
+                        android:layout_marginBottom="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="Last Time : "/>
 
                 </LinearLayout>
 

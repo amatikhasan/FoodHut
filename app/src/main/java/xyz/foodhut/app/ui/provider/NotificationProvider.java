@@ -44,11 +44,11 @@ public class NotificationProvider extends AppCompatActivity {
 
 
         dialog = new ProgressDialog(this);
-        dialog.setMessage("Loading Notifications...");
+        dialog.setMessage("Please Wait...");
         dialog.show();
 
 
-        FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID + "/notifications")
+        FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID + "/notifications/old")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -59,6 +59,8 @@ public class NotificationProvider extends AppCompatActivity {
                             arrayList.add(notification);
                             Log.d("Check", "list noti: " + arrayList.size());
                         }
+
+                        FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID + "/notifications/new").removeValue();
 
                         Collections.reverse(arrayList);
                         //bind the data in adapter
@@ -74,8 +76,8 @@ public class NotificationProvider extends AppCompatActivity {
     }
 
     public void goBack(View view){
-        startActivity(new Intent(this,HomeProvider.class));
+      //  startActivity(new Intent(this,HomeProvider.class));
         finish();
-        finishAffinity();
+       // finishAffinity();
     }
 }

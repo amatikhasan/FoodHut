@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.customer.AddOrderMultiple">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            app:cardElevation="2dp"
+            app:cardPreventCornerOverlap="false">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+
+
+                <ImageView
+                    android:id="@+id/arrow"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:onClick="goBack"
+                    android:src="@drawable/icon_back" />
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cv1"
+            android:layout_margin="8dp"
+            android:scrollbars="none">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+
+               <android.support.v7.widget.RecyclerView
+                   android:id="@+id/rvOrderItem"
+                   android:layout_marginBottom="8dp"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+               </android.support.v7.widget.RecyclerView>
+
+                <TextView
+                    android:id="@+id/txtSubTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rvOrderItem"
+                    android:layout_marginBottom="16dp"
+                    android:text="Sub Total"
+                    android:fontFamily="sans-serif-light"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rvOrderItem"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_toStartOf="@id/aoSubTotalPrice"
+                    android:text="৳ "
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/aoSubTotalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rvOrderItem"
+                    android:layout_alignParentEnd="true"
+                    android:text="0"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtDelivery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtSubTotal"
+                    android:layout_marginBottom="16dp"
+                    android:text="Delivery Charge"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtSubTotal"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_toStartOf="@id/aoDeliveryFee"
+                    android:text="৳ "
+
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/aoDeliveryFee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtSubTotal"
+                    android:layout_alignParentEnd="true"
+                    android:text="0"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/txtCoupon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtDelivery"
+                    android:layout_marginBottom="16dp"
+                    android:text="Have Coupon Code?"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/aoCoupon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtDelivery"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="10dp"
+                    android:onClick="addCoupon"
+                    android:text="Add Coupon Here"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtCoupon"
+                    android:layout_marginBottom="16dp"
+                    android:text="Total"
+                    android:fontFamily="sans-serif-light"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtCoupon"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_toStartOf="@id/aoTotalPrice"
+                    android:text="৳ "
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/aoTotalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtCoupon"
+                    android:layout_alignParentEnd="true"
+                    android:text="0"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/aoNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtTotal"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/corner_primary_border"
+                    android:hint="Note"
+                    android:fontFamily="sans-serif-light"
+                    android:padding="8dp"
+                    android:textSize="14sp" />
+
+                <!--  <TextView
+                      android:id="@+id/txtDate"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignBaseline="@id/btnDate"
+                      android:text="Date"
+                      android:layout_below="@id/note"
+                      android:textSize="18sp" />
+
+                 <Button
+                      android:id="@+id/btnDate"
+                      android:text="Select Date"
+                      android:layout_below="@id/note"
+                      android:layout_alignParentEnd="true"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content" />  -->
+
+                <TextView
+                    android:id="@+id/txtTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/aoNote"
+                    android:layout_alignBaseline="@id/aoBtnTime"
+                    android:layout_marginBottom="16dp"
+                    android:text="Delivery Time"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/aoBtnTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/aoNote"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/round_button_primary"
+                    android:padding="8dp"
+                    android:text="Select Time"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <RelativeLayout
+                    android:id="@+id/rl1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/aoBtnTime"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp">
+
+
+                    <TextView
+                        android:id="@+id/txtPayment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="12dp"
+                        android:text="Payment Method"
+                        android:fontFamily="sans-serif-light"
+                        android:textSize="14sp" />
+
+                    <RadioGroup
+                        android:id="@+id/rg1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toEndOf="@id/txtPayment"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="72dp"
+                            android:layout_marginStart="32dp"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".33"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/cod"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Cash"
+                                    android:fontFamily="sans-serif-light"/>
+
+                                <RadioButton
+                                    android:id="@+id/aoRdoCOD"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="12sp" />
+
+
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_weight=".33"
+                                android:gravity="center"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/bkash"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="bKash"
+                                    android:fontFamily="sans-serif-light"/>
+                                <RadioButton
+                                    android:id="@+id/aoRdoBKash"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:gravity="center"
+                                android:layout_weight=".25"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/corporate"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:fontFamily="sans-serif-light"
+                                    android:text="Corporate Due" />
+
+                                <RadioButton
+                                    android:id="@+id/aoRdoCorporate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+
+                            </LinearLayout>
+
+                     <!--       <LinearLayout
+                                android:layout_weight=".25"
+                                android:gravity="center"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <RadioButton
+                                    android:id="@+id/aoRdoCard"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Card" />
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:gravity="center"
+                                android:layout_weight=".33"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <RadioButton
+                                    android:id="@+id/aoRdoCorporate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:clickable="false"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Corporate" />
+                            </LinearLayout>
+                            -->
+                        </LinearLayout>
+                    </RadioGroup>
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/txtAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rl1"
+                    android:layout_marginBottom="12dp"
+                    android:text="Address"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/aoAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rl1"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="8dp"
+                    android:text="Full Address"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/aoChangeAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/aoAddress"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="32dp"
+                    android:text="Change Address"
+                    android:onClick="changeAddress"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/aoChangeAddress" />
+
+
+
+            </RelativeLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/aoConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/round_button_green"
+                android:gravity="center"
+                android:onClick="confirm"
+                android:padding="12dp"
+                android:text="Confirm Order"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

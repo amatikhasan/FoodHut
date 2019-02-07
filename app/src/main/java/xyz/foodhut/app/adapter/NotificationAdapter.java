@@ -57,7 +57,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.setTextDrawable(obj.status);
 
        // String title="Your order O-"+obj.orderId+" is "+obj.status;
-        holder.title.setText(obj.status);
+        holder.title.setText(obj.title);
         holder.time.setText(obj.time);
     }
 
@@ -92,14 +92,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             String letter = "N";
 
             if(title != null && !title.isEmpty()) {
-                letter = title.substring(0, 1);
+           //     letter = title.substring(0, 1);
             }
 
             int color = mColorGenerator.getRandomColor();
 
             // Create a circular icon consisting of  a random background colour and first letter of title
             textDrawable = TextDrawable.builder()
-                    .buildRound(letter, color);
+                    .buildRound(title, color);
             drawable.setImageDrawable(textDrawable);
         }
 

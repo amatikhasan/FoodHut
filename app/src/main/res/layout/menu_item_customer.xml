@@ -8,9 +8,14 @@
         android:id="@+id/cardMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+
         app:cardCornerRadius="8dp"
-        app:cardElevation="2dp"
+        app:cardElevation="4dp"
+        app:cardMaxElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,7 +24,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -28,25 +32,26 @@
                 android:gravity="center_vertical"
                 android:paddingTop="5dp">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/providerAvatar"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="4dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
                     android:src="@drawable/kitchen_icon_colour" />
 
                 <LinearLayout
                     android:id="@+id/llInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="4dp"
-                    android:layout_toEndOf="@id/providerAvatar"
+                    android:layout_marginEnd="10dp"
                     android:layout_toStartOf="@+id/llRating"
+                    android:layout_toEndOf="@id/providerAvatar"
                     android:orientation="vertical">
 
                     <TextView
@@ -54,6 +59,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Name"
+                        android:fontFamily="sans-serif-light"
                         android:textSize="16sp" />
 
                     <TextView
@@ -61,6 +67,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="address"
+                        android:fontFamily="sans-serif-light"
+                        android:textColor="@color/overlay_dark_30"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -69,10 +77,11 @@
                     android:id="@+id/llRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginEnd="5dp"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginTop="4dp"
-                    android:gravity="end">
+                    android:layout_marginEnd="5dp"
+                    android:gravity="end"
+                    android:orientation="vertical">
 
                     <RatingBar
                         android:id="@+id/mRatingBar"
@@ -84,15 +93,30 @@
                         android:numStars="5"
                         android:stepSize=".5" />
 
-                    <!--   <TextView
-                           android:id="@+id/mRatingCount"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:layout_marginEnd="5dp"
-                           android:layout_marginStart="5dp"
-                           android:text="50"
-                           android:textSize="18sp" />
-                           -->
+                    <TextView
+                        android:id="@+id/mNoRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:text="No Rating"
+                        android:textSize="14sp"
+                        android:visibility="gone" />
+
+
+                    <TextView
+                        android:id="@+id/mAvailable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="5dp"
+                        android:text="Available"
+                        android:textColor="@color/overlay_dark_30"
+                        android:fontFamily="sans-serif-light"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -102,22 +126,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
                 <ImageView
                     android:id="@+id/mItemImage"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"
+                    android:layout_height="250dp"
                     android:padding="8dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/food1" />
+                    android:src="@drawable/loading" />
 
                 <ImageView
                     android:id="@+id/myFav"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/fav_64_empty_white" />
 
             </RelativeLayout>
@@ -125,7 +148,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:gravity="center_vertical">
 
 
@@ -133,7 +155,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginBottom="5dp"
                     android:layout_toStartOf="@id/mFoodPrice"
                     android:orientation="vertical">
 
@@ -141,8 +162,9 @@
                         android:id="@+id/mFoodName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
                         android:layout_marginStart="20dp"
+                        android:layout_marginEnd="25dp"
+                        android:fontFamily="sans-serif-light"
                         android:text="Food Name"
                         android:textSize="20sp" />
 
@@ -185,9 +207,107 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="4dp"
                     android:text="Price"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toStartOf="@id/rl2"
+                    android:maxLines="1"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Description"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/desc"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="Today"
+                    android:textColor="@color/overlay_dark_30"
+                    android:textSize="14sp" />
+
+                <RelativeLayout
+                    android:id="@+id/rl2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:id="@+id/llQty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:background="@drawable/corner_primary_bold"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/oiQtyMinus"
+                            android:layout_width="30dp"
+                            android:layout_height="32dp"
+                            android:onClick="quantityOp"
+                            android:src="@drawable/icon_minus" />
+
+                        <TextView
+                            android:id="@+id/oiQuantity"
+                            android:layout_width="16dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/oiQtyPlus"
+                            android:layout_width="30dp"
+                            android:layout_height="32dp"
+                            android:onClick="quantityOp"
+                            android:src="@drawable/icon_plus" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llOrder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:background="@drawable/corner_primary_filled"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="14dp"
+                            android:gravity="center"
+                            android:text="ORDER"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+                </RelativeLayout>
 
             </RelativeLayout>
 

@@ -23,13 +23,13 @@ import xyz.foodhut.app.model.Review;
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Review> data;
-    private String user;
+    private String type;
 
 
-    public ReviewAdapter(Context context, ArrayList<Review> data) {
+    public ReviewAdapter(Context context, ArrayList<Review> data,String type) {
         this.context = context;
         this.data = data;
-        this.user=user;
+        this.type=type;
     }
 
     @NonNull
@@ -49,7 +49,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         holder.foodName.setText(obj.menuName);
         holder.customerName.setText(obj.customerName);
         holder.review.setText(obj.review);
+        holder.time.setText(obj.time);
+        if (type.equals("reviews"))
         holder.ratingBar.setRating(Float.parseFloat(obj.rating));
+        else
+            holder.ratingBar.setVisibility(View.INVISIBLE);
     }
 
 
@@ -61,7 +65,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView foodName, customerName,review;
+        TextView foodName, customerName,review,time;
         RatingBar ratingBar;
         CardView card;
 
@@ -71,7 +75,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             foodName = itemView.findViewById(R.id.mFoodName);
             customerName = itemView.findViewById(R.id.mCustomer);
             review = itemView.findViewById(R.id.mReview);
-
+            time = itemView.findViewById(R.id.mTime);
             ratingBar = itemView.findViewById(R.id.mRatingBar);
             //card = itemView.findViewById(R.id.cardMenu);
         }

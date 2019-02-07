@@ -112,11 +112,13 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PhoneAuthActivity.class);
         intent.putExtra("type", "customer");
         startActivity(intent);
+        finish();
     }
 
     public void toProvider(View view) {
         Intent intent = new Intent(this, PhoneAuthActivity.class);
         intent.putExtra("type", "provider");
         startActivity(intent);
+        finish();
     }
 }

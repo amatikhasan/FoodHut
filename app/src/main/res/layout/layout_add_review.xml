@@ -14,6 +14,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="10dp"
         android:text="Review this order"
+        android:fontFamily="sans-serif-light"
         android:textColor="@android:color/darker_gray"
         android:textSize="16sp" />
 
@@ -23,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="order no"
+        android:fontFamily="sans-serif-light"
         android:textSize="16sp"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="8dp"
@@ -57,5 +59,31 @@
         android:padding="5dp"
         android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlReview"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif-light"
+        android:text="OR"/>
+
+    <EditText
+        android:id="@+id/rlComplain"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/or"
+        android:background="@drawable/corner_black_border"
+        android:ellipsize="end"
+        android:ems="10"
+        android:gravity="start"
+        android:hint="write your complain (optional)"
+        android:inputType="textMultiLine"
+        android:padding="5dp"
+        android:textSize="16sp" />
 
 </RelativeLayout>

@@ -21,14 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp">
 
-            <ImageView
-                android:id="@+id/logo"
-                android:layout_width="100dp"
-                android:layout_height="25dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/home_logo" />
+
 
             <ImageView
                 android:id="@+id/arrow"
@@ -49,24 +42,27 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:textSize="16sp"
+        android:fontFamily="sans-serif-light"
         android:text="Have anything on your mind? "/>
     <TextView
         android:id="@+id/txt2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
+        android:fontFamily="sans-serif-light"
         android:text="We would like to hear from you, feel free to write us."/>
 
     <EditText
         android:id="@+id/etFeedBack"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="120dp"
         android:gravity="start"
         android:layout_margin="16dp"
         android:padding="8dp"
        android:inputType="textMultiLine"
         android:background="@drawable/rect_text_edit"
         android:ems="10"
+        android:fontFamily="sans-serif-light"
         android:ellipsize="end"
         android:hint="what's on your mind?"/>
 

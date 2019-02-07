@@ -26,4 +26,60 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="title_activity_home_provider">HomeProvider</string>
     <string name="title_activity_home_customer">HomeCustomer</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
+    <string name="aboutUs_1">Foodhut is a homemade food delivery service that connects home cooks of all socioeconomic backgrounds to diners who want a taste of home. Our vision is to become Bangladeshi\'s leading online marketplace for homemade food by providing equal opportunities for people of all genders who love to cook. Foodhut focuses on creating the ultimate marketplace for homemade food by:</string>
+
+    <string name="aboutUs_2">By giving women that agency or choice of not having to come out their homes and work to be "empowered". Economic independence is the key to having choices in life.
+</string>
+
+    <string name="aboutUs_3">Helping cooks make more informed choices about their hygiene practices and the use of high quality ingredients which results in better food choices for the customer.
+</string>
+
+    <string name="aboutUs_4">By eliminating the need to eat out at costly restaurants, diners are able to enjoy healthy and wholesome meals sitting at home.
+</string>
+
+    <string name="aboutUs_5">We believe in a world where everyone can experience a taste of home.</string>
+
+    <string name="faq_1">Place an order telling us the number of portions you want, when and where you want to have them delivered; and you¡¯re done. You can rest easy knowing that your homemade food will prepared with the freshest ingredients available in a hygienic environment by our home cooks and will be delivered on time. You can also browse offers on our facebook group.
+</string>
+    <string name="faq_2">We offer healthy and tasty food prepared to your order. Unlike commercial eateries, we focus on wholesome and freshly prepared meals, cooked with love and care at our cooks¡¯ kitchens.
+</string>
+    <string name="faq_3">You can order most offers mentioned hours in advance, although specific offers may be available 3-6 hours ahead. As you may already understand shopping for the local ingredients, cooking your meals and then delivering them to your doorstep takes time.
+</string>
+    <string name="faq_4">You pay for the meals in cash once the food is delivered to your doorstep. We are working on incorporating payments online with a credit or debit card, as well as bkash and other mobile financial services.
+</string>
+    <string name="faq_5">
+Yes. All meals are delivered to the address you enter when ordering, which can be your home, workplace or anywhere you want in the areas we are operating.
+</string>
+    <string name="faq_7">At this point in time, Foodhut is only available in selected areas of Dhaka.
+</string>
+    <string name="faq_8">You only pay for the meal and a nominal delivery fee.
+</string>
+    <string name="faq_9">In order to change or cancel your order, you just need to do within the cancellation time which is usually the same as the last order time.
+</string>
+    <string name="faq_10">Food safety is a pillar of the Foodhut community. We seek out only the best home Cooks and hold them to the highest standards for food safety. We inspect all kitchens before Cooks are approved to sell on the platform and conduct regular home visits on a quarterly basis to ensure our standards are maintained . Additionally, we furnish each Cook with information on hygiene and packaging guidelines. We receive feedback on every single Foodhut meal to ensure that quality and safety standards are never compromised. We thoroughly investigate all complaints, and if there are safety issues such as illness, the Cook is barred from posting until the investigation is completed. If a complaint is legitimate and of a serious nature the Cook will be barred from our platform - the most important thing for us is that people enjoy their food safely.
+</string>
+    <string name="faq_11">On the rare occasion of the food not meeting your expectations, the cook will usually compensate you by sending a free meal if you provide a valid reason. For delivery issues, Foodhut will investigate and take action accordingly, which may include reimbursing your delivery fee. Please feel free to contact us via the help &amp; support section on the app or via email at support@foodhut.xyz
+</string>
+    <string name="faq_12">Please feel free to contact us via messenger or via email at support@foodhut.xyz
+</string>
+
+    <string name="privacy_1">This policy explains how we, foodhut, a brand of www.foodhut.xyz, use your personal information which you provide to us when using our service, including but not limited to our website and upcoming mobile applications (apps).
+</string>
+
+    <string name="privacy_2">We collect personal information from you when you order goods or services from us or use our website. We also collect information when you complete any customer survey. Website usage information may also be collected using cookies.
+</string>
+    <string name="privacy_3">Information that we collect from you is used to process your order and to manage your account. We may also use your information to email you about other products or services that we think may be of interest to you. In processing your order we may send your information to credit reference and fraud prevention agencies.
+
+</string>
+    <string name="privacy_4">You have a right to request a copy of the information we hold on you at any time. Please email us if you would like to receive a copy of this information ¨C support@foodhut.xyz. There will be a small charge for processing this request.
+</string>
+    <string name="privacy_5">Our website may have links to other websites. This privacy policy only applies to this website. You should therefore read the privacy policies of the other websites when you are using those sites.
+</string>
+
+    <string name="title_activity_fullscreen_image">FullscreenImage</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 </resources>

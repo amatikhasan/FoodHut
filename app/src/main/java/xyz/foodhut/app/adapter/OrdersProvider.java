@@ -25,6 +25,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 import xyz.foodhut.app.R;
 import xyz.foodhut.app.data.StaticConfig;
@@ -33,20 +34,19 @@ import xyz.foodhut.app.model.OrderDetails;
 import xyz.foodhut.app.model.OrderDetailsProvider;
 import xyz.foodhut.app.ui.customer.OrderStatusCustomer;
 import xyz.foodhut.app.ui.provider.OrderStatusProvider;
+
 import static android.content.ContentValues.TAG;
 import static xyz.foodhut.app.ui.PhoneAuthActivity.userID;
 
 public class OrdersProvider extends RecyclerView.Adapter<OrdersProvider.ViewHolder> {
     private Context contex;
-    private ArrayList<OrderDetailsProvider> data;
     private ArrayList<OrderDetails> orderData;
 
-    public OrdersProvider(Context contex, ArrayList<OrderDetailsProvider> data, ArrayList<OrderDetails> orderData) {
+    public OrdersProvider(Context contex, ArrayList<OrderDetails> orderData) {
         this.contex = contex;
-        this.data = data;
         this.orderData = orderData;
 
-        Log.d("check", "OrdersCustomer: size " + data.size() + " " + orderData.size());
+        Log.d("check", "OrdersCustomer: size " + orderData.size());
     }
 
     @NonNull
@@ -61,89 +61,106 @@ public class OrdersProvider extends RecyclerView.Adapter<OrdersProvider.ViewHold
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        final OrderDetailsProvider obj = data.get(position);
-        final OrderDetails obj2 = orderData.get(position);
-        Log.d("check", "onBindViewHolder: " + obj.name + " " + obj.menuId + " " + obj2.date);
+        final OrderDetails obj = orderData.get(position);
+        //   Log.d("check", "onBindViewHolder: " + obj.name + " " + obj.menuId + " " + obj2.date);
 
         // Get the calander
         Calendar c = Calendar.getInstance();
         DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
         final String date = dateFormat.format(c.getTime());
 
-        holder.foodName.setText(obj.name);
-        String qty = obj2.quantity + " pkt.";
+        holder.foodName.setText(obj.itemName);
+        String qty = obj.quantity + " pkt.";
         holder.quantity.setText(qty);
-        if (!obj2.extraItem.equals("")) {
-            String extra = "Extra " + obj2.extraItem;
+
+        if (!obj.extraItem.isEmpty()) {
+            String extra = "Extra " + obj.extraItem;
             holder.extraItem.setText(extra);
-            String pcs = obj2.extraQuantity + " pcs.";
+            String pcs = obj.extraQuantity + " pcs.";
             holder.extraQty.setText(pcs);
+            holder.extraItem.setVisibility(View.VISIBLE);
+            holder.extraQty.setVisibility(View.VISIBLE);
         }
-        else {
+
+        else  {
             holder.extraItem.setVisibility(View.GONE);
             holder.extraQty.setVisibility(View.GONE);
         }
-        String amount = "৳ " + obj2.amount;
-        holder.amount.setText(amount);
-        String time = "Time: " + obj2.date + " " + obj2.time;
-        holder.dateTime.setText(time);
-        String orderNo = "O-" + obj2.orderId;
-        holder.orderNo.setText(orderNo);
-        holder.address.setText(obj2.cAddress);
 
-        if (!obj2.status.equals("Pending")) {
-            if (!obj2.note.isEmpty()) {
+        String amount = "৳ " + obj.amount;
+        holder.amount.setText(amount);
+        String time = "Time: " + obj.date + " " + obj.time;
+        holder.dateTime.setText(time);
+
+        String orderNo;
+
+        if (obj.menuCount > 0)
+            orderNo = "O-" + obj.orderId + " (" + obj.menuCount + ")";
+        else
+            orderNo = "O-" + obj.orderId;
+
+        holder.orderNo.setText(orderNo);
+        //  holder.address.setText(obj2.cAddress);
+
+        if (!obj.status.equals("Pending")) {
+            if (!obj.note.isEmpty()) {
                 holder.viewNote.setVisibility(View.VISIBLE);
                 holder.viewNote.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        viewNote(obj2.note);
+                        viewNote(obj.note);
                     }
                 });
             }
-            }
-
-
-        if (obj2.status.equals("Pending")) {
+        }
+        if (obj.status.equals("Pending")) {
             holder.status.setText("Accept");
-            holder.status.setGravity(Gravity.CENTER);
-            holder.status.setTextColor(contex.getResources().getColor(R.color.white));
-            holder.status.setBackgroundColor(contex.getResources().getColor(R.color.colorPrimary));
+            holder.status.setBackground(contex.getResources().getDrawable(R.drawable.round_button_primary));
+            holder.status.setEnabled(true);
             holder.action.setVisibility(View.VISIBLE);
-            holder.icon.setVisibility(View.GONE);
-        } else {
-            holder.status.setText(obj2.status);
-            if (obj2.status.equals("Accepted")) {
-                holder.action.setVisibility(View.VISIBLE);
-                holder.action.setText("Ready");
-                holder.action.setBackgroundColor(contex.getResources().getColor(R.color.colorPrimary));
-                holder.action.setTextColor(contex.getResources().getColor(R.color.white));
-            }
-            if (obj2.status.equals("Ready")) {
-                holder.status.setTextColor(contex.getResources().getColor(R.color.green));
-                holder.icon.setImageDrawable(contex.getResources().getDrawable(R.drawable.icon_accepted));
-                holder.action.setVisibility(View.INVISIBLE);
-            }
-            if (obj2.status.equals("Cancelled")||obj2.status.equals("Rejected")) {
-                holder.status.setTextColor(contex.getResources().getColor(R.color.colorPrimary));
-                holder.icon.setImageDrawable(contex.getResources().getDrawable(R.drawable.icon_cancelled));
-                holder.viewNote.setVisibility(View.INVISIBLE);
-                holder.action.setVisibility(View.INVISIBLE);
-            }
-            if (obj2.status.equals("Shipped")) {
-                holder.status.setTextColor(contex.getResources().getColor(R.color.orange));
-                holder.icon.setImageDrawable(contex.getResources().getDrawable(R.drawable.icon_shipped));
-                holder.action.setVisibility(View.INVISIBLE);
-                holder.status.setPadding(8,8,0,0);
-            }
-            if (obj2.status.equals("Delivered")) {
-                holder.status.setTextColor(contex.getResources().getColor(R.color.greenDark));
-                holder.icon.setImageDrawable(contex.getResources().getDrawable(R.drawable.icon_delivered));
-                holder.action.setVisibility(View.INVISIBLE);
-            }
+            holder.action.setText("Reject");
+            holder.action.setBackgroundResource(0);
+            holder.action.setTextColor(contex.getResources().getColor(R.color.colorPrimary));
         }
 
-        if (obj2.status.equals("Pending")){
+        if (obj.status.equals("Accepted")) {
+            holder.status.setText(obj.status);
+            holder.status.setBackground(contex.getResources().getDrawable(R.drawable.round_button_blue));
+            holder.status.setEnabled(false);
+
+            holder.action.setVisibility(View.VISIBLE);
+            holder.action.setText("Ready");
+            holder.action.setBackground(contex.getResources().getDrawable(R.drawable.round_button_primary));
+            holder.action.setTextColor(contex.getResources().getColor(R.color.white));
+        }
+        if (obj.status.equals("Ready")) {
+            holder.status.setText(obj.status);
+            holder.status.setBackground(contex.getResources().getDrawable(R.drawable.round_button_green));
+            holder.status.setEnabled(false);
+            holder.action.setVisibility(View.INVISIBLE);
+        }
+        if (obj.status.equals("Cancelled") || obj.status.equals("Rejected")) {
+            holder.status.setText(obj.status);
+            holder.status.setEnabled(false);
+            holder.status.setBackground(contex.getResources().getDrawable(R.drawable.round_button_primary));
+            holder.viewNote.setVisibility(View.INVISIBLE);
+            holder.action.setVisibility(View.INVISIBLE);
+        }
+        if (obj.status.equals("Shipped")) {
+            holder.status.setEnabled(false);
+            holder.status.setText(obj.status);
+            holder.status.setBackground(contex.getResources().getDrawable(R.drawable.round_button_orange));
+            holder.action.setVisibility(View.INVISIBLE);
+        }
+        if (obj.status.equals("Delivered")) {
+            holder.status.setEnabled(false);
+            holder.status.setText(obj.status);
+            holder.status.setBackground(contex.getResources().getDrawable(R.drawable.round_button_green));
+            holder.action.setVisibility(View.INVISIBLE);
+        }
+
+
+        if (obj.status.equals("Pending")) {
             holder.action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -154,27 +171,35 @@ public class OrdersProvider extends RecyclerView.Adapter<OrdersProvider.ViewHold
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(final DialogInterface dialog, final int id) {
                                     Toast.makeText(contex, "Order Rejected!", Toast.LENGTH_SHORT).show();
-                                    holder.action.setVisibility(View.INVISIBLE);
                                     holder.status.setText("Rejected");
-                                    holder.status.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);
-                                    holder.status.setTextColor(contex.getResources().getColor(R.color.colorPrimary));
-                                    holder.icon.setVisibility(View.VISIBLE);
-                                    holder.icon.setImageDrawable(contex.getResources().getDrawable(R.drawable.icon_cancelled));
-
-                                    holder.status.setBackgroundResource(0);
+                                    holder.status.setBackground(contex.getResources().getDrawable(R.drawable.round_button_primary));
+                                    holder.status.setTextColor(contex.getResources().getColor(R.color.white));
                                     holder.status.setEnabled(false);
                                     holder.action.setVisibility(View.INVISIBLE);
 
-                                    FirebaseDatabase.getInstance().getReference().child("admin/orders").child(obj2.date).child(obj.menuId).child("orders").child(obj2.orderId).child("status").setValue("Rejected");
-                                    FirebaseDatabase.getInstance().getReference().child("providers/" + obj.pId + "/orders").child(obj2.date).child(obj2.orderId).child("orderDetails").child("status").setValue("Rejected");
-                                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj2.cId + "/orders").child(obj2.date).child(obj2.orderId).child("orderDetails").child("status").setValue("Cancelled");
+                                    Calendar c = Calendar.getInstance();
+                                    int day = c.get(Calendar.DAY_OF_MONTH);
+                                    int hour = c.get(Calendar.HOUR_OF_DAY);
+                                    int minute = c.get(Calendar.MINUTE);
 
+                                    String month = new SimpleDateFormat("MMM", Locale.US).format(c.getTime());
+                                    String time = day + " " + month + " " + formatTime(hour + ":" + minute);
+
+                                    FirebaseDatabase.getInstance().getReference().child("admin/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("status").setValue("Rejected");
+                                    FirebaseDatabase.getInstance().getReference().child("providers/" + obj.pId + "/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("status").setValue("Rejected");
+                                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj.cId + "/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("status").setValue("Cancelled");
+
+                                    FirebaseDatabase.getInstance().getReference().child("providers/" + obj.pId + "/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("statusTime").setValue(time);
+                                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj.cId + "/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("statusTime").setValue(time);
 
                                     final Notification notification = new Notification();
-                                    notification.orderId = obj2.orderId;
-                                    notification.status = "Your order O-"+obj2.orderId+" is Cancelled";
+                                    notification.orderId = obj.orderId;
+                                    notification.title = "Your order O-" + obj.orderId + " is Cancelled";
+                                    notification.status = "C";
                                     notification.time = date;
-                                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj2.cId + "/notifications").push().setValue(notification);
+                                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj.cId + "/notifications/new").push().setValue(notification);
+                                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj.cId + "/notifications/old").push().setValue(notification);
+
 
                                 }
                             })
@@ -191,51 +216,94 @@ public class OrdersProvider extends RecyclerView.Adapter<OrdersProvider.ViewHold
             holder.status.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(contex, "Order Accepted!", Toast.LENGTH_SHORT).show();
-                    holder.status.setTextColor(contex.getResources().getColor(R.color.green));
-                    holder.icon.setVisibility(View.VISIBLE);
-                    holder.icon.setImageDrawable(contex.getResources().getDrawable(R.drawable.icon_accepted));
+                    Toast.makeText(contex, "Order Accepted! Come Back Again When You're Ready", Toast.LENGTH_SHORT).show();
                     holder.status.setText("Accepted");
-                    holder.status.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);
-                    holder.status.setBackgroundResource(0);
+                    holder.status.setBackground(contex.getResources().getDrawable(R.drawable.round_button_blue));
+                    holder.status.setTextColor(contex.getResources().getColor(R.color.white));
                     holder.status.setEnabled(false);
                     holder.action.setVisibility(View.INVISIBLE);
 
-                    if (!obj2.note.isEmpty()) {
+                    if (!obj.note.isEmpty()) {
                         holder.viewNote.setVisibility(View.VISIBLE);
                         holder.viewNote.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                viewNote(obj2.note);
+                                viewNote(obj.note);
                             }
                         });
                     }
-                    FirebaseDatabase.getInstance().getReference().child("admin/orders").child(obj2.date).child(obj.menuId).child("orders").child(obj2.orderId).child("status").setValue("Accepted");
-                    FirebaseDatabase.getInstance().getReference().child("providers/" + obj.pId + "/orders").child(obj2.date).child(obj2.orderId).child("orderDetails").child("status").setValue("Accepted");
-                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj2.cId + "/orders").child(obj2.date).child(obj2.orderId).child("orderDetails").child("status").setValue("Processing");
+
+                    Calendar c = Calendar.getInstance();
+                    int day = c.get(Calendar.DAY_OF_MONTH);
+                    int hour = c.get(Calendar.HOUR_OF_DAY);
+                    int minute = c.get(Calendar.MINUTE);
+
+                    String month = new SimpleDateFormat("MMM", Locale.US).format(c.getTime());
+                    String time = day + " " + month + " " + formatTime(hour + ":" + minute);
+
+                    FirebaseDatabase.getInstance().getReference().child("admin/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("status").setValue("Accepted");
+                    FirebaseDatabase.getInstance().getReference().child("providers/" + obj.pId + "/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("status").setValue("Accepted");
+                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj.cId + "/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("status").setValue("Accepted");
+
+                    FirebaseDatabase.getInstance().getReference().child("providers/" + obj.pId + "/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("statusTime").setValue(time);
+                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj.cId + "/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("statusTime").setValue(time);
+
 
                     final Notification notification = new Notification();
-                    notification.orderId = obj2.orderId;
-                    notification.status = "Your order O-"+obj2.orderId+" is Processing";
+                    notification.orderId = obj.orderId;
+                    notification.title = "Your order O-" + obj.orderId + " is Accepted";
+                    notification.status = "A";
                     notification.time = date;
-                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj2.cId + "/notifications").push().setValue(notification);
+                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj.cId + "/notifications/new").push().setValue(notification);
+                    FirebaseDatabase.getInstance().getReference().child("customers/" + obj.cId + "/notifications/old").push().setValue(notification);
+
                 }
             });
         }
 
-        if (obj2.status.equals("Accepted")){
+        if (obj.status.equals("Accepted")) {
             holder.action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(contex, "Order is Ready for Pickup!", Toast.LENGTH_SHORT).show();
                     holder.action.setVisibility(View.INVISIBLE);
                     holder.status.setText("Ready");
+                    holder.status.setBackground(contex.getResources().getDrawable(R.drawable.round_button_green));
+                    holder.status.setTextColor(contex.getResources().getColor(R.color.white));
 
-                    FirebaseDatabase.getInstance().getReference().child("providers/" + obj.pId + "/orders").child(obj2.date).child(obj2.orderId).child("orderDetails").child("status").setValue("Ready");
-                    FirebaseDatabase.getInstance().getReference().child("admin/orders").child(obj2.date).child(obj.menuId).child("orders").child(obj2.orderId).child("status").setValue("Ready");
+
+                    FirebaseDatabase.getInstance().getReference().child("providers/" + obj.pId + "/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("status").setValue("Ready");
+                    FirebaseDatabase.getInstance().getReference().child("admin/orders").child(obj.date).child(obj.menuId).child("orders").child(obj.orderId).child("status").setValue("Ready");
                 }
             });
         }
+    }
+
+    //formate time with AM,PM for button
+    public String formatTime(String time) {
+        String format, formattedTime, minutes;
+        String[] dateParts = time.split(":");
+        int hour = Integer.parseInt(dateParts[0]);
+        int minute = Integer.parseInt(dateParts[1]);
+        if (hour == 0) {
+            hour += 12;
+            format = "AM";
+        } else if (hour == 12) {
+            format = "PM";
+        } else if (hour > 12) {
+            hour -= 12;
+            format = "PM";
+        } else {
+            format = "AM";
+        }
+
+        if (minute < 10)
+            minutes = "0" + minute;
+        else
+            minutes = String.valueOf(minute);
+        formattedTime = hour + ":" + minutes + " " + format;
+
+        return formattedTime;
     }
 
     protected void viewNote(String note) {
@@ -255,7 +323,7 @@ public class OrdersProvider extends RecyclerView.Adapter<OrdersProvider.ViewHold
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return orderData.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -280,12 +348,9 @@ public class OrdersProvider extends RecyclerView.Adapter<OrdersProvider.ViewHold
             //  payment = itemView.findViewById(R.id.oscPayment);
             amount = itemView.findViewById(R.id.mAmount);
             quantity = itemView.findViewById(R.id.mQty);
-            address = itemView.findViewById(R.id.mCAddress);
-            icon = itemView.findViewById(R.id.mIcon);
+            //  address = itemView.findViewById(R.id.mCAddress);
+            //  icon = itemView.findViewById(R.id.mIcon);
             card = itemView.findViewById(R.id.cardMenu);
         }
-
     }
-
-
 }

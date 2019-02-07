@@ -55,6 +55,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -83,10 +84,11 @@ public class ProfileCustomer extends AppCompatActivity {
     String type;
     TextView tvName, tvaddress, location;
     ImageView photo;
-    String mName, mAddress, mLocation, mImageUrl, mApartment, mHouse, mStreet, mArea;
+    String mName="", mAddress="", mLocation, mImageUrl, mApartment, mHouse, mStreet, mArea;
     public String userID;
 
     byte[] byteArray;
+    Bitmap bitmap;
     public static byte[] bytes;
     private static final int IMAGE_REQUEST = 1;
     private Uri filePath;
@@ -137,6 +139,9 @@ public class ProfileCustomer extends AppCompatActivity {
             Picasso.get().load(mImageUrl).placeholder(R.drawable.default_avatar).into(photo);
 
         }
+        else {
+            checkProfile();
+        }
 
         checkAddress();
 
@@ -150,6 +155,38 @@ public class ProfileCustomer extends AppCompatActivity {
 
         //getAddress(23.798428,90.353462);
 
+    }
+
+    public void checkProfile() {
+
+        FirebaseDatabase.getInstance().getReference().child("customers").child(StaticConfig.UID).child("about").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.getValue() != null) {
+
+                    HashMap hashUser = (HashMap) snapshot.getValue();
+                    String name = (String) hashUser.get("name");
+                    String address = (String) hashUser.get("address");
+                    String avatar = (String) hashUser.get("avatar");
+
+                    if (!name.equals("name")){
+                        mName=name;
+                        tvName.setText(name);}
+                    if (!address.equals("address")){
+                        mAddress=address;
+                        tvaddress.setText(address);}
+                    if (!avatar.equals("default"))
+                        Picasso.get().load(avatar).placeholder(R.drawable.kitchen_icon_colour).into(photo);
+
+                    Log.d("check", "name in provider: " + name );
+
+
+                }
+            }
+
+            public void onCancelled(DatabaseError arg0) {
+            }
+        });
     }
 
     public void checkAddress() {
@@ -174,19 +211,8 @@ public class ProfileCustomer extends AppCompatActivity {
     }
 
     public void goBack(View view){
-        FirebaseDatabase.getInstance().getReference().child("customers").child(StaticConfig.UID).child("about").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.getValue() != null) {
 
-                    HashMap hashUser = (HashMap) snapshot.getValue();
-                    String name = (String) hashUser.get("name");
-                    String address = (String) hashUser.get("address");
-
-                    Log.d("check", "name in provider: " + name+" "+address);
-
-
-                    if ((name.equals("")||name.equals("name"))||(address.equals("")||address.equals("address"))){
+                    if ((mName.equals("")||mName.equals("name"))||(mAddress.equals("")||mAddress.equals("address"))){
                         final AlertDialog.Builder builder = new AlertDialog.Builder(ProfileCustomer.this);
                         builder.setMessage("Please update all information before you leave.")
                                 .setCancelable(false)
@@ -200,16 +226,32 @@ public class ProfileCustomer extends AppCompatActivity {
                         Log.d("check method", "from alert");
                     }
                     else {
-                        startActivity(new Intent(ProfileCustomer.this,HomeProvider.class));
+                      //  startActivity(new Intent(ProfileCustomer.this,HomeCustomer.class));
                         finish();
-                        finishAffinity();
+                      //  finishAffinity();
                     }
-                }
-            }
+    }
 
-            public void onCancelled(DatabaseError arg0) {
-            }
-        });
+    @Override
+    public void onBackPressed() {
+        if ((mName.equals("")||mName.equals("name"))||(mAddress.equals("")||mAddress.equals("address"))){
+            final AlertDialog.Builder builder = new AlertDialog.Builder(ProfileCustomer.this);
+            builder.setMessage("Please update all information before you leave.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            dialog.cancel();
+                        }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+            Log.d("check method", "from alert");
+        }
+        else {
+           // startActivity(new Intent(ProfileCustomer.this,HomeCustomer.class));
+            finish();
+           // finishAffinity();
+        }
     }
 
     public void favourites(View view){
@@ -261,6 +303,7 @@ public class ProfileCustomer extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (!etName.getText().toString().isEmpty()) {
+                            mName=etName.getText().toString();
                             tvName.setText(etName.getText().toString());
                             databaseReference.child("customers/" + userID).child("about").child("name").setValue(etName.getText().toString());
 
@@ -314,13 +357,14 @@ public class ProfileCustomer extends AppCompatActivity {
                 okButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mApartment = etApartment.getText().toString();
-                        mHouse = etHouse.getText().toString();
-                        mStreet = etStreet.getText().toString();
-                        mArea = etArea.getText().toString();
+                        mApartment = etApartment.getText().toString().trim();
+                        mHouse = etHouse.getText().toString().trim();
+                        mStreet = etStreet.getText().toString().trim();
+                        mArea = etArea.getText().toString().trim();
 
                         if (!mApartment.isEmpty() && !mHouse.isEmpty() && !mStreet.isEmpty() && !mArea.isEmpty()) {
-                            String address = mApartment + "/" + mHouse + "," + mStreet + "," + mArea;
+                            String address = mApartment + "/" + mHouse + ", " + mStreet + ", " + mArea;
+                            mAddress=address;
                             StaticConfig.ADDRESS=address;
                             tvaddress.setText(address);
                             databaseReference.child("customers/" + userID).child("about").child("address").setValue(address);
@@ -382,9 +426,11 @@ public class ProfileCustomer extends AppCompatActivity {
         if (filePath != null) {
 
             progressDialog.show();
-            StorageReference riversRef = mStorageRef.child("images/" + userID + "/" + mName + number);
-            riversRef.putFile(filePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            StorageReference riversRef = mStorageRef.child("images/" + userID + "/" + mName);
+
+            UploadTask uploadTask = riversRef.putBytes(byteArray);
+
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             //if the upload is successfull
@@ -455,8 +501,13 @@ public class ProfileCustomer extends AppCompatActivity {
             filePath = data.getData();
             try {
 
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 photo.setImageBitmap(bitmap);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 25, stream);
+                byteArray = stream.toByteArray();
+
+                stream.close();
 
                 updatePhoto();
 
@@ -519,9 +570,9 @@ public class ProfileCustomer extends AppCompatActivity {
 
                     Log.d("check", "location " + lattitude + " " + longitude);
 
-                    // getAddress(lattitude, longitude);
+                    // getAddress(latitude, longitude);
                     // GetReverseGeoCoding geoCoding=new GetReverseGeoCoding();
-                    // geoCoding.getAddress(lattitude,longitude);
+                    // geoCoding.getAddress(latitude,longitude);
 
                     getArea(lattitude, longitude);
 

@@ -68,7 +68,7 @@ public class FragmentDAT extends Fragment {
         context = view.getContext();
 
         dialog = new ProgressDialog(context);
-        dialog.setMessage("Loading Menu...");
+        dialog.setMessage("Please Wait...");
 
         arrayList = new ArrayList<>();
         recyclerView = view.findViewById(R.id.rvDat);
@@ -79,49 +79,35 @@ public class FragmentDAT extends Fragment {
 
         mDate = checkDate();
 
-        getSchedule();
+        getScheduleList();
+        dialog.dismiss();
 
         return view;
     }
 
-    public void getSchedule() {
+    public void getScheduleList() {
 
-        arrayList.clear();
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
         if (user != null) {
             userID = user.getUid();
         }
 
+
         if (StaticConfig.UID != null) {
             dialog.show();
-            FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule").child(mDate)
+            FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            dialog.dismiss();
-                            //fetch files from firebase database and push in arraylist
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                xyz.foodhut.app.model.ScheduleProvider scheduleProvider = snapshot.getValue(xyz.foodhut.app.model.ScheduleProvider.class);
-                            //    if (scheduleProvider.date.equals(mDate)) {
-                            //        arrayList.add(scheduleProvider);
-                             //   }
-                                arrayList.add(scheduleProvider);
-                                //menuAdapter.notifyDataSetChanged();
-                                Log.d("Check list", "onDataChange: " + arrayList.size());
+                            if (dataSnapshot.getValue() != null) {
+                                dialog.dismiss();
+                                //fetch files from firebase database and push in arraylist
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                                    getSchedule(String.valueOf(snapshot.getKey()));
+                                }
                             }
-
-                        //    for (int i = 0; i < arrayList.size(); i++) {
-                        //        if (!arrayList.get(i).date.equals(mDate)) {
-                         //           arrayList.remove(i);
-                        //        }
-                        //    }
-
-                              Collections.reverse(arrayList);
-
-                            //bind the data in adapter
-                            Log.d("Check list", "out datachange: " + arrayList.size());
-                            adapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -130,6 +116,50 @@ public class FragmentDAT extends Fragment {
                         }
                     });
         }
+    }
+
+    public void getSchedule(String menuId){
+        FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule").child(menuId).child(mDate)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                            dialog.dismiss();
+                            //fetch files from firebase database and push in arraylist
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                xyz.foodhut.app.model.ScheduleProvider scheduleProvider = snapshot.getValue(xyz.foodhut.app.model.ScheduleProvider.class);
+
+                                //   if (scheduleProvider.date.equals(mDate)) {
+                                //      arrayList.add(scheduleProvider);
+                                //   }
+                                arrayList.add(scheduleProvider);
+                                //menuAdapter.notifyDataSetChanged();
+                                Log.d("Check list", "onDataChange: " + arrayList.size());
+                            }
+
+                            //  for (int i = 0; i < arrayList.size(); i++) {
+                            //      if (!arrayList.get(i).date.equals(mDate)) {
+                            //        arrayList.remove(i);
+                            //      }
+                            //  }
+
+
+                            Collections.reverse(arrayList);
+
+                            //bind the data in adapter
+                            Log.d("Check list", "out datachange: " + arrayList.size());
+                            adapter.notifyDataSetChanged();
+                        }
+                        else {
+                            dialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        dialog.dismiss();
+                    }
+                });
     }
 
     public String checkDate() {

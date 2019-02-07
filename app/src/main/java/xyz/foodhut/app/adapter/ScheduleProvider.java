@@ -1,5 +1,6 @@
 package xyz.foodhut.app.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -49,18 +50,19 @@ public class ScheduleProvider extends RecyclerView.Adapter<ScheduleProvider.View
 
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
         final xyz.foodhut.app.model.ScheduleProvider obj = data.get(position);
-         Log.d("check", "schedule: " + obj.name + " " + obj.id + " " + obj.date);
+        Log.d("check", "schedule: " + obj.name + " " + obj.id + " " + obj.date);
 
         // if(obj.date.equals(checkDate())) {
 
-        String price = "৳ " + obj.price;
+        String price = "৳ " + obj.sellerPrice;
         holder.foodName.setText(obj.name);
         holder.price.setText(price);
-        //  holder.type.setText(obj.type);
+        holder.type.setText(obj.type);
         holder.desc.setText(obj.desc);
+        holder.lastTime.append(obj.lastOrderTime);
         Picasso.get().load(obj.imageUrl).placeholder(R.drawable.image).into(holder.image);
         //Glide.with(contex).load(obj.imageUrl).into(holder.image);
 
@@ -74,11 +76,18 @@ public class ScheduleProvider extends RecyclerView.Adapter<ScheduleProvider.View
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog, final int id) {
 
-                                FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("schedule").child(obj.date).child(obj.scheduleId).removeValue();
+                                final ProgressDialog progressDialog = new ProgressDialog(contex);
+                                progressDialog.setMessage("Please Wait...");
+                                progressDialog.show();
+
+                                FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("schedule").child(obj.id).child(obj.date).child(obj.scheduleId).removeValue();
                                 FirebaseDatabase.getInstance().getReference().child("schedule").child(obj.scheduleId).removeValue();
                                 Toast.makeText(contex, "Schedule for this menu is deleted", Toast.LENGTH_SHORT).show();
 
+                                data.remove(position);
                                 notifyDataSetChanged();
+
+                                progressDialog.cancel();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -92,13 +101,13 @@ public class ScheduleProvider extends RecyclerView.Adapter<ScheduleProvider.View
             }
         });
 
-        holder.card.setOnClickListener(new View.OnClickListener() {
+     /*   holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Intent intent = new Intent(contex, AddMenu.class);
                 intent.putExtra("name", obj.name);
-                intent.putExtra("price", obj.price);
+                intent.putExtra("price", obj.sellerPrice);
                 //intent.putExtra("id", obj.menuId);
                 //intent.putExtra("desc", obj.desc);
                 intent.putExtra("type", obj.type);
@@ -112,6 +121,7 @@ public class ScheduleProvider extends RecyclerView.Adapter<ScheduleProvider.View
 
             }
         });
+        */
 
         // }
 
@@ -162,7 +172,7 @@ public class ScheduleProvider extends RecyclerView.Adapter<ScheduleProvider.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView foodName, price, type, desc, ratingCount, deleteSchedule;
+        TextView foodName, price, type, desc, ratingCount, deleteSchedule,lastTime;
         RatingBar ratingBar;
         ImageView image;
         CardView card;
@@ -172,8 +182,9 @@ public class ScheduleProvider extends RecyclerView.Adapter<ScheduleProvider.View
             super(itemView);
             foodName = itemView.findViewById(R.id.mFoodName);
             price = itemView.findViewById(R.id.mFoodPrice);
-            //  type = itemView.findViewById(R.id.mFoodType);
+            type = itemView.findViewById(R.id.mType);
             desc = itemView.findViewById(R.id.mFoodDesc);
+            lastTime = itemView.findViewById(R.id.mLastTime);
 
             deleteSchedule = itemView.findViewById(R.id.deleteSchedule);
             image = (ImageView) itemView.findViewById(R.id.mItemImage);

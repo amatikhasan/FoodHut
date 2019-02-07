@@ -37,7 +37,23 @@
 
     <style name="RatingBar2" parent="Theme.AppCompat">
         <item name="colorControlNormal">@android:color/darker_gray</item>
-        <item name="colorControlActivated">@android:color/holo_orange_light</item>
+        <item name="colorControlActivated">@android:color/white</item>
+    </style>
+
+    <style name="checkBox" parent="Base.Theme.AppCompat">
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 
 </resources>

@@ -13,14 +13,21 @@ public class MenuCustomer {
     public String imageUrl;
     public String type;
     public String price;
+    public String sellerPrice;
     public String desc;
     public String extraItem;
     public String extraItemPrice;
     public float rating;
     public int ratingCount;
+    public int foodQty;
 
+    public String lastOrderTime;
+    public String category;
+    public String pkgSize;
     public String schedule;
     public String location;
+    public String latitude;
+    public String longitude;
     public String scheduleId;
 
 

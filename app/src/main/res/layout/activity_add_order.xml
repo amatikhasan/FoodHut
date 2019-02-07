@@ -22,22 +22,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
 
-                <ImageView
-                    android:id="@+id/logo"
-                    android:layout_width="100dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/home_logo" />
+
 
                 <ImageView
                     android:id="@+id/arrow"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginStart="16dp"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
                     android:onClick="goBack"
                     android:src="@drawable/icon_back" />
 
@@ -45,133 +38,113 @@
         </android.support.v7.widget.CardView>
 
         <ScrollView
-            android:scrollbars="none"
-            android:layout_margin="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cv1">
+            android:layout_below="@id/cv1"
+            android:layout_margin="8dp"
+            android:scrollbars="none">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                >
 
-                <TextView
-                    android:id="@+id/aoName"
+
+                <RelativeLayout
+                    android:id="@+id/rlQty"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                   android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center"
-                    android:text="Name"
-                    android:textSize="16sp" />
-
-            <RelativeLayout
-                android:id="@+id/rlQty"
-                android:layout_marginBottom="12dp"
-                android:layout_below="@id/aoName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/txtQuantity"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@id/llQty"
-                    android:layout_marginBottom="10dp"
-                    android:text="Quantity"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_toStartOf="@id/aoPrice"
-                    android:text="৳ "
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/aoPrice"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:layout_toStartOf="@id/llQty"
-                    android:text="0"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/llQty"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:padding="4dp"
-                    android:background="@drawable/corner_primary_border"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/aoQtyMinus"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:onClick="quantityOp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/minus_50" />
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
 
                     <TextView
-                        android:id="@+id/aoQuantity"
+                        android:id="@+id/aoName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
+                        android:layout_alignBaseline="@id/llQty"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toStartOf="@id/txtPrice"
+                        android:text="Name"
+                        android:fontFamily="sans-serif-light"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/txtPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:layout_marginStart="5dp"
-                        android:text="1"
-                        android:textSize="14sp" />
+                        android:layout_marginEnd="2dp"
+                        android:layout_toStartOf="@id/aoPrice"
+                        android:text="৳ "
+                        android:textSize="16sp" />
 
-                    <ImageView
-                        android:id="@+id/aoQtyPlus"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:onClick="quantityOp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="2dp"
-                        android:src="@drawable/plus_50" />
-                </LinearLayout>
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/aoPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="64dp"
+                        android:layout_toStartOf="@id/llQty"
+                        android:text="0"
+                        android:textSize="16sp" />
 
-             <!--   <TextView
-                    android:id="@+id/txtSubTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/txtQuantity"
-                    android:layout_marginBottom="10dp"
-                    android:text="SubTotal"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/X1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="32dp"
+                        android:layout_toStartOf="@id/llQty"
+                        android:text="X"
+                        android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/aoSubTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtQuantity"
-                    android:layout_toStartOf="@+id/tk1"
-                    android:text="0"
-                    android:textSize="16sp" />
-                    -->
+                    <LinearLayout
+                        android:id="@+id/llQty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/corner_primary_bold"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/aoQtyMinus"
+                            android:layout_width="30dp"
+                            android:layout_height="32dp"
+                            android:onClick="quantityOp"
+                            android:src="@drawable/icon_minus" />
+
+                        <TextView
+                            android:id="@+id/aoQuantity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:text="1"
+
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/aoQtyPlus"
+                            android:layout_width="30dp"
+                            android:layout_height="32dp"
+                            android:onClick="quantityOp"
+                            android:src="@drawable/icon_plus" />
+                    </LinearLayout>
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/rlExtra"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="79dp">
+                    android:layout_below="@id/rlQty"
+                    android:layout_marginBottom="8dp">
 
                     <TextView
                         android:id="@+id/aoExtraItem"
@@ -180,11 +153,12 @@
                         android:layout_alignBaseline="@id/llExtra"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginBottom="10dp"
                         android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_toStartOf="@id/txtExtraPrice"
                         android:ellipsize="marquee"
                         android:text="Extra "
+                        android:fontFamily="sans-serif-light"
                         android:textSize="16sp" />
 
                     <TextView
@@ -192,8 +166,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="2dp"
                         android:layout_marginStart="5dp"
+                        android:layout_marginEnd="2dp"
                         android:layout_toStartOf="@id/aoExtraPrice"
                         android:text="৳ "
                         android:textSize="16sp" />
@@ -203,51 +177,54 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="32dp"
+                        android:layout_marginEnd="64dp"
                         android:layout_toStartOf="@id/llExtra"
                         android:text="0"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/X2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="32dp"
+                        android:layout_toStartOf="@id/llExtra"
+                        android:text="X"
                         android:textSize="16sp" />
 
                     <LinearLayout
                         android:id="@+id/llExtra"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="24dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/corner_primary_border"
-                        android:gravity="center"
-                        android:orientation="horizontal"
                         android:layout_marginBottom="8dp"
-                        android:padding="4dp">
+                        android:background="@drawable/corner_primary_bold"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:id="@+id/aoExtraQtyMinus"
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="4dp"
+                            android:layout_width="30dp"
+                            android:layout_height="32dp"
                             android:onClick="quantityOp"
-                            android:src="@drawable/minus_50" />
+                            android:src="@drawable/icon_minus" />
 
                         <TextView
                             android:id="@+id/aoExtraQuantity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:layout_marginStart="5dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
                             android:text="0"
                             android:textSize="14sp" />
 
                         <ImageView
                             android:id="@+id/aoExtraQtyPlus"
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginEnd="4dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="2dp"
+                            android:layout_width="30dp"
+                            android:layout_height="32dp"
                             android:onClick="quantityOp"
-                            android:src="@drawable/plus_50" />
+                            android:src="@drawable/icon_plus" />
                     </LinearLayout>
 
                 </RelativeLayout>
@@ -259,26 +236,30 @@
                     android:layout_below="@id/rlExtra"
                     android:layout_marginBottom="16dp"
                     android:text="Sub Total"
-                    android:textSize="16sp" />
+                    android:fontFamily="sans-serif-light"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="2dp"
+                    android:layout_below="@id/rlExtra"
                     android:layout_marginStart="5dp"
+                    android:layout_marginEnd="2dp"
                     android:layout_toStartOf="@id/aoSubTotalPrice"
                     android:text="৳ "
-                    android:layout_below="@id/rlExtra"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/aoSubTotalPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_below="@id/rlExtra"
+                    android:layout_alignParentEnd="true"
                     android:text="0"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txtDelivery"
@@ -287,24 +268,26 @@
                     android:layout_below="@id/txtSubTotal"
                     android:layout_marginBottom="16dp"
                     android:text="Delivery Charge"
-                    android:textSize="16sp" />
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="2dp"
+                    android:layout_below="@id/txtSubTotal"
                     android:layout_marginStart="5dp"
+                    android:layout_marginEnd="2dp"
                     android:layout_toStartOf="@id/aoDeliveryFee"
                     android:text="৳ "
-                    android:layout_below="@id/txtSubTotal"
+
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/aoDeliveryFee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_below="@id/txtSubTotal"
+                    android:layout_alignParentEnd="true"
                     android:text="0"
                     android:textSize="16sp" />
 
@@ -314,20 +297,21 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txtDelivery"
                     android:layout_marginBottom="16dp"
-                    android:text="Coupon"
-                    android:textSize="16sp" />
+                    android:text="Have Coupon Code?"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/aoCoupon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_below="@id/txtDelivery"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginBottom="10dp"
-                    android:text="Add Coupon Code"
                     android:onClick="addCoupon"
+                    android:text="Add Coupon Here"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/txtTotal"
@@ -336,37 +320,44 @@
                     android:layout_below="@id/txtCoupon"
                     android:layout_marginBottom="16dp"
                     android:text="Total"
-                    android:textSize="16sp" />
+                    android:fontFamily="sans-serif-light"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="2dp"
+                    android:layout_below="@id/txtCoupon"
                     android:layout_marginStart="5dp"
+                    android:layout_marginEnd="2dp"
                     android:layout_toStartOf="@id/aoTotalPrice"
                     android:text="৳ "
-                    android:layout_below="@id/txtCoupon"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/aoTotalPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_below="@id/txtCoupon"
+                    android:layout_alignParentEnd="true"
                     android:text="0"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/aoNote"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txtTotal"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="4dp"
                     android:layout_marginBottom="16dp"
-                    android:padding="8dp"
                     android:background="@drawable/corner_primary_border"
-                    android:textSize="14sp"
-                    android:hint="Note" />
+                    android:hint="Note"
+                    android:fontFamily="sans-serif-light"
+                    android:padding="8dp"
+                    android:textSize="14sp" />
 
                 <!--  <TextView
                       android:id="@+id/txtDate"
@@ -389,81 +380,218 @@
                     android:id="@+id/txtTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@id/aoBtnTime"
                     android:layout_below="@id/aoNote"
+                    android:layout_alignBaseline="@id/aoBtnTime"
                     android:layout_marginBottom="16dp"
-                    android:text="Expected Time"
-                    android:textSize="16sp" />
+                    android:text="Delivery Time"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/aoBtnTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_below="@id/aoNote"
-                    android:background="@color/colorPrimary"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginBottom="8dp"
-                    android:textSize="14sp"
+                    android:background="@drawable/round_button_primary"
                     android:padding="8dp"
+                    android:text="Select Time"
                     android:textColor="@color/white"
-                    android:text="Select Time" />
+                    android:textSize="14sp" />
 
                 <RelativeLayout
                     android:id="@+id/rl1"
-                    android:layout_marginBottom="8dp"
-                    android:layout_below="@id/aoBtnTime"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-
-                <TextView
-                    android:id="@+id/txtPayment"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:text="Payment"
-                    android:layout_centerVertical="true"
-                    android:textSize="16sp" />
+                    android:layout_below="@id/aoBtnTime"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp">
 
-                <RadioGroup
-                    android:id="@+id/rg1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true">
 
-                    <RadioButton
-                        android:id="@+id/aoRdoCOD"
+                    <TextView
+                        android:id="@+id/txtPayment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:text="Cash On delivery" />
-                </RadioGroup>
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="12dp"
+                        android:text="Payment Method"
+                        android:fontFamily="sans-serif-light"
+                        android:textSize="14sp" />
+
+                    <RadioGroup
+                        android:id="@+id/rg1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toEndOf="@id/txtPayment"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="72dp"
+                            android:layout_marginStart="32dp"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".33"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/cod"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-light"
+                                    android:text="Cash" />
+
+                                <RadioButton
+                                    android:id="@+id/aoRdoCOD"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="12sp" />
+
+
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_weight=".33"
+                                android:gravity="center"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/bkash"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-light"
+                                    android:text="bKash" />
+                                <RadioButton
+                                    android:id="@+id/aoRdoBKash"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:gravity="center"
+                                android:layout_weight=".25"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/corporate"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:fontFamily="sans-serif-light"
+                                    android:text="Corporate Due" />
+
+                                <RadioButton
+                                    android:id="@+id/aoRdoCorporate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+
+                            </LinearLayout>
+
+                            <!--       <LinearLayout
+                                       android:layout_weight=".25"
+                                       android:gravity="center"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="wrap_content"
+                                       android:orientation="vertical">
+
+                                       <RadioButton
+                                           android:id="@+id/aoRdoCard"
+                                           android:layout_width="wrap_content"
+                                           android:layout_height="wrap_content" />
+                                       <TextView
+                                           android:layout_width="wrap_content"
+                                           android:layout_height="wrap_content"
+                                           android:text="Card" />
+
+                                   </LinearLayout>
+
+
+                                   <LinearLayout
+                                       android:gravity="center"
+                                       android:layout_weight=".33"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="wrap_content"
+                                       android:orientation="vertical">
+
+                                       <RadioButton
+                                           android:id="@+id/aoRdoCorporate"
+                                           android:layout_width="wrap_content"
+                                           android:layout_height="wrap_content"
+                                           android:clickable="false"/>
+                                       <TextView
+                                           android:layout_width="wrap_content"
+                                           android:layout_height="wrap_content"
+                                           android:text="Corporate" />
+                                   </LinearLayout>
+                                   -->
+                        </LinearLayout>
+                    </RadioGroup>
                 </RelativeLayout>
 
                 <TextView
                     android:id="@+id/txtAddress"
-                    android:layout_marginBottom="12dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rl1"
+                    android:layout_marginBottom="12dp"
                     android:text="Address"
-                    android:textSize="16sp" />
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/aoAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                   android:layout_below="@id/rl1"
+                    android:layout_below="@id/rl1"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="8dp"
                     android:text="Full Address"
-                    android:textSize="16sp" />
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/aoChangeAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/aoAddress"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="32dp"
+                    android:text="Change Address"
+                    android:onClick="changeAddress"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
 
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_below="@id/aoAddress" />
+                    android:layout_below="@id/aoChangeAddress" />
+
+
 
             </RelativeLayout>
         </ScrollView>
@@ -476,16 +604,16 @@
 
             <TextView
                 android:id="@+id/aoConfirm"
-                android:gravity="center"
-                android:layout_margin="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="confirm"
-                android:textSize="14sp"
+                android:layout_margin="8dp"
                 android:background="@drawable/round_button_green"
-                android:textColor="@color/white"
+                android:gravity="center"
+                android:onClick="confirm"
                 android:padding="12dp"
-                android:text="Confirm Order" />
+                android:text="Confirm Order"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
         </LinearLayout>
     </RelativeLayout>
 

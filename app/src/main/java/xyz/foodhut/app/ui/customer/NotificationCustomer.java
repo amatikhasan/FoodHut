@@ -43,11 +43,11 @@ public class NotificationCustomer extends AppCompatActivity {
 
 
         dialog = new ProgressDialog(this);
-        dialog.setMessage("Loading Favourite Menus...");
+        dialog.setMessage("Please Wait...");
         dialog.show();
 
 
-        FirebaseDatabase.getInstance().getReference("customers/" + StaticConfig.UID + "/notifications")
+        FirebaseDatabase.getInstance().getReference("customers/" + StaticConfig.UID + "/notifications/old")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -58,6 +58,8 @@ public class NotificationCustomer extends AppCompatActivity {
                             arrayList.add(notification);
                             Log.d("Check", "list noti: " + arrayList.size());
                         }
+
+                        FirebaseDatabase.getInstance().getReference("customers/" + StaticConfig.UID + "/notifications/new").removeValue();
 
                         Collections.reverse(arrayList);
                         //bind the data in adapter
@@ -73,8 +75,8 @@ public class NotificationCustomer extends AppCompatActivity {
     }
 
     public void goBack(View view){
-        startActivity(new Intent(this,HomeCustomer.class));
+      //  startActivity(new Intent(this,HomeCustomer.class));
         finish();
-        finishAffinity();
+      //  finishAffinity();
     }
 }

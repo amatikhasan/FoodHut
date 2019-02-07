@@ -13,13 +13,65 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <android.support.design.widget.NavigationView
+  <!--  <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="220dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_home_customer"
-        app:menu="@menu/activity_home_customer_drawer" />
+        app:menu="@menu/activity_home_customer_drawer" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
+
+        <View
+            android:id="@+id/viewShadow"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@drawable/bg_gradient_soft"
+            app:layout_constraintBottom_toTopOf="@id/cvFooter" />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/llLogout"
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingEnd="32dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_gravity="bottom|center_horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/logout_nav_24"/>
+            <TextView
+                android:id="@+id/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="Log Out"
+                />
+
+        </LinearLayout>
+        </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </android.support.design.widget.NavigationView>
+    -->
 
 </android.support.v4.widget.DrawerLayout>
