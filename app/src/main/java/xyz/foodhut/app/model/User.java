@@ -12,7 +12,10 @@ public class User {
     public String type;
     public String rating;
     public String ratingCount;
+    public String corporateCode;
+    public int corporateDue;
 
+    public String commission;
     public String autoAddress;
     public String longitude;
     public String latitude;

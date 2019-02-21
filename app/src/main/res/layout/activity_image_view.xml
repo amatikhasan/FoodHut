@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.customer.ImageView">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/fullscreen_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:scaleType="centerInside"
+            android:keepScreenOn="true" />
+
+        <!-- This FrameLayout insets its children based on system windows using
+             android:fitsSystemWindows. -->
+
+
+
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/dummy_button"
+                android:textColor="@color/white"
+                android:background="@color/grayDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Close" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

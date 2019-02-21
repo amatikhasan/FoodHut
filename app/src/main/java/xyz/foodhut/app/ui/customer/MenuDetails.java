@@ -138,7 +138,7 @@ public class MenuDetails extends AppCompatActivity {
             category.setText(mCategory);
             lastTime.setText(time);
 
-            Picasso.get().load(mImageUrl).placeholder(R.drawable.image).into(image);
+            Picasso.get().load(mImageUrl).placeholder(R.drawable.loading).into(image);
           //  Glide.with(getApplicationContext()).load(mImageUrl).placeholder(R.drawable.loading).into(image);
 
             /*
@@ -155,7 +155,7 @@ public class MenuDetails extends AppCompatActivity {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MenuDetails.this);
+           /*     AlertDialog.Builder mBuilder = new AlertDialog.Builder(MenuDetails.this);
                 View mView = getLayoutInflater().inflate(R.layout.layout_image_view, null);
               //  ImageView image = mView.findViewById(R.id.pvImage);
                 PhotoView photoView = mView.findViewById(R.id.pvImage);
@@ -169,6 +169,12 @@ public class MenuDetails extends AppCompatActivity {
                 mBuilder.setView(mView);
                 AlertDialog mDialog = mBuilder.create();
                 mDialog.show();
+                */
+
+                Intent intent = new Intent(MenuDetails.this, xyz.foodhut.app.ui.customer.ImageView.class);
+                intent.putExtra("imageUrl", mImageUrl);
+                startActivity(intent);
+
             }
         });
 

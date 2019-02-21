@@ -226,7 +226,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:fontFamily="sans-serif-light"
-                    android:text="Enter order no. O-xxxxx as reference" />
+                    android:text="Enter order no. O-xxxxx as reference and complete payment" />
 
             </LinearLayout>
 

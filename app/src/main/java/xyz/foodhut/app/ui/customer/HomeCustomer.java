@@ -48,6 +48,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.appyvet.materialrangebar.RangeBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -75,6 +79,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -90,6 +98,7 @@ import java.util.Map;
 import xyz.foodhut.app.R;
 import xyz.foodhut.app.adapter.MenuCustomer;
 import xyz.foodhut.app.classes.NotificationService;
+import xyz.foodhut.app.classes.RequestHandler;
 import xyz.foodhut.app.data.SharedPreferenceHelper;
 import xyz.foodhut.app.data.StaticConfig;
 import xyz.foodhut.app.ui.MainActivity;
@@ -307,7 +316,6 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
         checkUpdate();
 
         checkProfile();
-
 
         notificationCount();
 
@@ -695,10 +703,8 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
 
     public void getMenu(final int check) {
 
-
         dummyList.clear();
         arrayList.clear();
-
 
         StaticConfig.QTY = 0;
         StaticConfig.SUBTOTAL = 0;
@@ -722,7 +728,6 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
             */
         if (!isConnected()){
             dialog.cancel();
-
          }
 
         if (StaticConfig.UID != null) {
@@ -760,7 +765,7 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
                                             Log.d("Check", "date comparing : " + dummyList.get(i).schedule);
                                             arrayList.add(dummyList.get(i));
                                         } else {
-                                            FirebaseDatabase.getInstance().getReference("schedule").child(dummyList.get(i).scheduleId).removeValue();
+                                         //   FirebaseDatabase.getInstance().getReference("schedule").child(dummyList.get(i).scheduleId).removeValue();
                                         }
                                     } catch (ParseException e) {
                                         e.printStackTrace();
@@ -828,12 +833,12 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
 
                                         getDistance(dummyLatitude, dummyLongitude);
                                         tvLocation.setText("Current location");
+                                        getLocation(dummyLatitude,dummyLongitude,tvLocation);
                                         locationDalog.cancel();
 
                                     } else {
 
                                         if (SharedPreferenceHelper.getInstance(HomeCustomer.this).getLOCATION().isEmpty())
-
                                             locationOp();
 
                                         else {
@@ -882,7 +887,8 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
                                         else
                                             filterLocation(mLocation);
 
-                                        tvLocation.setText(mLocation);
+                                            tvLocation.setText(mLocation);
+
                                     }
                                 }
 
@@ -1045,6 +1051,7 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
                             SharedPreferenceHelper.getInstance(getApplicationContext()).setLatLong(String.valueOf(latitude),String.valueOf(longitude));
 
                             tvLocation.setText("Current location");
+                            getLocation(latitude,longitude,tvLocation);
                             getDistance(latitude, longitude);
                         }
                     } else {
@@ -1341,8 +1348,11 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
                     log(e.getMessage());
                 }
                 if ((latitude != 0 && longitude != 0)) {
+                    SharedPreferenceHelper.getInstance(getApplicationContext()).setLatLong(String.valueOf(latitude),String.valueOf(longitude));
+
                     getDistance(latitude, longitude);
                     tvLocation.setText("Current location");
+                    getLocation(latitude,longitude,tvLocation);
                     locationDalog.cancel();
                 } else {
                     EnableGPSAutoMatically();
@@ -2656,6 +2666,61 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
         final android.app.AlertDialog alert = builder.create();
         alert.show();
         Log.d("check method", "from alert");
+    }
+
+
+    public void getLocation(double lati, double longi, final TextView tvLocate) {
+
+        //  longi=90.353655;
+        //   lati=23.795604;
+
+        final String[] subLocality = new String[1];
+        final String[] area_level_3 = new String[1];
+
+        String reqUrl = "https://barikoi.xyz/v1/api/search/reverse/geocode/MTEzMjo0Nk03MEcyNjRC/place?longitude=" + longi + "&latitude=" + lati;
+        StringRequest sr = new StringRequest(Request.Method.GET, reqUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("check", "barikoi: "+response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray Results = jsonObject.getJSONArray("Place");
+                            Log.d("check", "barikoi: Place" + Results.toString());
+                            JSONObject zero = Results.getJSONObject(0);
+                            Log.d("check", "barikoi: zero" + zero.toString());
+
+                            String area = zero.getString("area");
+
+                            if (!area.equals("") && !area.isEmpty()) {
+                              //  mLocation = area;
+                             //   mLocationTemp = area;
+                                tvLocate.setText(area);
+                            } else {
+                               // Toast.makeText(HomeCustomer.this, "Sorry we can't detect your location.", Toast.LENGTH_SHORT).show();
+
+                                tvLocate.setText("Current Location");
+                            }
+
+                            Log.d("check", "barikoi address: " + area);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                     //   if (mLocation.equals("")) {
+                      //      Toast.makeText(HomeCustomer.this, "Sorry we can't detect your location.", Toast.LENGTH_SHORT).show();
+                     //   }
+                        tvLocate.setText("Current Location");
+                    }
+                });
+
+        RequestHandler.getmInstance(this).addToRequestQueue(sr);
     }
 
 

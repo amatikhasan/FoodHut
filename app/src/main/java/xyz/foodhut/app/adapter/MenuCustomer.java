@@ -108,8 +108,8 @@ public class MenuCustomer extends RecyclerView.Adapter<MenuCustomer.ViewHolder> 
         //holder.ratingBar.setRating((float) obj.rating);
         // Transformation transformation=new RoundedTransformationBuilder().cornerRadius(12).oval(false).build();
 
-        Picasso.get().load(obj.imageUrl).placeholder(R.drawable.loading).into(holder.image);
-       // Glide.with(contex).load(obj.imageUrl).placeholder(R.drawable.loading).into(holder.image);
+       // Picasso.get().load(obj.imageUrl).placeholder(R.drawable.loading).into(holder.image);
+        Glide.with(contex).load(obj.imageUrl).placeholder(R.drawable.loading).into(holder.image);
 
         updateProvider(obj.providerId, holder);
 
