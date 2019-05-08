@@ -802,7 +802,10 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                         newUser3.phone = phone;
                         newUser3.name = "name";
                         newUser3.address = "address";
-                        newUser3.status = "Inactive";
+                        newUser3.status = "Active";
+                        newUser3.corporateCode = "code";
+                        newUser3.corporateDue = 0;
+
                         //    newUser3.latitude=0;
                         //    newUser3.longitude=0;
                         newUser3.avatar = StaticConfig.STR_DEFAULT_BASE64;

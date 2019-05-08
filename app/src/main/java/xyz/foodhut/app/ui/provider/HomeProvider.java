@@ -10,15 +10,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -26,7 +23,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,20 +32,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
-import java.util.Locale;
 
 import xyz.foodhut.app.R;
-import xyz.foodhut.app.adapter.MenuCustomer;
 import xyz.foodhut.app.classes.NotificationService;
 import xyz.foodhut.app.data.SharedPreferenceHelper;
 import xyz.foodhut.app.data.StaticConfig;
-import xyz.foodhut.app.ui.FeedBack;
 import xyz.foodhut.app.ui.MainActivity;
 import xyz.foodhut.app.ui.Profile;
 import xyz.foodhut.app.ui.ProfileUpdate;
-import xyz.foodhut.app.ui.customer.HomeCustomer;
-import xyz.foodhut.app.ui.customer.NotificationCustomer;
-import xyz.foodhut.app.ui.customer.ProfileCustomer;
 
 public class HomeProvider extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -397,7 +387,7 @@ public class HomeProvider extends AppCompatActivity
     }
 
     public void mySchedule(View view) {
-        startActivity(new Intent(this, Schedule.class));
+        startActivity(new Intent(this, ScheduleTab.class));
     }
 
     public void orders(View view) {

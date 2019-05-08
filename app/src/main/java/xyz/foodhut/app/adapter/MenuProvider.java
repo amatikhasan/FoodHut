@@ -291,7 +291,7 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                                     if (dataSnapshot.getValue() != null) {
 
-                                                        Toast.makeText(contex, "Menu already Added in Schedule, try different day", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(contex, "Menu already Added in ScheduleTab, try different day", Toast.LENGTH_SHORT).show();
 
                                                     }
                                                     else {
@@ -347,7 +347,7 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
 
 
                                                         Log.d("check", "onClick: schedule " + day[0] + " " + formattedDate);
-                                                        Toast.makeText(contex, "Menu Added in Schedule", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(contex, "Menu Added in ScheduleTab", Toast.LENGTH_SHORT).show();
 
 
                                                     }

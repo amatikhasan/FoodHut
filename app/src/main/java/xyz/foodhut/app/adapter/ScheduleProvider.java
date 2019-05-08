@@ -82,7 +82,7 @@ public class ScheduleProvider extends RecyclerView.Adapter<ScheduleProvider.View
 
                                 FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("schedule").child(obj.id).child(obj.date).child(obj.scheduleId).removeValue();
                                 FirebaseDatabase.getInstance().getReference().child("schedule").child(obj.scheduleId).removeValue();
-                                Toast.makeText(contex, "Schedule for this menu is deleted", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(contex, "ScheduleTab for this menu is deleted", Toast.LENGTH_SHORT).show();
 
                                 data.remove(position);
                                 notifyDataSetChanged();

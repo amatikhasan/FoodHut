@@ -22,8 +22,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -35,11 +38,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Random;
 
 import xyz.foodhut.app.R;
 import xyz.foodhut.app.data.DBHelper;
+import xyz.foodhut.app.data.StaticConfig;
 import xyz.foodhut.app.model.MenuProvider;
+import xyz.foodhut.app.model.Review;
 
 import static xyz.foodhut.app.ui.PhoneAuthActivity.userID;
 
@@ -66,7 +72,7 @@ public class AddMenu extends AppCompatActivity {
     Bundle extras;
     Toolbar toolbar;
 
-    String mRating,mRatingCount;
+    String mRating,mRatingCount,commission="30";
 
     private DatabaseReference databaseReference;
     private StorageReference mStorageRef;
@@ -176,7 +182,31 @@ public class AddMenu extends AppCompatActivity {
         }
         Log.d("Extra Data Check", id + " " + mName + " " + isUpdate);
 
+        checkCommission();
         checkFilePermissions();
+    }
+
+    private void checkCommission() {
+
+        FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID + "/about/commission")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //fetch files from firebase database and push in arraylist
+
+                        if (dataSnapshot.getValue()!=null){
+                            commission=dataSnapshot.getValue().toString();
+
+                            Log.d("check", "commission: "+commission);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
     }
 
     public void goBack(View view) {
@@ -296,9 +326,13 @@ public class AddMenu extends AppCompatActivity {
         mDesc = desc.getText().toString().trim();
         mExtraItem = extraItem.getText().toString().trim();
         mExtraItemPrice = extraItemPrice.getText().toString().trim();
+
+        double com=Double.parseDouble("0."+commission);
         int SP= Integer.parseInt(mSellerPrice);
-        int CP= (int) (SP+(SP*.3));
+        int CP= (int) (SP+(SP*com));
         mPrice=String.valueOf(CP);
+
+        Log.d("check", "submit price: "+commission+" "+com+" "+SP+" "+CP);
 
         if (isUpdate) {
             // update();

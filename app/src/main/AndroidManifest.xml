@@ -18,6 +18,9 @@
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.provider.Schedule"></activity>
+        <activity android:name=".ui.customer.ImageView" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
@@ -35,7 +38,7 @@
         <activity android:name=".ui.provider.ProviderHome" />
         <activity android:name=".ui.PhoneAuthRegister" />
         <activity android:name=".ui.provider.Menus" />
-        <activity android:name=".ui.provider.Schedule" />
+        <activity android:name=".ui.provider.ScheduleTab" />
         <activity android:name=".ui.provider.Payments" />
         <activity android:name=".ui.provider.OrdersDate" />
         <activity android:name=".ui.provider.Reviews" />
@@ -90,11 +93,6 @@
         <activity android:name=".ui.Privacy" />
         <activity android:name=".ui.provider.Complains" />
         <activity android:name=".ui.provider.Kitchen" />
-        <activity
-            android:name=".ui.customer.FullscreenImage"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_fullscreen_image"
-            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.provider.ConfirmPayment">
+    tools:context=".ui.customer.ConfirmPayment">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cv1"
@@ -226,7 +226,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:fontFamily="sans-serif-light"
-                    android:text="Enter order no. O-xxxxx as reference" />
+                    android:text="Enter order no. O-xxxxx as reference and complete payment" />
 
             </LinearLayout>
 

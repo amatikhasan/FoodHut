@@ -1,204 +1,146 @@
 package xyz.foodhut.app.ui.provider;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 import xyz.foodhut.app.R;
 import xyz.foodhut.app.data.StaticConfig;
-import xyz.foodhut.app.ui.PhoneAuthRegister;
+import xyz.foodhut.app.model.ScheduleProvider;
 
-public class Schedule extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static String TAG = "PhoneAuth";
+public class Schedule extends AppCompatActivity {
 
-    //Toolbar toolbar;
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle drawerToggle;
+    RecyclerView recyclerView;
+    ArrayList<ScheduleProvider> arrayList = new ArrayList<>();
+    String userID = null;
+    xyz.foodhut.app.adapter.ScheduleProvider adapter;
 
-    private ViewPager viewPager;
-    private TabLayout tabLayout = null;
-    public static String STR_TODAY_FRAGMENT = "Today";
-    public static String STR_TOMORROW_FRAGMENT = "Tomorrow";
-    public static String STR_DAT_FRAGMENT = "Day After Tomorrow";
+    private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
+    private Context context;
 
-    private FloatingActionButton floatButton;
-    private ViewPagerAdapter adapter;
-
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseUser user;
+    private ProgressDialog dialog;
+    private String mDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
-     //   Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-     //   if (toolbar != null) {
-      //      setSupportActionBar(toolbar);
-     //      getSupportActionBar().setTitle("My Schedule");
-     //   }
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        initTab();
-        initFirebase();
 
-    }
+        dialog = new ProgressDialog(context);
+        dialog.setMessage("Please Wait...");
 
-    private void initFirebase() {
-        //Khoi tao thanh phan de dang nhap, dang ky
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    StaticConfig.UID = user.getUid();
-                } else {
-                    Schedule.this.finish();
-                    // User is signed in
-                    startActivity(new Intent(Schedule.this, PhoneAuthRegister.class));
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-                // ...
-            }
-        };
-    }
+        arrayList = new ArrayList<>();
+        recyclerView = findViewById(R.id.rvSchedule);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new xyz.foodhut.app.adapter.ScheduleProvider(this, arrayList, 1);
+        recyclerView.setAdapter(adapter);
 
-    public void goBack(View view){
-        startActivity(new Intent(this,HomeProvider.class));
-        finish();
-        finishAffinity();
-    }
+        getScheduleList();
 
-    /**
-     * Khoi tao 3 tab
-     */
-    private void initTab() {
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
-        setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
-        setupTabIcons();
+        dialog.dismiss();
     }
 
 
-    private void setupTabIcons() {
-        int[] tabIcons = {
-                R.drawable.ic_check_white_24dp,
-                R.drawable.ic_check_white_24dp,
-                R.drawable.ic_check_white_24dp
-        };
+    public void getScheduleList() {
 
-       // tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-       // tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-       //tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-        //tabLayout.getTabAt(3).setIcon(tabIcons[3]);
-        tabLayout.getTabAt(0).setText("Today");
-        tabLayout.getTabAt(1).setText("Tomorrow");
-        tabLayout.getTabAt(2).setText("Day After Tomorrow");
-    }
+        FirebaseUser user = firebaseAuth.getCurrentUser();
 
-    private void setupViewPager(ViewPager viewPager) {
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new FragmentToday(), STR_TODAY_FRAGMENT);
-        adapter.addFrag(new FragmentTomorrow(), STR_TOMORROW_FRAGMENT);
-        adapter.addFrag(new FragmentDAT(), STR_DAT_FRAGMENT);
-
-        viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(3);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        // if (id == R.id.menu_profile) {
-        //startActivity(new Intent(this,ShowPill.class));
-        //finish();
-        //  }
-
-
-        return false;
-    }
-
-    /**
-     * Adapter hien thi tab
-     */
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
+        if (user != null) {
+            userID = user.getUid();
         }
 
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
 
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
+        if (StaticConfig.UID != null) {
+            dialog.show();
+            FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() != null) {
+                                dialog.dismiss();
+                                //fetch files from firebase database and push in arraylist
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-        public void addFrag(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
+                                    getSchedule(String.valueOf(snapshot.getKey()));
 
-            // return null to display only the icon
-            return null;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            dialog.dismiss();
+                        }
+                    });
         }
     }
 
+    public void getSchedule(String menuId){
+        FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule").child(menuId).child(mDate)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                            dialog.dismiss();
+                            //fetch files from firebase database and push in arraylist
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                xyz.foodhut.app.model.ScheduleProvider scheduleProvider = snapshot.getValue(xyz.foodhut.app.model.ScheduleProvider.class);
+
+                                //   if (scheduleProvider.date.equals(mDate)) {
+                                //      arrayList.add(scheduleProvider);
+                                //   }
+                                arrayList.add(scheduleProvider);
+                                //menuAdapter.notifyDataSetChanged();
+                                Log.d("Check list", "onDataChange: " + arrayList.size());
+                            }
+
+                            //  for (int i = 0; i < arrayList.size(); i++) {
+                            //      if (!arrayList.get(i).date.equals(mDate)) {
+                            //        arrayList.remove(i);
+                            //      }
+                            //  }
+
+
+                            Collections.reverse(arrayList);
+
+                            //bind the data in adapter
+                            Log.d("Check list", "out datachange: " + arrayList.size());
+                            adapter.notifyDataSetChanged();
+                        }
+                        else {
+                            dialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        dialog.dismiss();
+                    }
+                });
+    }
 }

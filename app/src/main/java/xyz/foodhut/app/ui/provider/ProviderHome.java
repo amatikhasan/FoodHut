@@ -20,7 +20,7 @@ public class ProviderHome extends AppCompatActivity {
     }
 
     public void mySchedule(View view){
-        startActivity(new Intent(this,Schedule.class));
+        startActivity(new Intent(this, ScheduleTab.class));
     }
     public void orders(View view){
         startActivity(new Intent(this,OrdersDate.class));

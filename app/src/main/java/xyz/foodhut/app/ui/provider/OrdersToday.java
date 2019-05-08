@@ -42,7 +42,7 @@ public class OrdersToday extends AppCompatActivity {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-    xyz.foodhut.app.adapter.OrdersProvider adapter;
+    xyz.foodhut.app.adapter.OrdersProviderRunning adapter;
     private ProgressDialog dialog;
 
     @Override
@@ -64,7 +64,7 @@ public class OrdersToday extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvOrdersProvider);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new xyz.foodhut.app.adapter.OrdersProvider(this,orderDetails);
+        adapter = new xyz.foodhut.app.adapter.OrdersProviderRunning(this,orderDetails);
         recyclerView.setAdapter(adapter);
 
         dialog = new ProgressDialog(this);
@@ -176,6 +176,9 @@ public class OrdersToday extends AppCompatActivity {
 
     public void getOrderDetails(final String menuId, String date, String orderId) {
 
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+        final String today = sdf.format(calendar.getTime());
 
         databaseReference.child("providers/" + StaticConfig.UID + "/orders").child(date).child(menuId).child("orders").child(orderId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -185,7 +188,7 @@ public class OrdersToday extends AppCompatActivity {
                         //fetch files from firebase database and push in arraylist
                         OrderDetails details = dataSnapshot.getValue(OrderDetails.class);
 
-                        if (details != null && !details.status.equals("Cancelled") && !details.status.equals("Rejected")&&!details.status.equals("Pending"))
+                        if (details != null &&details.date.equals(today) && !details.status.equals("Cancelled") && !details.status.equals("Rejected")&&!details.status.equals("Pending")&&!details.status.equals("Delivered"))
                             orderDetails.add(details);
                         //  Collections.reverse(obj);
 
@@ -207,7 +210,7 @@ public class OrdersToday extends AppCompatActivity {
                         }
 
                         adapter.notifyDataSetChanged();
-                        Log.d("Check list", "onDataChange: details " + orderDetails.size() + " " + orderDetails.get(0).orderId);
+                        Log.d("Check list", "onDataChange: details " + orderDetails.size() );
                     }
 
                     @Override

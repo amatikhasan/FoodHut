@@ -677,21 +677,128 @@ public class AddOrder extends AppCompatActivity {
 
     public void confirm(View view) {
 
+        final String[] code = new String[1];
+        final String[] corporateCode = new String[1];
+        final long[] corporateDue = new long[1];
+
+        corporateCode[0]="code2019";
+
+        if (cod.isChecked()) {
+            mPayment = "COD";
+            completeOrder();
+        }
+        if (bKash.isChecked()) {
+            mPayment = "bKash";
+            completeOrder();
+        }
+        if (corporate.isChecked()) {
+            mPayment = "Corporate Due";
+
+            LayoutInflater layoutInflater = LayoutInflater.from(this);
+            View inflate = layoutInflater.inflate(R.layout.layout_add_corporate_code, null);
+
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+            builder.setView(inflate);
+
+            final ProgressDialog pDialog = new ProgressDialog(this);
+            pDialog.setMessage("Applying Code..");
+
+            final EditText etCode = inflate.findViewById(R.id.etCode);
+
+            builder.setCancelable(false)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            final android.support.v7.app.AlertDialog alertDialog = builder.create();
+
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(final DialogInterface dialog) {
+                    Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+                    okButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            code[0] = etCode.getText().toString().trim();
+                            if (!code[0].isEmpty()) {
+
+                                pDialog.show();
+
+                                FirebaseDatabase.getInstance().getReference("customers/" + StaticConfig.UID + "/about")
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                //fetch files from firebase database and push in arraylist
+
+                                                if (dataSnapshot.getValue()!=null){
+
+                                                    HashMap hashUser = (HashMap) dataSnapshot.getValue();
+
+                                                    try {
+                                                        corporateCode[0] = (String) hashUser.get("corporateCode");
+                                                        corporateDue[0] = (long) hashUser.get("corporateDue");
+                                                    }catch (NullPointerException e){
+                                                        e.printStackTrace();
+                                                    }
+
+
+                                                    if (code[0].equals(corporateCode[0])){
+                                                        Toast.makeText(AddOrder.this, "Code Applied!", Toast.LENGTH_SHORT).show();
+
+                                                        int due= (int) (corporateDue[0]+mFinalAmount);
+
+                                                        FirebaseDatabase.getInstance().getReference("customers/" + StaticConfig.UID + "/about/corporateDue").setValue(due);
+
+                                                        dialog.cancel();
+
+
+                                                        completeOrder();
+
+                                                    }
+                                                    else {
+                                                        Toast.makeText(AddOrder.this, "Invalid Code!", Toast.LENGTH_SHORT).show();
+                                                        dialog.cancel();
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                //    databaseReference.child("customers/" + userID).child("about").child("name").setValue(etName.getText().toString());
+
+                            } else {
+                                Toast.makeText(AddOrder.this, "Required fields are missing", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            });
+
+            alertDialog.show();
+        }
+
+
+
+    }
+
+
+    public void completeOrder() {
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage("Please wait..");
+
         if (isConnected()) {
 
-            final ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setMessage("Please wait..");
-            dialog.show();
 
-            if (cod.isChecked()) {
-                mPayment = "COD";
-            }
-            if (bKash.isChecked()) {
-                mPayment = "bKash";
-            }
-            if (corporate.isChecked()) {
-                mPayment = "Corporate Due";
-            }
+            dialog.show();
 
 
             //get the signed in user
@@ -1019,6 +1126,8 @@ public class AddOrder extends AppCompatActivity {
         }
         else
             Toast.makeText(this, "Sorry, you don't have an active internet connection", Toast.LENGTH_SHORT).show();
+
+        dialog.cancel();
     }
 
 
