@@ -614,10 +614,10 @@ public class ProfileUpdate extends AppCompatActivity implements GoogleApiClient.
 
             if (mType.equals("provider")) {
                 startActivity(new Intent(this,HomeProvider.class));
-                finish();  }
+                finishAffinity();  }
             if (mType.equals("customer")) {
                 startActivity(new Intent(this,HomeCustomer.class));
-                finish();  }
+                finishAffinity();  }
         }
 
 

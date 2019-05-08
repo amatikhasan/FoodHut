@@ -122,8 +122,13 @@ public class AddOrder extends AppCompatActivity {
             mAvailable = extras.getInt("available");
             //mDesc = extras.getString("desc");
             mExtraItem = extras.getString("extraItem");
-            mExtraItemPrice = extras.getInt("extraItemPrice");
-            Log.d("check", "extraItem: " + mExtraItem);
+            try {
+                mExtraItemPrice = Integer.parseInt(extras.getString("extraItemPrice"));
+                Log.d("check", "extraItem: " + mExtraItem);
+            }catch (NumberFormatException e){
+                e.printStackTrace();
+            }
+
 
             mImageUrl = extras.getString("imageUrl");
             mDate = extras.getString("date");
@@ -133,7 +138,7 @@ public class AddOrder extends AppCompatActivity {
             mProviderAddress = extras.getString("providerAddress");
             mProviderPhone = extras.getString("providerPhone");
 
-            // Log.d("check", "onCreate: "+byteArray);
+            Log.d("check", "extra add order: "+mExtraItemPrice);
 
             mSubTotal = mPrice;
             mTotal = mPrice;
@@ -413,6 +418,7 @@ public class AddOrder extends AppCompatActivity {
                         if (!mCoupon.isEmpty()) {
 
                             pDialog.show();
+                            final String[] usable = {"multiple"};
 
                             FirebaseDatabase.getInstance().getReference().child("admin/appControl").child("coupon").child(mCoupon).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -424,42 +430,93 @@ public class AddOrder extends AppCompatActivity {
                                         final String type = (String) hashUser.get("type");
 
 
+                                        String  usableTemp = (String) hashUser.get("usable");
+
+                                        if (usableTemp!=null)
+                                            usable[0] =usableTemp;
+
+
+                                        // flat= coupon value will be deducted from total amount
+                                        // promo= first item only will be at a fixed promo price
+
+
                                         if (value > 0) {
                                             if (type.equals("flat")) {
-                                                FirebaseDatabase.getInstance().getReference().child("admin/appControl").child("coupon").child(mCoupon).child("usedBy")
-                                                        .child(StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(DataSnapshot snapshot) {
 
-                                                        if (snapshot.getValue() == null) {
+                                                if (usable[0].equals("once")) {
+
+                                                    FirebaseDatabase.getInstance().getReference().child("admin/appControl").child("coupon").child(mCoupon).child("usedBy")
+                                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(DataSnapshot snapshot) {
+
+                                                                    if (snapshot.getValue() == null) {
+
+                                                                        pDialog.cancel();
+
+                                                                        mFinalAmount -= value;
+                                                                        String couponValue = "৳ -" + value;
+                                                                        coupon.setText(couponValue);
+                                                                        coupon.setEnabled(false);
+                                                                        mCouponValue = (int) value;
+
+                                                                        finalAmount.setText(String.valueOf(mFinalAmount));
+
+                                                                        dialog.dismiss();
+                                                                        Toast.makeText(AddOrder.this, "Coupon is applied!", Toast.LENGTH_SHORT).show();
+
+                                                                    } else {
+                                                                        pDialog.cancel();
+                                                                        dialog.dismiss();
+                                                                        Toast.makeText(AddOrder.this, "Sorry coupon is not valid!", Toast.LENGTH_SHORT).show();
+                                                                    }
+
+                                                                    pDialog.cancel();
+                                                                }
+
+                                                                public void onCancelled(DatabaseError arg0) {
+                                                                    pDialog.cancel();
+                                                                }
+                                                            });
+
+                                                } else {
+                                                    FirebaseDatabase.getInstance().getReference().child("admin/appControl").child("coupon").child(mCoupon).child("usedBy")
+                                                            .child(StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot snapshot) {
+
+                                                            if (snapshot.getValue() == null) {
+
+                                                                pDialog.cancel();
+
+                                                                mFinalAmount -= value;
+                                                                String couponValue = "৳ -" + value;
+                                                                coupon.setText(couponValue);
+                                                                coupon.setEnabled(false);
+                                                                mCouponValue = (int) value;
+
+                                                                finalAmount.setText(String.valueOf(mFinalAmount));
+
+                                                                dialog.dismiss();
+                                                                Toast.makeText(AddOrder.this, "Coupon is applied!", Toast.LENGTH_SHORT).show();
+
+                                                            } else {
+                                                                pDialog.cancel();
+                                                                dialog.dismiss();
+                                                                Toast.makeText(AddOrder.this, "Sorry coupon is not valid!", Toast.LENGTH_SHORT).show();
+                                                            }
 
                                                             pDialog.cancel();
-
-                                                            mFinalAmount -= value;
-                                                            String couponValue = "৳ -" + value;
-                                                            coupon.setText(couponValue);
-                                                            coupon.setEnabled(false);
-                                                            mCouponValue = (int) value;
-
-                                                            finalAmount.setText(String.valueOf(mFinalAmount));
-
-                                                            dialog.dismiss();
-                                                            Toast.makeText(AddOrder.this, "Coupon is applied!", Toast.LENGTH_SHORT).show();
-
-                                                        } else {
-                                                            pDialog.cancel();
-                                                            dialog.dismiss();
-                                                            Toast.makeText(AddOrder.this, "Sorry coupon is not valid!", Toast.LENGTH_SHORT).show();
                                                         }
 
-                                                        pDialog.cancel();
-                                                    }
-
-                                                    public void onCancelled(DatabaseError arg0) {
-                                                        pDialog.cancel();
-                                                    }
-                                                });
+                                                        public void onCancelled(DatabaseError arg0) {
+                                                            pDialog.cancel();
+                                                        }
+                                                    });
+                                                }
                                             }
+
+
 
 
                                             if (type.equals("promo")) {
@@ -545,7 +602,7 @@ public class AddOrder extends AppCompatActivity {
                 String qty = String.valueOf(mQuantity);
                 String sub = String.valueOf(mSubTotal);
                 String totals = String.valueOf(mTotal);
-              //  itemPrice.setText(sub);
+                //  itemPrice.setText(sub);
                 total.setText(totals);
                 quantity.setText(qty);
 
@@ -590,7 +647,7 @@ public class AddOrder extends AppCompatActivity {
 
                 String sub = String.valueOf(mExtraSubTotal);
                 String totals = String.valueOf(mTotal);
-             //   extraItemPrice.setText(sub);
+                //   extraItemPrice.setText(sub);
                 total.setText(totals);
 
                 mFinalAmount -= mExtraItemPrice;
@@ -607,7 +664,7 @@ public class AddOrder extends AppCompatActivity {
 
             String sub = String.valueOf(mExtraSubTotal);
             String totals = String.valueOf(mTotal);
-         //   extraItemPrice.setText(sub);
+            //   extraItemPrice.setText(sub);
             total.setText(totals);
 
             mFinalAmount += mExtraItemPrice;
@@ -857,13 +914,9 @@ public class AddOrder extends AppCompatActivity {
                         orderDetails1 = new OrderDetails(orderNo, mId, cName, userID, cAddress, cPhone, mProviderName, mProviderId, mName, mQuantity, mExtraItem, mExtraQuantity, note, mFinalAmount,mSellerAmount, mCouponValue, mPayment, "Due", mDate, mLastTime, mTime, "Pending", time);
 
 
-                    StaticConfig.menuDetails = menuDetails;
-                    StaticConfig.orderDetails1 = orderDetails1;
-
 
                     final OrderDetails orderDetails2 = new OrderDetails(orderNo, mId, cName, userID, cAddress, cPhone, mProviderName, mProviderId, mName, mQuantity, mExtraItem, mExtraQuantity, note, mSellerAmount, mPayment, mDate, mLastTime, mTime, "Pending", time);
 
-                    StaticConfig.orderDetails2 = orderDetails2;
 
                     databaseReference.child("admin/orders/" + mDate).child(mId).child("menuDetails").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -1115,7 +1168,7 @@ public class AddOrder extends AppCompatActivity {
                     intent.putExtra("available", mAvailable);
 
                     startActivity(intent);
-                  //  finish();
+                    //  finish();
                 }
 
             } else {

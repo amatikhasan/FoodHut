@@ -271,8 +271,13 @@ public class AddMenu extends AppCompatActivity {
                 //   compressedImage = new Compressor(this).compressToFile(actualImage);
                 //  imageBitmap = new Compressor(this).compressToBitmap(actualImage);
 
-                imageBitmap = (Bitmap) data.getExtras().get("data");
-                image.setImageBitmap(imageBitmap);
+                try {
+                    imageBitmap = (Bitmap) data.getExtras().get("data");
+                    image.setImageBitmap(imageBitmap);
+                }
+                catch (NullPointerException e){
+                    e.printStackTrace();
+                }
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, stream);

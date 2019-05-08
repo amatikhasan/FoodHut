@@ -227,13 +227,13 @@ public class HomeProvider extends AppCompatActivity
                     status = (String) hashUser.get("status");
                     StaticConfig.LATITUDE = (String) hashUser.get("latitude");
                     StaticConfig.LONGITUDE = (String) hashUser.get("longitude");
-                    StaticConfig.KITCHENNAME=kitchenName;
-                    StaticConfig.PHONE=(String) hashUser.get("phone");
+                    StaticConfig.KITCHENNAME = kitchenName;
+                    StaticConfig.PHONE = (String) hashUser.get("phone");
 
                     StaticConfig.NAME = name;
                     StaticConfig.ADDRESS = address;
 
-                    Log.d("check", "name in provider: " + name+" "+kitchenName);
+                    Log.d("check", "name in provider: " + name + " " + kitchenName);
 
                     if (status.equals("Active")) {
 
@@ -246,9 +246,7 @@ public class HomeProvider extends AppCompatActivity
                             y.putExtra("isUpdate", "false");
                             startActivity(y);
                             finish();
-                        }
-
-                        else {
+                        } else {
                             String manager = "Manager: " + name;
                             tvName.setText(manager);
                             tvKitchen.setText(kitchenName);
@@ -256,7 +254,7 @@ public class HomeProvider extends AppCompatActivity
                             String status1 = "Status: " + status;
                             tvStatus.setText(status1);
 
-                            if (rating>0)
+                            if (rating > 0)
                                 ratingBar.setRating(rating);
                             else {
                                 ratingBar.setVisibility(View.GONE);
@@ -264,29 +262,42 @@ public class HomeProvider extends AppCompatActivity
                             }
 
 
-                            if (!avatar.equals("default")){
+                            if (!avatar.equals("default")) {
                                 Picasso.get().load(avatar).placeholder(R.drawable.kitchen_icon_colour).into(image);
 
-                               // Glide.with(getApplicationContext()).load(avatar).placeholder(R.drawable.kitchen_icon_colour).into(image);
+                                // Glide.with(getApplicationContext()).load(avatar).placeholder(R.drawable.kitchen_icon_colour).into(image);
                             }
 
                         }
 
-                    }
-                    else{
-                        final AlertDialog.Builder builder = new AlertDialog.Builder(HomeProvider.this);
-                        builder.setMessage("Foodhut approval is required to get access as a kitchen manager." +
-                                " We will shortly review your kitchen til then stay with us." +
-                                " Thank you for your patience.")
-                                .setCancelable(false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(final DialogInterface dialog, final int id) {
-                                        finish();
-                                    }
-                                });
-                        final AlertDialog alert = builder.create();
-                        alert.show();
-                        Log.d("check method", "from alert");
+                    } else {
+
+                        if (name.equals("name") || address.equals("address") || kitchenName.equals("kitchen")) {
+                            Log.d("check", "name in provider2: " + name + " " + address);
+
+                            Intent y = new Intent(HomeProvider.this, ProfileUpdate.class);
+                            y.putExtra("type", "provider");
+                            y.putExtra("avatar", "default");
+                            y.putExtra("isUpdate", "false");
+                            startActivity(y);
+                            finish();
+                        }
+                        else{
+
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(HomeProvider.this);
+                            builder.setMessage("Foodhut approval is required to get access as a kitchen manager." +
+                                    " We will shortly review your kitchen til then stay with us." +
+                                    " Thank you for your patience.")
+                                    .setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(final DialogInterface dialog, final int id) {
+                                            finish();
+                                        }
+                                    });
+                            final AlertDialog alert = builder.create();
+                            alert.show();
+                            Log.d("check method", "from alert");
+                        }
                     }
                 }
 

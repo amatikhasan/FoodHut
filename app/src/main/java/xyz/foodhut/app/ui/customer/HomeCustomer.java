@@ -317,7 +317,6 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
 
         checkProfile();
 
-
         notificationCount();
 
         startService(new Intent(this, NotificationService.class));
@@ -704,10 +703,8 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
 
     public void getMenu(final int check) {
 
-
         dummyList.clear();
         arrayList.clear();
-
 
         StaticConfig.QTY = 0;
         StaticConfig.SUBTOTAL = 0;
@@ -731,7 +728,6 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
             */
         if (!isConnected()){
             dialog.cancel();
-
          }
 
         if (StaticConfig.UID != null) {
@@ -769,7 +765,7 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
                                             Log.d("Check", "date comparing : " + dummyList.get(i).schedule);
                                             arrayList.add(dummyList.get(i));
                                         } else {
-                                            FirebaseDatabase.getInstance().getReference("schedule").child(dummyList.get(i).scheduleId).removeValue();
+                                         //   FirebaseDatabase.getInstance().getReference("schedule").child(dummyList.get(i).scheduleId).removeValue();
                                         }
                                     } catch (ParseException e) {
                                         e.printStackTrace();
@@ -843,7 +839,6 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
                                     } else {
 
                                         if (SharedPreferenceHelper.getInstance(HomeCustomer.this).getLOCATION().isEmpty())
-
                                             locationOp();
 
                                         else {
@@ -892,7 +887,8 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
                                         else
                                             filterLocation(mLocation);
 
-                                        tvLocation.setText(mLocation);
+                                            tvLocation.setText(mLocation);
+
                                     }
                                 }
 
@@ -1353,6 +1349,8 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
                     log(e.getMessage());
                 }
                 if ((latitude != 0 && longitude != 0)) {
+                    SharedPreferenceHelper.getInstance(getApplicationContext()).setLatLong(String.valueOf(latitude),String.valueOf(longitude));
+
                     getDistance(latitude, longitude);
                     tvLocation.setText("Current location");
                     getLocation(latitude,longitude,tvLocation);
