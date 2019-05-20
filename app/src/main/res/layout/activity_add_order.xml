@@ -23,7 +23,6 @@
                 android:layout_height="48dp">
 
 
-
                 <ImageView
                     android:id="@+id/arrow"
                     android:layout_width="24dp"
@@ -46,8 +45,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
 
 
                 <RelativeLayout
@@ -67,8 +65,8 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="10dp"
                         android:layout_toStartOf="@id/txtPrice"
-                        android:text="Name"
                         android:fontFamily="sans-serif-light"
+                        android:text="Name"
                         android:textSize="16sp" />
 
                     <TextView
@@ -157,8 +155,8 @@
                         android:layout_marginBottom="10dp"
                         android:layout_toStartOf="@id/txtExtraPrice"
                         android:ellipsize="marquee"
-                        android:text="Extra "
                         android:fontFamily="sans-serif-light"
+                        android:text="Extra "
                         android:textSize="16sp" />
 
                     <TextView
@@ -235,10 +233,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rlExtra"
                     android:layout_marginBottom="16dp"
-                    android:text="Sub Total"
                     android:fontFamily="sans-serif-light"
-                    android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:text="Sub Total"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -267,8 +265,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txtSubTotal"
                     android:layout_marginBottom="16dp"
-                    android:text="Delivery Charge"
                     android:fontFamily="sans-serif-light"
+                    android:text="Delivery Charge"
                     android:textSize="14sp" />
 
                 <TextView
@@ -297,8 +295,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txtDelivery"
                     android:layout_marginBottom="16dp"
-                    android:text="Have Coupon Code?"
                     android:fontFamily="sans-serif-light"
+                    android:text="Have Coupon Code?"
                     android:textSize="14sp" />
 
                 <TextView
@@ -319,10 +317,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txtCoupon"
                     android:layout_marginBottom="16dp"
-                    android:text="Total"
                     android:fontFamily="sans-serif-light"
-                    android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:text="Total"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -354,44 +352,57 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/corner_primary_border"
-                    android:hint="Note"
                     android:fontFamily="sans-serif-light"
+                    android:hint="Note"
                     android:padding="8dp"
                     android:textSize="14sp" />
 
-                <!--  <TextView
-                      android:id="@+id/txtDate"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_alignBaseline="@id/btnDate"
-                      android:text="Date"
-                      android:layout_below="@id/note"
-                      android:textSize="18sp" />
+                <TextView
+                    android:id="@+id/txtDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/aoNote"
+                    android:layout_alignBaseline="@id/cv2"
+                   android:layout_marginTop="8dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Delivery Date"
+                    android:textSize="14sp" />
 
-                 <Button
-                      android:id="@+id/btnDate"
-                      android:text="Select Date"
-                      android:layout_below="@id/note"
-                      android:layout_alignParentEnd="true"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content" />  -->
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cv2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/aoNote"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="4dp"
+                    app:cardElevation="4dp"
+                    app:cardMaxElevation="4dp">
+
+                    <Spinner
+                        android:id="@+id/spDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:textSize="12sp" />
+                </android.support.v7.widget.CardView>
 
                 <TextView
                     android:id="@+id/txtTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/aoNote"
+                    android:layout_below="@id/txtDate"
                     android:layout_alignBaseline="@id/aoBtnTime"
                     android:layout_marginBottom="16dp"
-                    android:text="Delivery Time"
                     android:fontFamily="sans-serif-light"
+                    android:text="Delivery Time"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/aoBtnTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/aoNote"
+                    android:layout_below="@id/cv2"
                     android:layout_alignParentEnd="true"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/round_button_primary"
@@ -415,8 +426,8 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginBottom="12dp"
-                        android:text="Payment Method"
                         android:fontFamily="sans-serif-light"
+                        android:text="Payment Method"
                         android:textSize="14sp" />
 
                     <RadioGroup
@@ -444,7 +455,7 @@
                                 <ImageView
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
-                                    android:src="@drawable/cod"/>
+                                    android:src="@drawable/cod" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -459,25 +470,27 @@
                                     android:textSize="12sp" />
 
 
-
                             </LinearLayout>
 
 
                             <LinearLayout
-                                android:layout_weight=".33"
-                                android:gravity="center"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_weight=".33"
+                                android:gravity="center"
                                 android:orientation="vertical">
+
                                 <ImageView
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
-                                    android:src="@drawable/bkash"/>
+                                    android:src="@drawable/bkash" />
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="sans-serif-light"
                                     android:text="bKash" />
+
                                 <RadioButton
                                     android:id="@+id/aoRdoBKash"
                                     android:layout_width="wrap_content"
@@ -487,21 +500,22 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:gravity="center"
-                                android:layout_weight=".25"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_weight=".25"
+                                android:gravity="center"
                                 android:orientation="vertical">
 
                                 <ImageView
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
-                                    android:src="@drawable/corporate"/>
+                                    android:src="@drawable/corporate" />
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center"
                                     android:fontFamily="sans-serif-light"
+                                    android:gravity="center"
                                     android:text="Corporate Due" />
 
                                 <RadioButton
@@ -558,8 +572,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rl1"
                     android:layout_marginBottom="12dp"
-                    android:text="Address"
                     android:fontFamily="sans-serif-light"
+                    android:text="Address"
                     android:textSize="14sp" />
 
                 <TextView
@@ -569,8 +583,8 @@
                     android:layout_below="@id/rl1"
                     android:layout_alignParentEnd="true"
                     android:layout_marginBottom="8dp"
-                    android:text="Full Address"
                     android:fontFamily="sans-serif-light"
+                    android:text="Full Address"
                     android:textSize="14sp" />
 
                 <TextView
@@ -580,8 +594,8 @@
                     android:layout_below="@id/aoAddress"
                     android:layout_alignParentEnd="true"
                     android:layout_marginBottom="32dp"
-                    android:text="Change Address"
                     android:onClick="changeAddress"
+                    android:text="Change Address"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp" />
 
@@ -590,7 +604,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_below="@id/aoChangeAddress" />
-
 
 
             </RelativeLayout>

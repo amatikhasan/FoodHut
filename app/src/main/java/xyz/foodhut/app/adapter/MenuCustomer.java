@@ -113,7 +113,9 @@ public class MenuCustomer extends RecyclerView.Adapter<MenuCustomer.ViewHolder> 
 
         updateProvider(obj.providerId, holder);
 
-        checkDate(obj.schedule, holder);
+//check date to tag them
+//        checkDate(obj.schedule, holder);
+
         //  if (obj.providerAvatar!=null&&!obj.providerAvatar.equals("default")&&!obj.providerAvatar.isEmpty())
         //  Picasso.get().load(obj.providerAvatar).placeholder(R.drawable.kitchen_icon_colour).into(holder.providerAvatar);
 

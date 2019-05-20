@@ -182,7 +182,6 @@ public class OrdersCustomer extends AppCompatActivity {
 
             for (int j = 0; j < orderList.size(); j++) {
                 String orderId = orderList.get(j);
-                StaticConfig.ORDERID.add(orderId);
 
                 databaseReference.child("customers/" + userID).child("orders").child(date).child(orderId).child("orderDetails")
                         .addListenerForSingleValueEvent(new ValueEventListener() {

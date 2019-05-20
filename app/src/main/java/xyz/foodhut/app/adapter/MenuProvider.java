@@ -168,25 +168,25 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                 days.add("Day After Tomorrow");
 
 
-                final Spinner date = view.findViewById(R.id.spDaySchedule);
+//                final Spinner date = view.findViewById(R.id.spDaySchedule);
                 final TextView time = view.findViewById(R.id.btnLastTime);
                 final EditText qty = view.findViewById(R.id.etFoodQty);
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(contex, android.R.layout.simple_spinner_item, days);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                date.setAdapter(adapter);
-
-                date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        selected[0] = date.getSelectedItem().toString();
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
+//                ArrayAdapter<String> adapter = new ArrayAdapter<String>(contex, android.R.layout.simple_spinner_item, days);
+//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                date.setAdapter(adapter);
+//
+//                date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                        selected[0] = date.getSelectedItem().toString();
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> parent) {
+//
+//                    }
+//                });
 
                 time.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -249,43 +249,44 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                                     }
                                 } else {
 
-                                    // Get the calander
-                                    Calendar c = Calendar.getInstance();
-
-                                    // From calander get the year, month, day, hour, minute
-                                    year[0] = c.get(Calendar.YEAR);
-                                    month[0] = c.get(Calendar.MONTH);
-
-                                    if (selected[0].equals("Today")) {
-                                        day[0] = c.get(Calendar.DAY_OF_MONTH);
-                                    }
-                                    if (selected[0].equals("Tomorrow")) {
-                                        day[0] = c.get(Calendar.DAY_OF_MONTH) + 1;
-                                    }
-                                    if (selected[0].equals("Day After Tomorrow")) {
-                                        day[0] = c.get(Calendar.DAY_OF_MONTH) + 2;
-                                    }
-
-                                    c.set(year[0], month[0], day[0]);
-                                    String date = day[0] + "-" + (month[0] + 1) + "-" + year[0];
-
-                                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                                    Date date1 = null;
-                                    try {
-                                        date1 = dateFormat.parse(date);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    final String formattedDate;
-                                    SimpleDateFormat sdtf = new SimpleDateFormat("dd MMM yyyy");
-                                    Date now = c.getTime();
-                                    formattedDate = sdtf.format(date1);
-
-                                    Log.d("check", "onClick: date " + date + " " + formattedDate);
+//                                    // Get the calander
+//                                    Calendar c = Calendar.getInstance();
+//
+//                                    // From calander get the year, month, day, hour, minute
+//                                    year[0] = c.get(Calendar.YEAR);
+//                                    month[0] = c.get(Calendar.MONTH);
+//
+//                                    if (selected[0].equals("Today")) {
+//                                        day[0] = c.get(Calendar.DAY_OF_MONTH);
+//                                    }
+//                                    if (selected[0].equals("Tomorrow")) {
+//                                        day[0] = c.get(Calendar.DAY_OF_MONTH) + 1;
+//                                    }
+//                                    if (selected[0].equals("Day After Tomorrow")) {
+//                                        day[0] = c.get(Calendar.DAY_OF_MONTH) + 2;
+//                                    }
+//
+//                                    c.set(year[0], month[0], day[0]);
+//                                    String date = day[0] + "-" + (month[0] + 1) + "-" + year[0];
+//
+//                                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+//                                    Date date1 = null;
+//                                    try {
+//                                        date1 = dateFormat.parse(date);
+//                                    } catch (ParseException e) {
+//                                        e.printStackTrace();
+//                                    }
+//
+//                                    final String formattedDate;
+//                                    SimpleDateFormat sdtf = new SimpleDateFormat("dd MMM yyyy");
+//                                    Date now = c.getTime();
+//                                    formattedDate = sdtf.format(date1);
+//
+//                                    Log.d("check", "onClick: date " + date + " " + formattedDate);
 
                                     //check if schedule is available
-                                    FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule").child(obj.id).child(formattedDate)
+                                    FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule").child(obj.id)
+//                                            .child(formattedDate)
                                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -303,14 +304,16 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                                                         schedule.sellerPrice = obj.sellerPrice;
                                                         schedule.type = obj.type;
                                                         schedule.imageUrl = obj.imageUrl;
-                                                        schedule.date = formattedDate;
+//                                                        schedule.date = formattedDate;
                                                         schedule.lastOrderTime = mTime[0];
                                                         schedule.desc = obj.desc;
 
                                                         String pushkey = FirebaseDatabase.getInstance().getReference().push().getKey();
                                                         schedule.scheduleId = pushkey;
 
-                                                        FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("schedule").child(obj.id).child(formattedDate).child(pushkey).setValue(schedule);
+                                                        FirebaseDatabase.getInstance().getReference().child("providers").child(StaticConfig.UID).child("schedule").child(obj.id)
+//                                                                .child(formattedDate)
+                                                                .child(pushkey).setValue(schedule);
 
                                                         MenuCustomer customer = new MenuCustomer();
                                                         customer.id = obj.id;
@@ -319,7 +322,7 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                                                         customer.sellerPrice = obj.sellerPrice;
                                                         customer.type = obj.type;
                                                         customer.imageUrl = obj.imageUrl;
-                                                        customer.schedule = formattedDate;
+//                                                        customer.schedule = formattedDate;
                                                         customer.lastOrderTime = mTime[0];
                                                         customer.foodQty = Integer.parseInt(qty.getText().toString());
                                                         customer.category=obj.category;
@@ -346,7 +349,7 @@ public class MenuProvider extends RecyclerView.Adapter<MenuProvider.ViewHolder> 
                                                         //FirebaseDatabase.getInstance().getReference().child("locations").child(StaticConfig.LOCATION).setValue(StaticConfig.LOCATION);
 
 
-                                                        Log.d("check", "onClick: schedule " + day[0] + " " + formattedDate);
+                                                        Log.d("check", "onClick: schedule " + day[0] );
                                                         Toast.makeText(contex, "Menu Added in ScheduleTab", Toast.LENGTH_SHORT).show();
 
 

@@ -74,7 +74,7 @@
                     android:layout_marginEnd="8dp"
                     android:textColor="@color/overlay_dark_30"
                     android:textSize="12sp"
-                    android:text="Available on" />
+                    android:text="Available " />
 
 
 

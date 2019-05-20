@@ -33,7 +33,6 @@ public class Schedule extends AppCompatActivity {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-    private Context context;
 
     private ProgressDialog dialog;
     private String mDate;
@@ -49,8 +48,9 @@ public class Schedule extends AppCompatActivity {
 
 
 
-        dialog = new ProgressDialog(context);
+        dialog = new ProgressDialog(this);
         dialog.setMessage("Please Wait...");
+        dialog.show();
 
         arrayList = new ArrayList<>();
         recyclerView = findViewById(R.id.rvSchedule);
@@ -61,7 +61,7 @@ public class Schedule extends AppCompatActivity {
 
         getScheduleList();
 
-        dialog.dismiss();
+
     }
 
 
@@ -101,7 +101,8 @@ public class Schedule extends AppCompatActivity {
     }
 
     public void getSchedule(String menuId){
-        FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule").child(menuId).child(mDate)
+        FirebaseDatabase.getInstance().getReference("providers/" + StaticConfig.UID).child("schedule").child(menuId)
+//                .child(mDate)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -131,6 +132,8 @@ public class Schedule extends AppCompatActivity {
                             //bind the data in adapter
                             Log.d("Check list", "out datachange: " + arrayList.size());
                             adapter.notifyDataSetChanged();
+
+                            dialog.dismiss();
                         }
                         else {
                             dialog.dismiss();
@@ -142,5 +145,11 @@ public class Schedule extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
+    }
+
+    public void goBack(View view) {
+        //   startActivity(new Intent(this,HomeProvider.class));
+        finish();
+        //  finishAffinity();
     }
 }

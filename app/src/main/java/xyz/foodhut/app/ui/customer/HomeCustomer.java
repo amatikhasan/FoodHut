@@ -740,7 +740,9 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
                                 //fetch files from firebase database and push in arraylist
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     xyz.foodhut.app.model.MenuCustomer customer = snapshot.getValue(xyz.foodhut.app.model.MenuCustomer.class);
-                                    dummyList.add(customer);
+//                                    dummyList.add(customer);
+                                    arrayList.add(customer);
+
                                     Log.d("Check list", "onDataChange: " + dummyList.size());
                                 }
                                 Calendar c = Calendar.getInstance();
@@ -756,52 +758,54 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
                                 formattedDate = dateFormat.format(now);
 
 
-                                for (int i = 0; i < dummyList.size(); i++) {
-                                    try {
-                                        Date date1 = dateFormat.parse(formattedDate);
-                                        Date date2 = dateFormat.parse(dummyList.get(i).schedule);
-                                        Log.d("Check", "date : " + date1 + " " + date2);
-                                        if (date1.before(date2) || date1.equals(date2)) {
-                                            Log.d("Check", "date comparing : " + dummyList.get(i).schedule);
-                                            arrayList.add(dummyList.get(i));
-                                        } else {
-                                         //   FirebaseDatabase.getInstance().getReference("schedule").child(dummyList.get(i).scheduleId).removeValue();
-                                        }
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
+//                                for (int i = 0; i < dummyList.size(); i++) {
+//                                    try {
+//                                        Date date1 = dateFormat.parse(formattedDate);
+//                                        Date date2 = dateFormat.parse(dummyList.get(i).schedule);
+//                                        Log.d("Check", "date : " + date1 + " " + date2);
+//                                        if (date1.before(date2) || date1.equals(date2)) {
+//                                            Log.d("Check", "date comparing : " + dummyList.get(i).schedule);
+//                                            arrayList.add(dummyList.get(i));
+//                                        } else {
+//                                         //   FirebaseDatabase.getInstance().getReference("schedule").child(dummyList.get(i).scheduleId).removeValue();
+//                                        }
+//                                    } catch (ParseException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
 
                                 Collections.shuffle(arrayList);
 
                                 //   if (arrayList.get(i).imageUrl == null ) {
                                 //       arrayList.remove(i);
                                 //   }
-                                for (int i = 0; i < arrayList.size() - 1; i++) {
-                                    for (int j = 0; j < arrayList.size() - i - 1; j++) {
 
-                                        Date date1 = null;
-                                        Date date2 = null;
-                                        try {
-                                            date1 = dateFormat.parse(arrayList.get(j).schedule);
-                                            date2 = dateFormat.parse(arrayList.get(j + 1).schedule);
-                                            Log.d("Check", "dates : " + date1 + " " + date2);
-                                        } catch (ParseException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                        if (date1.after(date2)) {
-
-                                            xyz.foodhut.app.model.MenuCustomer mc2 = new xyz.foodhut.app.model.MenuCustomer();
-                                            mc2 = arrayList.get(j);
-                                            arrayList.set(j, arrayList.get(j + 1));
-                                            arrayList.set(j + 1, mc2);
-
-                                            Log.d("Check", "dates comparing: " + i + " " + j);
-                                        }
-
-                                    }
-                                }
+                                //menu list sort by date
+//                                for (int i = 0; i < arrayList.size() - 1; i++) {
+//                                    for (int j = 0; j < arrayList.size() - i - 1; j++) {
+//
+//                                        Date date1 = null;
+//                                        Date date2 = null;
+//                                        try {
+//                                            date1 = dateFormat.parse(arrayList.get(j).schedule);
+//                                            date2 = dateFormat.parse(arrayList.get(j + 1).schedule);
+//                                            Log.d("Check", "dates : " + date1 + " " + date2);
+//                                        } catch (ParseException e) {
+//                                            e.printStackTrace();
+//                                        }
+//
+//                                        if (date1.after(date2)) {
+//
+//                                            xyz.foodhut.app.model.MenuCustomer mc2 = new xyz.foodhut.app.model.MenuCustomer();
+//                                            mc2 = arrayList.get(j);
+//                                            arrayList.set(j, arrayList.get(j + 1));
+//                                            arrayList.set(j + 1, mc2);
+//
+//                                            Log.d("Check", "dates comparing: " + i + " " + j);
+//                                        }
+//
+//                                    }
+//                                }
 
                                 //bind the data in adapter
                                 Log.d("Check list", "out datachange: " + arrayList.size());
@@ -1123,7 +1127,7 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
 
     public void clearCart(View view) {
         StaticConfig.QTY = 0;
-        StaticConfig.SUBTOTAL = 0;
+         StaticConfig.SUBTOTAL = 0;
         StaticConfig.TOTAL = 0;
         StaticConfig.ORDERITEMLIST.clear();
         StaticConfig.ITEMQTYLIST.clear();
@@ -1462,36 +1466,31 @@ public class HomeCustomer extends AppCompatActivity implements GoogleApiClient.C
         dates.add("Tomorrow");
         dates.add("Day After Tomorrow");
 
-        final Spinner date = inflate.findViewById(R.id.spDate);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dates);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        date.setAdapter(adapter);
-
-        if (!mDate.equals("Any Day")) {
-            if (mDate.equals("Today")) {
-                date.setSelection(1);
-            }
-            if (mDate.equals("Tomorrow")) {
-                date.setSelection(2);
-            }
-            if (mDate.equals("Day After Tomorrow")) {
-                date.setSelection(3);
-            }
-        }
-
-        date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mDate = date.getSelectedItem().toString();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        //functionality for date filter
+//        final Spinner date = inflate.findViewById(R.id.spDate);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dates);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        date.setAdapter(adapter);
+//        if (!mDate.equals("Any Day")) {
+//            if (mDate.equals("Today")) {
+//                date.setSelection(1);
+//            }
+//            if (mDate.equals("Tomorrow")) {
+//                date.setSelection(2);
+//            }
+//            if (mDate.equals("Day After Tomorrow")) {
+//                date.setSelection(3);
+//            }
+//        }
+//        date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                mDate = date.getSelectedItem().toString();
+//            }
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//            }
+//        });
 
         builder.setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

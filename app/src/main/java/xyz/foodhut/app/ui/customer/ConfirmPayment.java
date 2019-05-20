@@ -290,15 +290,14 @@ public class ConfirmPayment extends AppCompatActivity {
                     final OrderMenuDetails menuDetails = new OrderMenuDetails(mId, mName, mType, mPrice, mImageUrl, mProviderId, mProviderName, mProviderAddress);
                     final OrderDetails orderDetails1 = new OrderDetails(orderNo, mId, cName, userID, cAddress, cPhone, mProviderName, mProviderId, mName, mQuantity, mExtraItem, mExtraQuantity, note, mFinalAmount,mSellerAmount, mCouponValue, "bKash", "Pending", mDate, mLastTime, mTime, "Pending", time);
 
-                    StaticConfig.menuDetails = menuDetails;
-                    StaticConfig.orderDetails1 = orderDetails1;
+
 
                     Log.d("check", "confirm: " + mPrice + " " + mQuantity + " " + mSellerPrice + " " + mExtraQuantity + " " + mFinalAmount + " " + mSellerAmount);
 
 
 
                     final OrderDetails orderDetails2 = new OrderDetails(orderNo, mId, cName, userID, cAddress, cPhone, mProviderName, mProviderId, mName, mQuantity, mExtraItem, mExtraQuantity, note, mSellerAmount, "bKash", mDate, mLastTime, mTime, "Pending", time);
-                    StaticConfig.orderDetails2 = orderDetails2;
+
 
                     databaseReference.child("admin/orders/" + mDate).child(mId).child("menuDetails").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -544,10 +543,6 @@ public class ConfirmPayment extends AppCompatActivity {
             orderDetails1 = new OrderDetails(orderNo, mId, cName, userID, cAddress, cPhone, mProviderName, mProviderId,0, mName, mQuantity, mExtraItem, mExtraQuantity, note, mFinalAmount,mSellerAmount, mCouponValue, "bKash", "Pending", mDate, mLastTime, mTime, "Pending", time);
 
 
-        StaticConfig.menuDetails = menuDetails;
-        StaticConfig.orderDetails1 = orderDetails1;
-
-
 
         OrderDetails orderDetails2;
 
@@ -555,8 +550,6 @@ public class ConfirmPayment extends AppCompatActivity {
             orderDetails2 = new OrderDetails(orderNo, mId, cName, userID, cAddress, cPhone, mProviderName, mProviderId, i + 1, mName, mQuantity, mExtraItem, mExtraQuantity, note, mSellerAmount, "bKash", mDate, mLastTime, mTime, "Pending", time);
         else
             orderDetails2 = new OrderDetails(orderNo, mId, cName, userID, cAddress, cPhone, mProviderName, mProviderId, 0, mName, mQuantity, mExtraItem, mExtraQuantity, note, mSellerAmount, "bKash", mDate, mLastTime, mTime, "Pending", time);
-
-        StaticConfig.orderDetails2 = orderDetails2;
 
         updateAdmin(i, mId, mDate, orderNo, orderDetails1, menuDetails);
         updateCustomer(i, mId, mDate, orderNo, orderDetails1, menuDetails, date, key);

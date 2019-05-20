@@ -13,12 +13,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -34,9 +37,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -54,10 +59,11 @@ public class AddOrder extends AppCompatActivity {
     TextView quantity, total, extraItem, extraItemPrice, txtExtraPrice, extraItemQty, extraX, name, finalAmount, time, address, itemPrice, coupon, dc;
     EditText etNote;
     TextView confirm;
+    Spinner date;
     RadioButton cod, bKash, card, corporate;
     LinearLayout llExtra;
 
-    String cName, cAddress, cPhone, mCoupon, mScheduleId, mPayment;
+    String cName, cAddress, cPhone, mCoupon, mScheduleId, mPayment,mSelected;
     String mName, mExtraItem, mNote, mTime, mAddress, mProviderAddress, mProviderPhone,
             mId, mType, mImageUrl, mDate, mLastTime, mProviderId, mProviderName;
     int mQuantity = 1, mExtraQuantity = 0, mSubTotal = 0, mTotal = 0, mAvailable = 0, mFinalAmount = 0, mSellerPrice = 0, mSellerAmount = 0, mCouponValue = 0, mPrice = 0, mExtraItemPrice = 0, mExtraSubTotal = 0, deliveryCharge = 0;
@@ -92,6 +98,7 @@ public class AddOrder extends AppCompatActivity {
         coupon = findViewById(R.id.aoCoupon);
         address = findViewById(R.id.aoAddress);
 
+        date=findViewById(R.id.spDate);
         time = findViewById(R.id.aoBtnTime);
         confirm = findViewById(R.id.aoConfirm);
         etNote = findViewById(R.id.aoNote);
@@ -294,6 +301,74 @@ public class AddOrder extends AppCompatActivity {
             }
         });
 
+
+
+        //date selector spinner
+        List<String> days = new ArrayList<String>();
+        days.add("Today");
+        days.add("Tomorrow");
+        days.add("Day After Tomorrow");
+
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, days);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                date.setAdapter(adapter);
+
+                date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        mSelected = date.getSelectedItem().toString();
+
+                        mDate=formatDate(mSelected);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+    }
+
+    public String formatDate(String selected){
+
+        int day=0,month=0,year=0;
+
+//         Get the calander
+        Calendar c = Calendar.getInstance();
+
+        // From calander get the year, month, day, hour, minute
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+
+        if (selected.equals("Today")) {
+            day = c.get(Calendar.DAY_OF_MONTH);
+        }
+        if (selected.equals("Tomorrow")) {
+            day = c.get(Calendar.DAY_OF_MONTH) + 1;
+        }
+        if (selected.equals("Day After Tomorrow")) {
+            day = c.get(Calendar.DAY_OF_MONTH) + 2;
+        }
+
+        c.set(year, month, day);
+        String date = day + "-" + (month + 1) + "-" + year;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date date1 = null;
+        try {
+            date1 = dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        final String formattedDate;
+        SimpleDateFormat sdtf = new SimpleDateFormat("dd MMM yyyy");
+        formattedDate = sdtf.format(date1);
+
+        Log.d("check", "onClick: date " + date + " " + formattedDate);
+
+        return formattedDate;
     }
 
     public boolean isConnected(){
@@ -732,119 +807,177 @@ public class AddOrder extends AppCompatActivity {
         alertDialog.show();
     }
 
+
+
     public void confirm(View view) {
 
-        final String[] code = new String[1];
-        final String[] corporateCode = new String[1];
-        final long[] corporateDue = new long[1];
 
-        corporateCode[0]="code2019";
 
-        if (cod.isChecked()) {
-            mPayment = "COD";
-            completeOrder();
+        if (mSelected.equals("Today")&&!isTimeValid()){
+            Toast.makeText(this, "Sorry, You're late today to order this food. Order for another date?", Toast.LENGTH_SHORT).show();
         }
-        if (bKash.isChecked()) {
-            mPayment = "bKash";
-            completeOrder();
-        }
-        if (corporate.isChecked()) {
-            mPayment = "Corporate Due";
-
-            LayoutInflater layoutInflater = LayoutInflater.from(this);
-            View inflate = layoutInflater.inflate(R.layout.layout_add_corporate_code, null);
-
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-            builder.setView(inflate);
-
-            final ProgressDialog pDialog = new ProgressDialog(this);
-            pDialog.setMessage("Applying Code..");
-
-            final EditText etCode = inflate.findViewById(R.id.etCode);
-
-            builder.setCancelable(false)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-            final android.support.v7.app.AlertDialog alertDialog = builder.create();
-
-            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(final DialogInterface dialog) {
-                    Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-
-                    okButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            code[0] = etCode.getText().toString().trim();
-                            if (!code[0].isEmpty()) {
-
-                                pDialog.show();
-
-                                FirebaseDatabase.getInstance().getReference("customers/" + StaticConfig.UID + "/about")
-                                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                //fetch files from firebase database and push in arraylist
-
-                                                if (dataSnapshot.getValue()!=null){
-
-                                                    HashMap hashUser = (HashMap) dataSnapshot.getValue();
-
-                                                    try {
-                                                        corporateCode[0] = (String) hashUser.get("corporateCode");
-                                                        corporateDue[0] = (long) hashUser.get("corporateDue");
-                                                    }catch (NullPointerException e){
-                                                        e.printStackTrace();
-                                                    }
+        else {
 
 
-                                                    if (code[0].equals(corporateCode[0])){
-                                                        Toast.makeText(AddOrder.this, "Code Applied!", Toast.LENGTH_SHORT).show();
+            final String[] code = new String[1];
+            final String[] corporateCode = new String[1];
+            final long[] corporateDue = new long[1];
 
-                                                        int due= (int) (corporateDue[0]+mFinalAmount);
+            corporateCode[0] = "code2019";
 
-                                                        FirebaseDatabase.getInstance().getReference("customers/" + StaticConfig.UID + "/about/corporateDue").setValue(due);
+            if (cod.isChecked()) {
+                mPayment = "COD";
+                completeOrder();
+            }
+            if (bKash.isChecked()) {
+                mPayment = "bKash";
+                completeOrder();
+            }
+            if (corporate.isChecked()) {
+                mPayment = "Corporate Due";
 
-                                                        dialog.cancel();
+                LayoutInflater layoutInflater = LayoutInflater.from(this);
+                View inflate = layoutInflater.inflate(R.layout.layout_add_corporate_code, null);
+
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                builder.setView(inflate);
+
+                final ProgressDialog pDialog = new ProgressDialog(this);
+                pDialog.setMessage("Applying Code..");
+
+                final EditText etCode = inflate.findViewById(R.id.etCode);
+
+                builder.setCancelable(false)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                final android.support.v7.app.AlertDialog alertDialog = builder.create();
+
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(final DialogInterface dialog) {
+                        Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+                        okButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                code[0] = etCode.getText().toString().trim();
+                                if (!code[0].isEmpty()) {
+
+                                    pDialog.show();
+
+                                    FirebaseDatabase.getInstance().getReference("customers/" + StaticConfig.UID + "/about")
+                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    //fetch files from firebase database and push in arraylist
+
+                                                    if (dataSnapshot.getValue() != null) {
+
+                                                        HashMap hashUser = (HashMap) dataSnapshot.getValue();
+
+                                                        try {
+                                                            corporateCode[0] = (String) hashUser.get("corporateCode");
+                                                            corporateDue[0] = (long) hashUser.get("corporateDue");
+                                                        } catch (NullPointerException e) {
+                                                            e.printStackTrace();
+                                                        }
 
 
-                                                        completeOrder();
+                                                        if (code[0].equals(corporateCode[0])) {
+                                                            Toast.makeText(AddOrder.this, "Code Applied!", Toast.LENGTH_SHORT).show();
 
-                                                    }
-                                                    else {
-                                                        Toast.makeText(AddOrder.this, "Invalid Code!", Toast.LENGTH_SHORT).show();
-                                                        dialog.cancel();
+                                                            int due = (int) (corporateDue[0] + mFinalAmount);
+
+                                                            FirebaseDatabase.getInstance().getReference("customers/" + StaticConfig.UID + "/about/corporateDue").setValue(due);
+
+                                                            dialog.cancel();
+
+
+                                                            completeOrder();
+
+                                                        } else {
+                                                            Toast.makeText(AddOrder.this, "Invalid Code!", Toast.LENGTH_SHORT).show();
+                                                            dialog.cancel();
+                                                        }
                                                     }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
 
-                                            }
-                                        });
+                                                }
+                                            });
 
-                                //    databaseReference.child("customers/" + userID).child("about").child("name").setValue(etName.getText().toString());
+                                    //    databaseReference.child("customers/" + userID).child("about").child("name").setValue(etName.getText().toString());
 
-                            } else {
-                                Toast.makeText(AddOrder.this, "Required fields are missing", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(AddOrder.this, "Required fields are missing", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
 
-            alertDialog.show();
+                alertDialog.show();
+            }
+
         }
 
+    }
 
+    public boolean isTimeValid() {
 
+        String time;
+
+        Calendar calendar = Calendar.getInstance();
+        final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        final int minute = calendar.get(Calendar.MINUTE);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+        final String date = sdf.format(calendar.getTime());
+
+        // From calander get the year, month, day, hour, minute
+
+        if (minute < 10) {
+            time = formatTime(String.valueOf(hour) + ":" + "0" + String.valueOf(minute));
+            //mTime = formatTime(time);
+            //mTime=time;
+        } else {
+            time = formatTime(String.valueOf(hour) + ":" + String.valueOf(minute));
+            // mTime = formatTime(time);
+            //mTime=time;
+        }
+
+        SimpleDateFormat stf = new SimpleDateFormat("hh:mm a");
+        Date date1 = null;
+        Date date2 = null;
+        Date date3 = null;
+
+        try {
+            date2 = stf.parse(mLastTime);
+            date1 = stf.parse(time);
+            date3 = stf.parse(mTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("check", "order: " + date + " " + date1 + " " + date2+ " " + date3);
+
+        if (date.equals(mDate)) {
+
+                if (date1.before(date2)) {
+
+                    return true;
+
+                }
+        }
+
+        return false;
     }
 
 

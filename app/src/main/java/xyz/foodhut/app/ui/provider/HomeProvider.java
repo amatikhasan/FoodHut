@@ -398,7 +398,7 @@ public class HomeProvider extends AppCompatActivity
     }
 
     public void mySchedule(View view) {
-        startActivity(new Intent(this, ScheduleTab.class));
+        startActivity(new Intent(this, Schedule.class));
     }
 
     public void orders(View view) {

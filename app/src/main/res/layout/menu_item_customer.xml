@@ -227,20 +227,21 @@
                     android:layout_marginEnd="8dp"
                     android:layout_toStartOf="@id/rl2"
                     android:maxLines="1"
+                    android:layout_marginBottom="16dp"
                     android:fontFamily="sans-serif-light"
                     android:text="Description"
                     android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/desc"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="Today"
-                    android:textColor="@color/overlay_dark_30"
-                    android:textSize="14sp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/date"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@id/desc"-->
+                    <!--android:layout_marginStart="20dp"-->
+                    <!--android:layout_marginBottom="16dp"-->
+                    <!--android:text="Today"-->
+                    <!--android:textColor="@color/overlay_dark_30"-->
+                    <!--android:textSize="14sp" />-->
 
                 <RelativeLayout
                     android:id="@+id/rl2"

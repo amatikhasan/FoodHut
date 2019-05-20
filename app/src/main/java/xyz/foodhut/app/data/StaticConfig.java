@@ -21,21 +21,15 @@ public class StaticConfig {
     public static int TOTAL = 0;
     public static int SELLERTOTAL = 0;
     public static int QTY = 0;
-    public static int DC = 0;
 
     public static int COUPON = 0;
-    public static int DELIVERY = 0;
- //   public static ArrayList<MenuCustomer> ORDERITEMLISTOrder=new ArrayList<>();
-//    public static ArrayList<Integer> ITEMQTYLISTOrder=new ArrayList<>();
+
     public static ArrayList<MenuCustomer> ORDERITEMLIST=new ArrayList<>();
     public static ArrayList<Integer> ITEMQTYLIST=new ArrayList<>();
     public static ArrayList<Integer> EXTRAQTYLIST=new ArrayList<>();
     public static SparseIntArray INDEXLIST=new SparseIntArray();
     public static String SCHEDULEFORONEITEM = "";
-  //  public static MenuCustomer SINGLEORDERITEM=new MenuCustomer();
     public static int ISORDERED=0;
-
-    public static ArrayList<OrderItem> orderItemDetails=new ArrayList<>();
 
     public static String STR_DEFAULT_BASE64 = "default";
     public static String UID = "";
@@ -48,12 +42,8 @@ public class StaticConfig {
     public static String DATE = "";
     public static String LATITUDE ;
     public static String LONGITUDE ;
-   // public static String ORDERID = "";
-  //  public static ArrayList<String> ORDERID=new ArrayList<>();
-  //  public static ArrayList<String> STATUS=new ArrayList<>();
 
-   // public static OrderMenuDetails menuDetails;
-  //  public static OrderDetails orderDetails1;
-  //  public static OrderDetails orderDetails2;
+
+
 
 }
